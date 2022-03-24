@@ -1,0 +1,48 @@
+[[html]]
+<body>
+  <script>
+    function hello() {
+      return "Hello World!"
+    }
+  </script>
+  <div style="size: 10px" yes="awrvwr">
+    test
+  </div>
+</body>
+[[/html]]
+
+[[css]]
+.select { size: 10px; color: limegreen; }
+[[/css]]
+
+[[math]]
+\text{yes} \Omega
+[[/math]]
+
+[[code type="css"]]
+.select { size: 10px; }
+[[/code]]
+
+[[div style="size: 10px;" data-attr="asdf" dfasdf=""]]
+asdf
+[[div data-attr="asdf" style="size: 20px"]]
+qwer
+[[div class="select"]]
+zxcv [[span]]hello[[/span]]
+
+[[module listpages category="*"]]
+> %%page_name%%
+%%comments%%
++++ yes
+[[/module]]
+[[/div]]
+[[/div]]
+[[/div]]
+
+[[=]]
+something
+[[/=]]
+
+outside the div
+
+[!-- asdgjf --]

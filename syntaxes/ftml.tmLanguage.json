@@ -1,0 +1,364 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "FTML/Wikidot Code",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#css-block"
+    },
+    {
+      "include": "#css-module-block"
+    },
+    {
+      "include": "#html-block"
+    },
+    {
+      "include": "#math-block"
+    },
+    {
+      "include": "#attribute"
+    },
+    {
+      "include": "#attributed-block-begin"
+    },
+    {
+      "include": "#block-begin"
+    },
+    {
+      "include": "#block-end"
+    },
+    {
+      "include": "#blockquote"
+    },
+    {
+      "include": "#header"
+    },
+    {
+      "include": "#variables"
+    },
+    {
+      "include": "#deprecated-variables"
+    }
+  ],
+  "repository": {
+    "attribute": {
+      "patterns": [
+        {
+          "name": "meta.attribute.style.ftml",
+          "begin": "style(?![\\w:-])",
+          "beginCaptures": {
+            "0": {
+              "name": "entity.other.attribute-name.ftml"
+            }
+          },
+          "end": "(?=\\s*+[^=\\s])",
+          "patterns": [
+            {
+              "name": "meta.embedded.line.css",
+              "begin": "=",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.separator.key-value.ftml"
+                }
+              },
+              "end": "(?<=(?<=[^\\\\=])\\\")(?=[\\s\\]]*)",
+              "patterns": [
+                {
+                  "name": "string.quoted.double.ftml",
+                  "begin": "\"",
+                  "beginCaptures": {
+                    "0": {
+                      "name": "punctuation.definition.string.begin.ftml"
+                    }
+                  },
+                  "end": "(\")",
+                  "endCaptures": {
+                    "0": {
+                      "name": "punctuation.definition.string.end.ftml"
+                    },
+                    "1": {
+                      "name": "source.css-ignored-vscode"
+                    }
+                  },
+                  "contentName": "source.css",
+                  "pattern": [
+                    {
+                      "include": "source.css"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "match": "(\\S+?)\\s*(=)\\s*((\\\")(?:[^\"]|\\\\\")*((\\\")))",
+          "captures": {
+            "1": {
+              "name": "entity.other.attribute-name.ftml"
+            },
+            "2": {
+              "name": "punctuation.separator.key-value.ftml"
+            },
+            "3": {
+              "name": "string.quoted.double.ftml"
+            },
+            "4": {
+              "name": "punctuation.definition.string.begin.ftml"
+            },
+            "5": {
+              "name": "punctuation.definition.string.end.ftml"
+            },
+            "6": {
+              "name": "source.css-ignored-vscode"
+            }
+          },
+          "name": "meta.attribute.$1.ftml"
+        }
+      ]
+    },
+    "comment": {
+      "name": "comment.block.ftml",
+      "begin": "\\[\\!\\-\\-",
+      "end": "\\-\\-\\]"
+    },
+    "css-block": {
+      "name": "markup.inserted.text.css",
+      "begin": "(?i)^(\\[\\[)(css)(\\]\\])$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "entity.name.tag.ftml"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "end": "(?i)^((\\[\\[)\\/)(css)(\\]\\])$",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "source.css-ignored-vscode"
+        },
+        "3": {
+          "name": "entity.name.tag.ftml"
+        },
+        "4": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "contentName": "meta.embedded.block.css",
+      "patterns": [
+        {
+          "include": "source.css"
+        }
+      ]
+    },
+    "css-module-block": {
+      "name": "markup.inserted.text.css",
+      "begin": "(?i)^(\\[\\[)(module css)(\\]\\])$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "entity.name.tag.ftml"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "end": "(?i)^((\\[\\[)\\/)(module)(\\]\\])$",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "source.css-ignored-vscode"
+        },
+        "3": {
+          "name": "entity.name.tag.ftml"
+        },
+        "4": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "contentName": "meta.embedded.block.css",
+      "patterns": [
+        {
+          "include": "source.css"
+        }
+      ]
+    },
+    "html-block": {
+      "name": "markup.inserted.text.html",
+      "begin": "(?i)^(\\[\\[)(html)(\\]\\])$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "entity.name.tag.ftml"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "end": "(?i)^((\\[\\[)\\/)(html)(\\]\\])$",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "source.css-ignored-vscode"
+        },
+        "3": {
+          "name": "entity.name.tag.ftml"
+        },
+        "4": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "contentName": "meta.embedded.block.html",
+      "patterns": [
+        {
+          "include": "text.html.basic"
+        }
+      ]
+    },
+    "math-block": {
+      "name": "markup.inserted.math.display.ftml",
+      "begin": "(?i)^(\\[\\[)(math)(\\]\\])$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "entity.name.tag.ftml"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "end": "(?i)^((\\[\\[)\\/)(math)(\\]\\])$",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "source.css-ignored-vscode"
+        },
+        "3": {
+          "name": "entity.name.tag.ftml"
+        },
+        "4": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "contentName": "meta.embedded.block.katex",
+      "patterns": [
+        {
+          "include": "text.katex"
+        }
+      ]
+    },
+    "attributed-block-begin": {
+      "name": "meta.block.structure.begin.ftml",
+      "begin": "(?i)^(\\[\\[)(div|code|span|blockquote|table|row|hcell|cell|ul|ol|li|module(?:456)? (listpages|countpages|listusers|tagcloud|listdrafts|wantedpages|orphanedpages|categories|watchers|members|join|sendinvitations|whoinvited|newpage|clone|redirect|mailform|comments|recentposts|rate|ratedpages|search|searchall|searchusers|files|sitechanges|pages|childpages|pagesbytag|nextpages|previouspage|backlinks|pagetree))",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "entity.name.tag.ftml"
+        }
+      },
+      "end": "(\\]\\])\\s*$",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#attribute"
+        }
+      ]
+    },
+    "block-begin": {
+      "name": "meta.block.structure.begin.ftml",
+      "match": "^(\\[\\[)(\\<|\\>|\\=|\\=\\=)(\\]\\])\\s*$",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "entity.name.tag.ftml"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      }
+    },
+    "block-end": {
+      "name": "meta.block.structure.end.ftml",
+      "match": "(?i)^((\\[\\[)/)(div|code|span|blockquote|table|row|hcell|cell|ul|ol|li|module|\\<|\\>|\\=|\\=\\=)(\\]\\])\\s*$",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.ftml"
+        },
+        "2": {
+          "name": "source.css-ignored-vscode"
+        },
+        "3": {
+          "name": "entity.name.tag.ftml"
+        },
+        "4": {
+          "name": "punctuation.definition.tag.end.ftml"
+        }
+      }
+    },
+    "blockquote": {
+      "name": "markup.quote.ftml",
+      "match": "^(\\>+)(?=\\s)",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.quote.ftml"
+        }
+      }
+    },
+    "header": {
+      "name": "markup.header.ftml",
+      "match": "^(\\+{1,6})(?=\\s)",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.header.ftml"
+        }
+      }
+    },
+    "variables": {
+      "match": "\\%\\%((crea|upda|commen)ted_(at|by|by_(unix|id|linked))|(parent_)?((full)?name|category|titl(e|e_linked))|link|content(\\{\\d+\\})?|preview(\\(\\d+\\))|summary|first_paragraph|_?tags(_linked(\\|.+)?)?|form_(data|raw|label|hint)(\\{.+\\})?|children|comments|size|rating(_votes|_percent)|revisions|index|total|limit|total_or_limit|site_(title|name|domain))\\%\\%",
+      "captures": {
+        "1": {
+          "name": "entity.name.variable.ftml"
+        }
+      },
+      "name": "variable.other.ftmlmodules.$1.ftml"
+    },
+    "deprecated-variables": {
+      "match": "\\%\\%(linked_title|page_unix_name|(full_)?page_name|author|date|(author|user|date)_edited|description|short|text|long|body)\\%\\%",
+      "captures": {
+        "1": null,
+        "name": "entity.name.variable.ftml"
+      },
+      "name": "invalid.deprecated.variable.other.ftmlmodules.$1.ftml"
+    }
+  },
+  "scopeName": "text.ftml"
+}
