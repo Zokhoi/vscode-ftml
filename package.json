@@ -55,6 +55,7 @@
     },
     "scripts": {
         "vscode:prepublish": "pnpm run compile",
+        "update:syntax-blocks": "node scripts/updateBlocks.js",
         "compile:vite": "node ./scripts/build.js",
         "compile:ts": "tsc -p ./",
         "compile:yaml": "pnpx js-yaml ./syntaxes/ftml.tmLanguage.yaml > ./syntaxes/ftml.tmLanguage.json",
