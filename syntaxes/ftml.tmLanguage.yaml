@@ -6,7 +6,8 @@ patterns:
   - include: '#css-module-block'
   - include: '#html-block'
   - include: '#math-block'
-  - include: '#attribute'
+  - include: '#math-inline'
+  - include: '#include-block'
   # - include: '#block-standalone'
   # - include: '#block-standalone-value'
   - include: '#block-standalone-value-map'
@@ -18,7 +19,24 @@ patterns:
   - include: '#block-end'
   - include: '#blocks-align-begin'
   - include: '#blocks-align-end'
+  - include: '#inline-align'
   - include: '#header'
+  - include: '#list'
+  - include: '#color'
+  - include: '#italics'
+  - include: '#bold'
+  - include: '#strikethrough'
+  - include: '#underline'
+  - include: '#subscript'
+  - include: '#superscript'
+  - include: '#raw'
+  - include: '#teletype'
+  - include: '#escape'
+  - include: '#link-triple'
+  - include: '#link-single'
+  - include: '#horizontal-rule'
+  - include: '#separator-rule'
+  - include: '#table'
   - include: '#page-variables'
   - include: '#user-variables'
   - include: '#deprecated-variables'
@@ -66,6 +84,21 @@ repository:
           '5':
             name: punctuation.definition.string.end.ftml
           '6':
+            name: source.css-ignored-vscode
+        name: meta.attribute.$1.ftml
+  attribute-messy-include:
+    patterns:
+      - match: (\|?)\s*(\S+?)\s*(=)\s*([^\n\|]+)\s*(\|?)
+        captures:
+          '1':
+            name: source.css-ignored-vscode
+          '2':
+            name: entity.other.attribute-name.ftml
+          '3':
+            name: punctuation.separator.key-value.ftml
+          '4':
+            name: string.other.value.ftml
+          '5':
             name: source.css-ignored-vscode
         name: meta.attribute.$1.ftml
   comment:
@@ -164,6 +197,41 @@ repository:
     contentName: meta.embedded.block.katex
     patterns:
       - include: text.katex
+  math-inline:
+    name: markup.inserted.math.display.ftml
+    begin: (\[\[)\s*(\$)
+    beginCaptures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.tag.ftml
+    end: (\$)\s*(\]\])
+    endCaptures:
+      '1':
+        name: entity.name.tag.ftml
+      '2':
+        name: punctuation.definition.tag.end.ftml
+    contentName: meta.embedded.inline.katex
+    patterns:
+      - include: text.katex
+  include-block:
+    name: meta.block.structure.standalone.ftml
+    begin: (?i)(\[\[)\s*(include(?:-messy)?)\s*\s+([^\s\]]+)(?=\s|\]\])
+    beginCaptures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.tag.ftml
+      '3':
+        name: string.other.value.ftml
+      '4':
+        name: punctuation.definition.tag.end.ftml
+    end: \]\]
+    endCaptures:
+      '0':
+        name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#attribute-messy-include'
   block-standalone:
     name: meta.block.structure.standalone.ftml
     match: (?i)(\[\[)\s*()\s*(\]\])
@@ -176,7 +244,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   block-standalone-value:
     name: meta.block.structure.standalone.ftml
-    match: (?i)(\[\[)\s*()\s+([^\s\]]+)(?=\s|\])\s*(\]\])
+    match: (?i)(\[\[)\s*()\s+([^]+)(?=\s|\]\])\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -189,7 +257,7 @@ repository:
   block-standalone-value-map:
     name: meta.block.structure.standalone.ftml
     begin: >-
-      (?i)(\[\[)\s*(char|character|checkbox|\*checkbox|date|embed|equation|eref|eqref|iframe|image|=image|<image|>image|f<image|f>image|include-elements|include-messy|lines|newlines|radio|radio-button|\*radio|\*radio-button|user|\*user)\s+([^\s\]]+)(?=\s|\])
+      (?i)(\[\[)\s*(char|character|checkbox|\*checkbox|date|embed|equation|eref|eqref|iframe|image|=image|<image|>image|f<image|f>image|include-elements|lines|newlines|radio|radio-button|\*radio|\*radio-button|user|\*user)\s+([^\s\]]+)(?=\s|\]\])
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -205,7 +273,7 @@ repository:
       - include: '#attribute'
   block-standalone-map:
     name: meta.block.structure.standalone.ftml
-    begin: (?i)(\[\[)\s*(footnoteblock|toc|f<toc|f>toc)(?=\s|\])
+    begin: (?i)(\[\[)\s*(footnoteblock|toc|f<toc|f>toc)(?=\s|\]\])
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -229,7 +297,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   block-begin-value:
     name: meta.block.structure.standalone.ftml
-    match: (?i)(\[\[)\s*()\s+([^\s\]]+)(?=\s|\])\s*(\]\])
+    match: (?i)(\[\[)\s*()\s+([^]+)(?=\s|\]\])\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -242,7 +310,7 @@ repository:
   block-begin-value-map:
     name: meta.block.structure.begin.ftml
     begin: >-
-      (?i)(\[\[)\s*(ifcategory|iftags|math|module|module654|size|tab)\s+([^\s\]]+)(?=\s|\])
+      (?i)(\[\[)\s*(ifcategory|iftags|math|module|module654|size|tab)\s+([^\s\]]+)(?=\s|\]\])
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -259,7 +327,7 @@ repository:
   block-begin-map:
     name: meta.block.structure.begin.ftml
     begin: >-
-      (?i)(\[\[)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|code|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)(?=\s|\])
+      (?i)(\[\[)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|code|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)(?=\s|\]\])
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -274,7 +342,7 @@ repository:
   block-end:
     name: meta.block.structure.end.ftml
     match: >-
-      (?i)((\[\[)\s*\/)\s*(anchor_|a_|anchor|a|blockquote|quote|bold|b|strong|code|collapsible|css|del|deletion|div_|div|footnote|hidden|html|ifcategory|iftags|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|math|module|module654|monospace|tt|mono|paragraph|p|size|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|tabview|tabs|tab|cell|hcell|row|underline|u)\s*(\]\])
+      (?i)((\[\[)\/)\s*(anchor_|a_|anchor|a|blockquote|quote|bold|b|strong|code|collapsible|css|del|deletion|div_|div|footnote|hidden|html|ifcategory|iftags|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|math|module|module654|monospace|tt|mono|paragraph|p|size|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|tabview|tabs|tab|cell|hcell|row|underline|include|u)\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -312,12 +380,175 @@ repository:
     captures:
       '1':
         name: punctuation.definition.quote.ftml
+  inline-align:
+    name: markup.align.ftml
+    match: ^(\=)\s
+    captures:
+      '1':
+        name: punctuation.definition.align.ftml
   header:
     name: markup.header.ftml
-    match: ^(\+{1,6})(?=\s)
+    match: ^(\+{1,6}\*?)(?=\s)
     captures:
       '1':
         name: punctuation.definition.header.ftml
+  list:
+    name: markup.list.ftml
+    match: ^\s*(\*|\#)(?=\s)
+    captures:
+      '1':
+        name: punctuation.definition.list.ftml
+  color:
+    name: markup.color.ftml
+    match: (\#\#)\s*(\#\d+|[^\n\|]+)\s*(\|)\s*([^\n]+)\s*(?<=[^\#])(\#\#)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.variable.ftml
+      '3':
+        name: source.css-ignored-vscode
+      '4':
+        name: string.other.value.ftml
+      '5':
+        name: punctuation.definition.tag.end.ftml
+  italics:
+    name: markup.italic.ftml
+    match: (\/\/)\s*([^\n]+)\s*(?<=[^\/])(\/\/)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  bold:
+    name: markup.bold.ftml
+    match: (\*\*)\s*([^\n]+)\s*(?<=[^\*])(\*\*)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  strikethrough:
+    name: markup.strikethrough.ftml
+    match: (\-\-)\s*([^\n]+)\s*(?<=[^\-])(\-\-)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  underline:
+    name: markup.underline.ftml
+    match: (\_\_)\s*([^\n]+)\s*(?<=[^\_])(\_\_)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  subscript:
+    name: markup.subscript.ftml
+    match: (\,\,)\s*([^\n]+)\s*(?<=[^\,])(\,\,)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  superscript:
+    name: markup.subscript.ftml
+    match: (\^\^)\s*([^\n]+)\s*(?<=[^\^])(\^\^)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  raw:
+    name: markup.raw.ftml
+    match: (\@\@)\s*([^\n]+)\s*(?<=[^\@])(\@\@)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: string.other.raw.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  teletype:
+    name: markup.teletype.ftml
+    match: (\{\{)\s*([^\n]+)\s*(?<=[^\}])(\}\})
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  escape:
+    name: markup.raw.ftml
+    match: (\@\<)\s*((?:(?!\>\@).)+)\s*(\>\@)
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: string.other.escape.ftml
+      '3':
+        name: punctuation.definition.tag.end.ftml
+  link-triple:
+    name: markup.underline.link.ftml
+    match: (\[\[\[)\s*(\*)?\s*([^\*\n\|]+)\s*(?:(\|)\s*([^\n]+)?)?\s*(?<=[^\]])(\]\]\])
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: source.css-ignored-vscode
+      '3':
+        name: entity.name.variable.ftml
+      '4':
+        name: source.css-ignored-vscode
+      '5':
+        name: string.other.value.ftml
+      '6':
+        name: punctuation.definition.tag.end.ftml
+  link-single:
+    name: markup.underline.link.ftml
+    match: (\[)\s*(\*)?\s*((?:\/(?!\/)|\#|(?:[^\:\/]+\:)?\/\/)[^\n\s\|]+)\s*([^\n]+)?\s*(?<=[^\]])(\])
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: source.css-ignored-vscode
+      '3':
+        name: entity.name.variable.ftml
+      '4':
+        name: string.other.value.ftml
+      '5':
+        name: punctuation.definition.tag.end.ftml
+  horizontal-rule:
+    name: markup.hr.ftml
+    match: ^(\-{4,})/s*$
+    captures:
+      '1':
+        name: punctuation.definition.tag.ftml
+  separator-rule:
+    name: markup.hr.ftml
+    match: ^(\={4,})/s*$
+    captures:
+      '1':
+        name: punctuation.definition.tag.ftml
+  table:
+    name: markup.table.ftml
+    begin: ^(?:\|\|)+\~?
+    beginCaptures:
+      '1':
+        name: punctuation.definition.tag.ftml
+    end: (?:\|\|)$
+    endCaptures:
+      '1':
+        name: punctuation.definition.tag.ftml
+    patterns:
+      - match: (?:\|\|)+\~?
+        captures:
+          '1':
+            name: punctuation.definition.tag.ftml
+      - match: \s(\_)$
+        captures:
+          '1':
+            name: punctuation.definition.tag.ftml
   page-variables:
     match: >-
       \%\%((crea|upda|commen)ted_(at|by|by_(unix|id|linked))|(parent_)?((full)?name|category|titl(e|e_linked))|link|content(\{\d+\})?|preview(\(\d+\))|summary|first_paragraph|_?tags(_linked(\|.+)?)?|form_(data|raw|label|hint)(\{.+\})?|children|comments|size|rating(_votes|_percent)|revisions|index|total|limit|total_or_limit|site_(title|name|domain))\%\%
@@ -326,8 +557,7 @@ repository:
         name: entity.name.variable.ftml
     name: variable.other.ftmlmodules.$1.ftml
   user-variables:
-    match: >-
-      \{\$.+\}
+    match: \{\$.+\}
     captures:
       '1':
         name: entity.name.variable.ftml

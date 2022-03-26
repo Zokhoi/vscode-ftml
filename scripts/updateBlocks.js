@@ -46,6 +46,7 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
     output['block'+body+head].push(...aliases, ...stars);
     if (body=='Begin') output.blockEnd.push(...aliases);
   }
+  output.blockStandaloneValueMap.splice(output.blockStandaloneValueMap.indexOf('include-messy'),1);
   for (const key in output) {
     output[key] = output[key].map(escapeRegExp).join('|');
   }
@@ -62,7 +63,16 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
     blockEnd: {},
   }
   for (const key in regexes) {
-    regexes[key].regex = `(?i)${key.includes('End')?'((\\[\\[)\\/)':'(\\[\\[)'}\\s*(${output[key]})${key.includes('Value')?'\\s+([^\\s\\]]+)':''}${(key.includes('Value')||key.includes('Map')) ? '(?=\\s|\\])' : ''}${key.includes('Map') ? '' : '\\s*(\\]\\])'}`
+    regexes[key].regex = `(?i)${key.endsWith('End')?'((\\[\\[)\\/)':'(\\[\\[)'}\\s*(${output[key]})`
+    if (key.endsWith('ValueMap')) {
+      regexes[key].regex += '\\s+([^\\s\\]]+)(?=\\s|\\]\\])';
+    } else if (key.endsWith('Value')) {
+      regexes[key].regex += '\\s+([^]+)(?=\\s|\\]\\])\\s*(\\]\\])'
+    } else if (key.endsWith('Map')) {
+      regexes[key].regex += '(?=\\s|\\]\\])';
+    } else {
+      regexes[key].regex += '\\s*(\\]\\])';
+    }
     regexes[key].position = key.includes('Map') ? 'begin' : 'match';
     regexes[key].disabled = !output[key];
   }
