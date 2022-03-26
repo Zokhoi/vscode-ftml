@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import ftmlWorker from './ftml.web.worker.js?bundled-worker&dataurl';
+import css from './css/wikidot.css';
+import collapsible from './css/Collapsible.css';
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -40,6 +42,10 @@ const baseHtml = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wikitext Preview</title>
+  <style>
+  ${css}
+  ${collapsible}
+  </style>
 </head>
 <body>
 <div id="preview-styles"></div>
@@ -62,7 +68,7 @@ const baseHtml = `<!DOCTYPE html>
     }
   });
 
-  window.addEventListener('message', e=>{
+  window.addEventListener('message', e => {
     const { ftmlSource } = e.data;
     ftml.postMessage(ftmlSource);
   })

@@ -1,0 +1,71 @@
+.wj-collapsible-block {
+  display: block;
+  line-height: normal;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wj-collapsible-block-link.wj-collapsible-block-folded,
+.wj-collapsible-block.folded > .wj-collapsible-block-folded,
+.wj-collapsible-block.unfolded > .wj-collapsible-block-unfolded {
+  display: none;
+}
+
+
+/* colmod support */
+
+.colmod-block > ul,
+.colmod-block > ul > li {
+    display:block;
+    line-height:normal;
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+.colmod-block > ul > li > ul,
+li.folded > .colmod-link-top a + a,
+li.folded > .colmod-content,
+li.folded > .colmod-link-end a,
+li.unfolded > .colmod-link-top a:first-child {
+    display:none;
+}
+.colmod-content {
+    -webkit-animation:colmod-fade-in 0.2s ease-in-out;
+    -moz-animation:colmod-fade-in 0.2s ease-in-out;
+    animation:colmod-fade-in 0.2s ease-in-out;
+    -webkit-animation-timing-function:cubic-bezier(0.3649610494,0,0.6350389506,1);
+    -moz-animation-timing-function:cubic-bezier(0.3649610494,0,0.6350389506,1);
+    animation-timing-function:cubic-bezier(0.3649610494,0,0.6350389506,1);
+}
+li.folded > .colmod-content {
+    -webkit-animation-name:none;
+    -moz-animation-name:none;
+    animation-name:none;
+}
+@-webkit-keyframes colmod-fade-in { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes colmod-fade-in { from { opacity:0; } to { opacity:1; } }
+@keyframes colmod-fade-in { from { opacity:0; } to { opacity:1; } }
+[class|="colmod-link"] div.foldable-list-container {
+    display:inline;
+}
+.colmod-collapsiblealt > [class|="colmod-link"],
+.collapsiblealt > .colmod-block > ul > li > [class|="colmod-link"] {
+    margin:0.5em 0;
+    text-align:center;
+}
+.colmod-collapsiblealt > [class|="colmod-link"] a,
+.collapsiblealt > .colmod-block > ul > li > [class|="colmod-link"] a {
+    padding:0.1em 0.5em;
+    text-decoration:none;
+    background-color:#F4F4F4;
+    border:1px solid #AAA;
+    color:#000;
+}
+.colmod-collapsiblealt > [class|="colmod-link"] a:hover,
+.colmod-collapsiblealt > [class|="colmod-link"] a:active,
+.collapsiblealt > .colmod-block > ul > li > [class|="colmod-link"] a:hover,
+.collapsiblealt > .colmod-block > ul > li > [class|="colmod-link"] a:active {
+    background:#DDD;
+    text-decoration:none;
+}
