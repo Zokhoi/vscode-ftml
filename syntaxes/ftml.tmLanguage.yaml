@@ -400,7 +400,7 @@ repository:
         name: punctuation.definition.list.ftml
   color:
     name: markup.color.ftml
-    match: (\#\#)\s*(\#\d+|[^\n\|]+)\s*(\|)\s*([^\n]+)\s*(?<=[^\#])(\#\#)
+    match: (\#\#)\s*(\#\d+|[^\n\|]+)\s*(\|)\s*((?:(?!\#\#).)+)\s*(?<=[^\#])(\#\#)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -414,7 +414,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   italics:
     name: markup.italic.ftml
-    match: (\/\/)\s*([^\n]+)\s*(?<=[^\/])(\/\/)
+    match: (\/\/)\s*((?:(?!\/\/).)+)\s*(?<=[^\/])(\/\/)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -422,7 +422,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   bold:
     name: markup.bold.ftml
-    match: (\*\*)\s*([^\n]+)\s*(?<=[^\*])(\*\*)
+    match: (\*\*)\s*((?:(?!\*\*).)+)\s*(?<=[^\*])(\*\*)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -430,7 +430,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   strikethrough:
     name: markup.strikethrough.ftml
-    match: (\-\-)\s*([^\n]+)\s*(?<=[^\-])(\-\-)
+    match: (\-\-)\s*((?:(?!\-\-).)+)\s*(?<=[^\-])(\-\-)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -438,7 +438,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   underline:
     name: markup.underline.ftml
-    match: (\_\_)\s*([^\n]+)\s*(?<=[^\_])(\_\_)
+    match: (\_\_)\s*((?:(?!\_\_).)+)\s*(?<=[^\_])(\_\_)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -446,7 +446,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   subscript:
     name: markup.subscript.ftml
-    match: (\,\,)\s*([^\n]+)\s*(?<=[^\,])(\,\,)
+    match: (\,\,)\s*((?:(?!\,\,).)+)\s*(?<=[^\,])(\,\,)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -454,7 +454,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   superscript:
     name: markup.subscript.ftml
-    match: (\^\^)\s*([^\n]+)\s*(?<=[^\^])(\^\^)
+    match: (\^\^)\s*((?:(?!\^\^).)+)\s*(?<=[^\^])(\^\^)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -462,7 +462,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   raw:
     name: markup.raw.ftml
-    match: (\@\@)\s*([^\n]+)\s*(?<=[^\@])(\@\@)
+    match: (\@\@)\s*((?:(?!\@\@).)+)\s*(?<=[^\@])(\@\@)
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -472,7 +472,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   teletype:
     name: markup.teletype.ftml
-    match: (\{\{)\s*([^\n]+)\s*(?<=[^\}])(\}\})
+    match: (\{\{)\s*((?:(?!\}\}).)+)\s*(?<=[^\}])(\}\})
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -490,7 +490,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   link-triple:
     name: markup.underline.link.ftml
-    match: (\[\[\[)\s*(\*)?\s*([^\*\n\|]+)\s*(?:(\|)\s*([^\n]+)?)?\s*(?<=[^\]])(\]\]\])
+    match: (\[\[\[)\s*(\*)?\s*((?:(?!\]\]\])[^\*\n\|])+)\s*(?:(\|)\s*((?:(?!\]\]\]).)+)?)?\s*(?<=[^\]])(\]\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -506,7 +506,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   link-single:
     name: markup.underline.link.ftml
-    match: (\[)\s*(\*)?\s*((?:\/(?!\/)|\#|(?:[^\:\/]+\:)?\/\/)[^\n\s\|]+)\s*([^\n]+)?\s*(?<=[^\]])(\])
+    match: (\[)\s*(\*)?\s*((?:\/(?!\/)|\#|(?:[^\:\/]+\:)?\/\/)[^\n\s\|]+)\s*((?:(?!\]).)+)?\s*(?<=[^\]])(\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
