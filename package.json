@@ -1,7 +1,7 @@
 {
     "name": "vscode-ftml",
     "publisher": "zokhoi",
-    "displayName": "FTML All-In-One",
+    "displayName": "FTML/Wikidot Workshop",
     "description": "VSCode extension for support of FTML",
     "version": "0.0.1",
     "engines": {
@@ -11,7 +11,10 @@
         "Programming Languages"
     ],
     "activationEvents": [
-        "onCommand:ftmlPreview.start"
+        "onLanguage:ftml",
+        "onCommand:ftml.preview.open",
+        "onCommand:ftml.preview.openToSide",
+        "onCommand:ftml.preview.toggleLock"
     ],
     "main": "./dist/extension",
     "contributes": {
@@ -47,9 +50,62 @@
         ],
         "commands": [
             {
-                "command": "ftmlPreview.start",
+                "command": "ftml.preview.open",
                 "title": "Start new preview tab for the current wikitext",
-                "category": "Ftml Preview"
+                "category": "Ftml"
+            },
+            {
+                "command": "ftml.preview.openToSide",
+                "title": "Start new preview tab to the side for the current wikitext",
+                "category": "Ftml"
+            },
+            {
+                "command": "ftml.preview.toggleLock",
+                "title": "Toggle lock status of current preview tab",
+                "category": "Ftml"
+            }
+        ],
+        "menus":  {
+            "editor/context": [
+                {
+                    "when": "resourceLangId == ftml",
+                    "command": "ftml.preview.open",
+                    "group": "3_preview"
+                },
+                {
+                    "when": "resourceLangId == ftml",
+                    "command": "ftml.preview.openToSide",
+                    "group": "3_preview"
+                }
+            ],
+            "editor/title": [
+                {
+                    "when": "resourceLangId == ftml",
+                    "command": "ftml.preview.open",
+                    "group": "4_ftml"
+                },
+                {
+                    "when": "resourceLangId == ftml",
+                    "command": "ftml.preview.openToSide",
+                    "group": "4_ftml"
+                },
+                {
+                    "when": "ftmlPreviewFocus",
+                    "command": "ftml.preview.toggleLock",
+                    "group": "4_ftml"
+                }
+            ]
+        },
+        "configuration": [
+            {
+                "title": "FTML",
+                "properties": {
+                    "ftml.preview.lock": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Specifies whether to lock preview to ftml document on open"
+                    }
+                }
             }
         ]
     },
@@ -75,7 +131,6 @@
         "vite-plugin-commonjs-externals": "^0.1.1"
     },
     "dependencies": {
-        "@wikijump/ftml-wasm": "^1.6.3",
-        "got": "^12.0.2"
+        "@wikijump/ftml-wasm": "^1.6.3"
     }
 }

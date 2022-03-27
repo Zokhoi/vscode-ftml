@@ -22,18 +22,7 @@ patterns:
   - include: '#inline-align'
   - include: '#header'
   - include: '#list'
-  - include: '#color'
-  - include: '#italics'
-  - include: '#bold'
-  - include: '#strikethrough'
-  - include: '#underline'
-  - include: '#subscript'
-  - include: '#superscript'
-  - include: '#raw'
-  - include: '#teletype'
-  - include: '#escape'
-  - include: '#link-triple'
-  - include: '#link-single'
+  - include: '#inline'
   - include: '#horizontal-rule'
   - include: '#separator-rule'
   - include: '#table'
@@ -41,6 +30,20 @@ patterns:
   - include: '#user-variables'
   - include: '#deprecated-variables'
 repository:
+  inline:
+    patterns:
+      - include: '#color'
+      - include: '#italics'
+      - include: '#bold'
+      - include: '#strikethrough'
+      - include: '#underline'
+      - include: '#subscript'
+      - include: '#superscript'
+      - include: '#raw'
+      - include: '#teletype'
+      - include: '#escape'
+      - include: '#link-triple'
+      - include: '#link-single'
   attribute:
     patterns:
       - name: meta.attribute.style.ftml
@@ -414,52 +417,88 @@ repository:
         name: punctuation.definition.tag.end.ftml
   italics:
     name: markup.italic.ftml
-    match: (\/\/)\s*((?:(?!\/\/).)+)\s*(?<=[^\/])(\/\/)
-    captures:
+    begin: (\/\/)(?=(?:\s*(?:(?!\/\/).)+\s*(?<=[^\/])(?:\/\/)))
+    beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
-      '3':
+    end: \/\/
+    endCaptures:
+      '0':
         name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#inline'
   bold:
     name: markup.bold.ftml
-    match: (\*\*)\s*((?:(?!\*\*).)+)\s*(?<=[^\*])(\*\*)
-    captures:
+    begin: (\*\*)(?=(?:\s*((?:(?!\*\*).)+)\s*(?<=[^\*])(?:\*\*)))
+    beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
-      '3':
+    end: \*\*
+    endCaptures:
+      '0':
         name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#inline'
   strikethrough:
     name: markup.strikethrough.ftml
-    match: (\-\-)\s*((?:(?!\-\-).)+)\s*(?<=[^\-])(\-\-)
-    captures:
+    begin: (\-\-)(?=(?:\s*((?:(?!\-\-).)+)\s*(?<=[^\-])(?:\-\-)))
+    beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
-      '3':
+    end: \-\-
+    endCaptures:
+      '0':
         name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#inline'
   underline:
     name: markup.underline.ftml
-    match: (\_\_)\s*((?:(?!\_\_).)+)\s*(?<=[^\_])(\_\_)
-    captures:
+    begin: (\_\_)(?=(?:\s*((?:(?!\_\_).)+)\s*(?<=[^\_])(?:\_\_)))
+    beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
-      '3':
+    end: \_\_
+    endCaptures:
+      '0':
         name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#inline'
   subscript:
     name: markup.subscript.ftml
-    match: (\,\,)\s*((?:(?!\,\,).)+)\s*(?<=[^\,])(\,\,)
-    captures:
+    begin: (\,\,)(?=(?:\s*((?:(?!\,\,).)+)\s*(?<=[^\,])(?:\,\,)))
+    beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
-      '3':
+    end: \,\,
+    endCaptures:
+      '0':
         name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#inline'
   superscript:
     name: markup.subscript.ftml
-    match: (\^\^)\s*((?:(?!\^\^).)+)\s*(?<=[^\^])(\^\^)
-    captures:
+    begin: (\^\^)(?=(?:\s*((?:(?!\^\^).)+)\s*(?<=[^\^])(?:\^\^)))
+    beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
-      '3':
+    end: \^\^
+    endCaptures:
+      '0':
         name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#inline'
+  teletype:
+    name: markup.teletype.ftml
+    begin: (\{\{)(?=(?:\s*((?:(?!\}\}).)+)\s*(?<=[^\}])(?:\}\})))
+    beginCaptures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+    end: \}\}
+    endCaptures:
+      '0':
+        name: punctuation.definition.tag.end.ftml
+    patterns:
+      - include: '#inline'
   raw:
     name: markup.raw.ftml
     match: (\@\@)\s*((?:(?!\@\@).)+)\s*(?<=[^\@])(\@\@)
@@ -468,14 +507,6 @@ repository:
         name: punctuation.definition.tag.begin.ftml
       '2':
         name: string.other.raw.ftml
-      '3':
-        name: punctuation.definition.tag.end.ftml
-  teletype:
-    name: markup.teletype.ftml
-    match: (\{\{)\s*((?:(?!\}\}).)+)\s*(?<=[^\}])(\}\})
-    captures:
-      '1':
-        name: punctuation.definition.tag.begin.ftml
       '3':
         name: punctuation.definition.tag.end.ftml
   escape:

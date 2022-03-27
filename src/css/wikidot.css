@@ -26,7 +26,18 @@ table.wj-table th {
 	background-color: #333;
 }
 
-
+.wj-align-center {
+	text-align: center;
+}
+.wj-align-left {
+	text-align: left;
+}
+.wj-align-right {
+	text-align: right;
+}
+.wj-align-justify {
+	text-align: justify;
+}
 
 
 #toc {
