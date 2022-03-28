@@ -3,7 +3,7 @@ import { basename } from 'path';
 import ftmlWorker from './ftml.web.worker.js?bundled-worker&dataurl';
 import { readFileSync } from 'fs';
 import css from './css/wikidot.css';
-import collapsible from './css/collapsibles.css';
+import collapsible from './css/collapsible.css';
 
 type previewInfo = {
   id: string,

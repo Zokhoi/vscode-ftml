@@ -6,6 +6,7 @@ __underline text__
 {{teletype (monospaced) text}}
 normal ^^superscript^^
 normal ,,subscript,,
+{{//**__--,,all,,^^seven^^--__**//}}
 [!-- invisible comment --]
 [[span style="color:red"]]custom //span// element[[/span]]
 [[span id="mySpan"]]My span element[[/span]]

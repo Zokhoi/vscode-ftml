@@ -1,136 +1,143 @@
 {
-    "name": "vscode-ftml",
-    "publisher": "zokhoi",
-    "displayName": "FTML/Wikidot Workshop",
-    "description": "VSCode extension for support of FTML",
-    "version": "0.0.1",
-    "engines": {
-        "vscode": "^1.65.0"
-    },
-    "categories": [
-        "Programming Languages"
+  "name": "vscode-ftml",
+  "publisher": "zokhoi",
+  "displayName": "FTML/Wikidot Workshop",
+  "description": "VSCode extension for support of FTML",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.65.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zokhoi/vscode-ftml.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Zokhoi/vscode-ftml/issues"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:ftml",
+    "onCommand:ftml.preview.open",
+    "onCommand:ftml.preview.openToSide",
+    "onCommand:ftml.preview.toggleLock"
+  ],
+  "main": "./dist/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "ftml",
+        "aliases": [
+          "FTML",
+          "ftml",
+          "Wikidot code"
+        ],
+        "extensions": [
+          ".ftml",
+          ".wd",
+          ".wikidot",
+          ".wj",
+          ".wikijump"
+        ],
+        "configuration": "./language-configuration.json"
+      }
     ],
-    "activationEvents": [
-        "onLanguage:ftml",
-        "onCommand:ftml.preview.open",
-        "onCommand:ftml.preview.openToSide",
-        "onCommand:ftml.preview.toggleLock"
+    "grammars": [
+      {
+        "language": "ftml",
+        "scopeName": "text.ftml",
+        "path": "./syntaxes/ftml.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.css": "css",
+          "meta.embedded.block.html": "html",
+          "meta.embedded.block.katex": "katex"
+        }
+      }
     ],
-    "main": "./dist/extension",
-    "contributes": {
-        "languages": [
-            {
-                "id": "ftml",
-                "aliases": [
-                    "FTML",
-                    "ftml",
-                    "Wikidot code"
-                ],
-                "extensions": [
-                    ".ftml",
-                    ".wd",
-                    ".wikidot",
-                    ".wj",
-                    ".wikijump"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "ftml",
-                "scopeName": "text.ftml",
-                "path": "./syntaxes/ftml.tmLanguage.json",
-                "embeddedLanguages": {
-                    "meta.embedded.block.css": "css",
-                    "meta.embedded.block.html": "html",
-                    "meta.embedded.block.katex": "katex"
-                }
-            }
-        ],
-        "commands": [
-            {
-                "command": "ftml.preview.open",
-                "title": "Start new preview tab for the current wikitext",
-                "category": "Ftml"
-            },
-            {
-                "command": "ftml.preview.openToSide",
-                "title": "Start new preview tab to the side for the current wikitext",
-                "category": "Ftml"
-            },
-            {
-                "command": "ftml.preview.toggleLock",
-                "title": "Toggle lock status of current preview tab",
-                "category": "Ftml"
-            }
-        ],
-        "menus":  {
-            "editor/context": [
-                {
-                    "when": "resourceLangId == ftml",
-                    "command": "ftml.preview.open",
-                    "group": "3_preview"
-                },
-                {
-                    "when": "resourceLangId == ftml",
-                    "command": "ftml.preview.openToSide",
-                    "group": "3_preview"
-                }
-            ],
-            "editor/title": [
-                {
-                    "when": "resourceLangId == ftml",
-                    "command": "ftml.preview.open",
-                    "group": "4_ftml"
-                },
-                {
-                    "when": "resourceLangId == ftml",
-                    "command": "ftml.preview.openToSide",
-                    "group": "4_ftml"
-                },
-                {
-                    "when": "ftmlPreviewFocus",
-                    "command": "ftml.preview.toggleLock",
-                    "group": "4_ftml"
-                }
-            ]
+    "commands": [
+      {
+        "command": "ftml.preview.open",
+        "title": "Start new preview tab for the current wikitext",
+        "category": "Ftml"
+      },
+      {
+        "command": "ftml.preview.openToSide",
+        "title": "Start new preview tab to the side for the current wikitext",
+        "category": "Ftml"
+      },
+      {
+        "command": "ftml.preview.toggleLock",
+        "title": "Toggle lock status of current preview tab",
+        "category": "Ftml"
+      }
+    ],
+    "menus":  {
+      "editor/context": [
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.preview.open",
+          "group": "3_preview"
         },
-        "configuration": [
-            {
-                "title": "FTML",
-                "properties": {
-                    "ftml.preview.lock": {
-                        "type": "boolean",
-                        "default": false,
-                        "description": "Specifies whether to lock preview to ftml document on open"
-                    }
-                }
-            }
-        ]
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.preview.openToSide",
+          "group": "3_preview"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.preview.open",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.preview.openToSide",
+          "group": "4_ftml"
+        },
+        {
+          "when": "ftmlPreviewFocus",
+          "command": "ftml.preview.toggleLock",
+          "group": "4_ftml"
+        }
+      ]
     },
-    "scripts": {
-        "vscode:prepublish": "pnpm run compile",
-        "update:syntax-blocks": "node scripts/updateBlocks.js",
-        "compile:vite": "node ./scripts/build.js",
-        "compile:ts": "tsc -p ./",
-        "compile:yaml": "pnpx js-yaml ./syntaxes/ftml.tmLanguage.yaml > ./syntaxes/ftml.tmLanguage.json",
-        "compile": "pnpm run compile:yaml && pnpm run compile:vite",
-        "lint": "eslint . --ext .ts,.tsx",
-        "watch": "tsc -w -p ./"
-    },
-    "devDependencies": {
-        "@types/node": "^17.0.23",
-        "@types/vscode": "^1.65.0",
-        "@types/vscode-webview": "^1.57.0",
-        "esbuild": "^0.14.27",
-        "js-yaml": "^4.1.0",
-        "toml": "^3.0.0",
-        "typescript": "^4.6.2",
-        "vite": "^2.8.6",
-        "vite-plugin-commonjs-externals": "^0.1.1"
-    },
-    "dependencies": {
-        "@wikijump/ftml-wasm": "^1.6.3"
-    }
+    "configuration": [
+      {
+        "title": "FTML",
+        "properties": {
+          "ftml.preview.lock": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether to lock preview to ftml document on open"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "update:syntax-blocks": "node scripts/updateBlocks.js",
+    "compile:vite": "node ./scripts/build.js",
+    "compile:ts": "tsc -p ./",
+    "compile:yaml": "pnpx js-yaml ./syntaxes/ftml.tmLanguage.yaml > ./syntaxes/ftml.tmLanguage.json",
+    "compile": "pnpm run compile:yaml && pnpm run compile:vite",
+    "lint": "eslint . --ext .ts,.tsx",
+    "watch": "tsc -w -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "@types/vscode": "^1.65.0",
+    "@types/vscode-webview": "^1.57.0",
+    "esbuild": "^0.14.27",
+    "js-yaml": "^4.1.0",
+    "toml": "^3.0.0",
+    "typescript": "^4.6.2",
+    "vite": "^2.8.6",
+    "vite-plugin-commonjs-externals": "^0.1.1"
+  },
+  "dependencies": {
+    "@wikijump/ftml-wasm": "^1.6.3"
+  }
 }

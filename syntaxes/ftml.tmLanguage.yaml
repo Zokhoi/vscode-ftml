@@ -417,7 +417,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   italics:
     name: markup.italic.ftml
-    begin: (\/\/)(?=(?:\s*(?:(?!\/\/).)+\s*(?<=[^\/])(?:\/\/)))
+    begin: (\/\/)(?=.+\/\/)
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -429,7 +429,7 @@ repository:
       - include: '#inline'
   bold:
     name: markup.bold.ftml
-    begin: (\*\*)(?=(?:\s*((?:(?!\*\*).)+)\s*(?<=[^\*])(?:\*\*)))
+    begin: (\*\*)(?=.+\*\*)
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -441,7 +441,7 @@ repository:
       - include: '#inline'
   strikethrough:
     name: markup.strikethrough.ftml
-    begin: (\-\-)(?=(?:\s*((?:(?!\-\-).)+)\s*(?<=[^\-])(?:\-\-)))
+    begin: (\-\-)(?=.+\-\-)
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -453,7 +453,7 @@ repository:
       - include: '#inline'
   underline:
     name: markup.underline.ftml
-    begin: (\_\_)(?=(?:\s*((?:(?!\_\_).)+)\s*(?<=[^\_])(?:\_\_)))
+    begin: (\_\_)(?=.+\_\_)
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -465,7 +465,7 @@ repository:
       - include: '#inline'
   subscript:
     name: markup.subscript.ftml
-    begin: (\,\,)(?=(?:\s*((?:(?!\,\,).)+)\s*(?<=[^\,])(?:\,\,)))
+    begin: (\,\,)(?=.+\,\,)
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -477,7 +477,7 @@ repository:
       - include: '#inline'
   superscript:
     name: markup.subscript.ftml
-    begin: (\^\^)(?=(?:\s*((?:(?!\^\^).)+)\s*(?<=[^\^])(?:\^\^)))
+    begin: (\^\^)(?=.+\^\^)
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -489,7 +489,7 @@ repository:
       - include: '#inline'
   teletype:
     name: markup.teletype.ftml
-    begin: (\{\{)(?=(?:\s*((?:(?!\}\}).)+)\s*(?<=[^\}])(?:\}\})))
+    begin: (\{\{)(?=.+\}\})
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
