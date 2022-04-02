@@ -225,10 +225,10 @@ This text is [[mark]]highlighted![[/mark]]
 
 Favorite kind of music:
 
-[[radio]] Disco
-[[radio]] Dance
-[[radio]] Rap
-[[*radio]] Noise
+[[radio music]] Disco
+[[radio music]] Dance
+[[radio music]] Rap
+[[*radio music]] Noise
 
 This text is regular, but [[size 250%]]this text is much larger[[/size]].
 

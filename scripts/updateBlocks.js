@@ -15,17 +15,16 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
     blockStandaloneMap: [],
     blockStandaloneValue: [],
     blockStandaloneValueMap: [],
-    blockBegin: [],
-    blockBeginMap: [],
-    blockBeginValue: [],
-    blockBeginValueMap: [],
-    blockEnd: [],
+    block: [],
+    blockMap: [],
+    blockValue: [],
+    blockValueMap: [],
   }
   for (const block in blocks) {
     let score = blocks[block]['accepts-score'];
     let star = blocks[block]['accepts-star'];
     let aliases = blocks[block].aliases || [];
-    let body = blocks[block].body == 'none' ? 'Standalone' : 'Begin';
+    let body = blocks[block].body == 'none' ? 'Standalone' : '';
     let head = '';
     switch (blocks[block].head) {
       case 'map':
@@ -56,25 +55,27 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
     blockStandaloneMap: {},
     blockStandaloneValue: {},
     blockStandaloneValueMap: {},
-    blockBegin: {},
-    blockBeginMap: {},
-    blockBeginValue: {},
-    blockBeginValueMap: {},
-    blockEnd: {},
+    block: {},
+    blockMap: {},
+    blockValue: {},
+    blockValueMap: {},
   }
   for (const key in regexes) {
-    regexes[key].regex = `(?i)${key.endsWith('End')?'((\\[\\[)\\/)':'(\\[\\[)'}\\s*(${output[key]})`
+    regexes[key].body = !key.includes('Standalone');
+    regexes[key].disabled = !output[key];
+    regexes[key].regex = `(?i)(\\[\\[)\\s*(${output[key]})`
     if (key.endsWith('ValueMap')) {
-      regexes[key].regex += '\\s+([^\\s\\]]+)(?=\\s|\\]\\])';
+      regexes[key].regex += '\\s+([^\\s\\]]+)(?:\\s+((?:(?!\\]\\]).)+))?\\s*(\\]\\])';
     } else if (key.endsWith('Value')) {
-      regexes[key].regex += '\\s+([^]+)(?=\\s|\\]\\])\\s*(\\]\\])'
+      regexes[key].regex += '\\s+((?:(?!\\]\\]).)+)\\s*(\\]\\])'
     } else if (key.endsWith('Map')) {
-      regexes[key].regex += '(?=\\s|\\]\\])';
+      regexes[key].regex += '(?:\\s+((?:(?!\\]\\]).)+))?\\s*(\\]\\])';
     } else {
       regexes[key].regex += '\\s*(\\]\\])';
     }
-    regexes[key].position = key.includes('Map') ? 'begin' : 'match';
-    regexes[key].disabled = !output[key];
+    if (regexes[key].body) {
+      regexes[key].end = `((\\[\\[)\\/)\\s*(${output[key]})\\s*(\\]\\])`;
+    }
   }
   let tmLangConfigRaw = fs.readFileSync(path.join(process.cwd(), 'syntaxes/ftml.tmLanguage.yaml'), 'utf-8');
   let tmLangConfig = yaml.load(tmLangConfigRaw.replace(/\# \- include/g, "- include"));
@@ -82,7 +83,12 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
     if (!tmLangConfig.repository[kebabize(key)]) {
       tmLangConfig.repository[kebabize(key)] = {};
     }
-    tmLangConfig.repository[kebabize(key)][regexes[key].position] = regexes[key].regex;
+    if (regexes[key].body) {
+      tmLangConfig.repository[kebabize(key)].begin = regexes[key].regex;
+      tmLangConfig.repository[kebabize(key)].end = regexes[key].end;
+    } else {
+      tmLangConfig.repository[kebabize(key)].match = regexes[key].regex;
+    }
   }
 
   let newTmLangConfigRaw = yaml.dump(tmLangConfig);
