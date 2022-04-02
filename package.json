@@ -7,6 +7,7 @@
   "engines": {
     "vscode": "^1.65.0"
   },
+  "icon": "assets/vscode-ftml.128x128.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Zokhoi/vscode-ftml.git"
@@ -40,7 +41,11 @@
           ".wj",
           ".wikijump"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "dark": "assets/ftmlang.64x64.png",
+          "light": "assets/ftmlang.64x64.png"
+        }
       }
     ],
     "grammars": [
@@ -72,7 +77,7 @@
         "category": "Ftml"
       }
     ],
-    "menus":  {
+    "menus": {
       "editor/context": [
         {
           "when": "resourceLangId == ftml",
