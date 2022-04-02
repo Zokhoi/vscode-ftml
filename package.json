@@ -22,7 +22,8 @@
     "onLanguage:ftml",
     "onCommand:ftml.preview.open",
     "onCommand:ftml.preview.openToSide",
-    "onCommand:ftml.preview.toggleLock"
+    "onCommand:ftml.preview.toggleLock",
+    "onCommand:ftml.preview.refresh"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -63,17 +64,17 @@
     "commands": [
       {
         "command": "ftml.preview.open",
-        "title": "Start new preview tab for the current wikitext",
+        "title": "%ftml.preview.open%",
         "category": "Ftml"
       },
       {
         "command": "ftml.preview.openToSide",
-        "title": "Start new preview tab to the side for the current wikitext",
+        "title": "%ftml.preview.openToSide%",
         "category": "Ftml"
       },
       {
         "command": "ftml.preview.toggleLock",
-        "title": "Toggle lock status of current preview tab",
+        "title": "%ftml.preview.toggleLock%",
         "category": "Ftml"
       }
     ],
@@ -115,7 +116,12 @@
           "ftml.preview.lock": {
             "type": "boolean",
             "default": false,
-            "description": "Specifies whether to lock preview to ftml document on open"
+            "description": "%ftml.preview.lock%"
+          },
+          "ftml.preview.backend": {
+            "type": "string",
+            "default": "ftml",
+            "description": "Default backend for the preview to use (\"ftml\"/\"wikidot\")"
           }
         }
       }

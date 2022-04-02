@@ -1,0 +1,6 @@
+{
+  "ftml.preview.open": "Start new preview tab for the current wikitext",
+  "ftml.preview.openToSide": "Start new preview tab to the side for the current wikitext",
+  "ftml.preview.toggleLock": "Toggle lock status of current preview tab",
+  "ftml.preview.lock": "Specifies whether to lock preview to ftml document on open"
+}

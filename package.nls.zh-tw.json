@@ -1,0 +1,6 @@
+{
+  "ftml.preview.open": "為本wiki文本源碼檔開啟預覽",
+  "ftml.preview.openToSide": "在本wiki文本源碼檔旁邊開啟預覽",
+  "ftml.preview.toggleLock": "鎖定或解鎖本預覽對應wiki文本源碼檔",
+  "ftml.preview.lock": "預設開啟預覽時鎖定對應wiki文本源碼檔或否"
+}
