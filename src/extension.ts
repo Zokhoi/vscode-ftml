@@ -7,7 +7,7 @@ import collapsible from './css/collapsible.css';
 
 type previewInfo = {
   id: string,
-  fileUri: string,
+  fileName: string,
   viewColumn: number,
   content: string,
   styles: string
@@ -28,7 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
   function createPreviewPanel(viewColumn?: number) {
     let panelInfo = {
       id: Math.random().toString(36).substring(4),
-      fileUri: '',
+      fileName: '',
       viewColumn: viewColumn ?? vscode.ViewColumn.Active,
       content: '',
       styles: ''
@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     const panel = vscode.window.createWebviewPanel(
       'ftml.preview',
-      panelInfo.fileUri ? `Preview ${basename(panelInfo.fileUri)}` : 'Wikitext Preview',
+      panelInfo.fileName ? `Preview ${basename(panelInfo.fileName)}` : 'Wikitext Preview',
       panelInfo.viewColumn ? panelInfo.viewColumn : vscode.ViewColumn.Active,
       {
         enableScripts: true,
@@ -52,18 +52,18 @@ export function activate(context: vscode.ExtensionContext) {
     idToInfo.set(panelInfo.id, panelInfo);
     
     panel.webview.html = makeHtml(panelInfo);
-    if (!panelInfo.fileUri) {
+    if (!panelInfo.fileName) {
       let activeEditor = vscode.window.activeTextEditor;
       if (activeEditor?.document.languageId == 'ftml') {
-        panelInfo.fileUri = activeEditor.document.fileName;
+        panelInfo.fileName = activeEditor.document.fileName;
         panel.webview.postMessage({
-          fileUri: activeEditor.document.uri,
+          fileName: activeEditor.document.fileName,
           ftmlSource: activeEditor.document.getText()
         });
         panel.title = `Preview ${basename(activeEditor.document.fileName)}`;
       }
     } else {
-      panel.webview.postMessage({ftmlSource: readFileSync(panelInfo.fileUri, 'utf-8')});
+      panel.webview.postMessage({ftmlSource: readFileSync(panelInfo.fileName, 'utf-8')});
     }
 
     if (vscode.workspace.getConfiguration('ftml.preview').get('lock')) {
@@ -81,9 +81,10 @@ export function activate(context: vscode.ExtensionContext) {
       idToInfo.set(panelId, panelInfo);
     })
     let docChangeDisposable = vscode.workspace.onDidChangeTextDocument(e=>{
+      if (lockedPreviews.has(panelId)&&idToInfo.get(panelId)?.fileName!=e.document.fileName) return;
       if (e.document.languageId == 'ftml') {
         panel.webview.postMessage({
-          fileUri: e.document.uri,
+          fileName: e.document.fileName,
           ftmlSource: e.document.getText()
         });
       }
@@ -111,9 +112,9 @@ export function activate(context: vscode.ExtensionContext) {
     let tabChangeDisposable = vscode.window.onDidChangeActiveTextEditor(e=>{
       if (e?.document.languageId == 'ftml') {
         let panelInfo = idToInfo.get(panelId)!;
-        panelInfo.fileUri = e.document.fileName;
+        panelInfo.fileName = e.document.fileName;
         panel.webview.postMessage({
-          fileUri: e.document.uri,
+          fileName: e.document.fileName,
           ftmlSource: e.document.getText()
         });
         panel.title = `Preview ${basename(e.document.fileName)}`;
@@ -188,7 +189,7 @@ function makeHtml(panelInfo: previewInfo) {
     const vscode = acquireVsCodeApi();
     let state = vscode.getState() || {
       id: "${panelInfo.id}",
-      fileUri: "${escapeBacktick(panelInfo.fileUri)}",
+      fileName: "${escapeBacktick(panelInfo.fileName)}",
       viewColumn: ${panelInfo.viewColumn},
       content: \`${escapeBacktick(panelInfo.content)}\`,
       styles: \`${escapeBacktick(panelInfo.styles)}\`
@@ -217,9 +218,9 @@ function makeHtml(panelInfo: previewInfo) {
     });
   
     window.addEventListener('message', e => {
-      const { fileUri , ftmlSource } = e.data;
+      const { fileName , ftmlSource } = e.data;
       ftml.postMessage(ftmlSource);
-      state.fileUri = fileUri;
+      state.fileName = fileName;
       vscode.setState(state);
     })
     </script>
