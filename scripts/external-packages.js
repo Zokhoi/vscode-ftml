@@ -55,5 +55,6 @@ module.exports.builtins = [
 
 module.exports.default = [
   ...module.exports.builtins,
+  ...module.exports.builtins.map(v=>`node:${v}`),
   ...module.exports.external,
 ];

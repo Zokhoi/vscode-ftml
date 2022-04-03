@@ -76,6 +76,21 @@
         "command": "ftml.preview.toggleLock",
         "title": "%ftml.preview.toggleLock%",
         "category": "Ftml"
+      },
+      {
+        "command": "ftml.preview.toggleLive",
+        "title": "%ftml.preview.toggleLive%",
+        "category": "Ftml"
+      },
+      {
+        "command": "ftml.preview.toggleBackend",
+        "title": "%ftml.preview.toggleBackend%",
+        "category": "Ftml"
+      },
+      {
+        "command": "ftml.preview.refresh",
+        "title": "%ftml.preview.refresh%",
+        "category": "Ftml"
       }
     ],
     "menus": {
@@ -106,6 +121,21 @@
           "when": "ftmlPreviewFocus",
           "command": "ftml.preview.toggleLock",
           "group": "4_ftml"
+        },
+        {
+          "when": "ftmlPreviewFocus && ftmlPreviewBackend == ftml",
+          "command": "ftml.preview.toggleLive",
+          "group": "4_ftml"
+        },
+        {
+          "when": "ftmlPreviewFocus",
+          "command": "ftml.preview.toggleBackend",
+          "group": "4_ftml"
+        },
+        {
+          "when": "ftmlPreviewFocus",
+          "command": "ftml.preview.refresh",
+          "group": "4_ftml"
         }
       ]
     },
@@ -118,10 +148,15 @@
             "default": false,
             "description": "%ftml.preview.lock%"
           },
+          "ftml.preview.live": {
+            "type": "boolean",
+            "default": true,
+            "description": "%ftml.preview.live%"
+          },
           "ftml.preview.backend": {
             "type": "string",
             "default": "ftml",
-            "description": "Default backend for the preview to use (\"ftml\"/\"wikidot\")"
+            "description": "%ftml.preview.backend%"
           }
         }
       }
@@ -142,7 +177,6 @@
     "@types/vscode": "^1.65.0",
     "@types/vscode-webview": "^1.57.0",
     "esbuild": "^0.14.27",
-    "got": "^12.0.2",
     "js-yaml": "^4.1.0",
     "toml": "^3.0.0",
     "typescript": "^4.6.2",
@@ -150,6 +184,7 @@
     "vite-plugin-commonjs-externals": "^0.1.1"
   },
   "dependencies": {
-    "@wikijump/ftml-wasm": "^1.6.3"
+    "@wikijump/ftml-wasm": "^1.6.3",
+    "got": "^12.0.2"
   }
 }

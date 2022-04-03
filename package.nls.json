@@ -2,5 +2,10 @@
   "ftml.preview.open": "Start new preview tab for the current wikitext",
   "ftml.preview.openToSide": "Start new preview tab to the side for the current wikitext",
   "ftml.preview.toggleLock": "Toggle lock status of current preview tab",
-  "ftml.preview.lock": "Specifies whether to lock preview to ftml document on open"
+  "ftml.preview.toggleLive": "Toggle live status of current preview tab",
+  "ftml.preview.toggleBackend": "Toggle backend of current preview tab (ftml/wikidot)",
+  "ftml.preview.lock": "Defaults preview to lock to one ftml document or not",
+  "ftml.preview.live": "Defaults preview to be live or not (refresh-on-command), only active when using ftml backend",
+  "ftml.preview.backend": "Default backend for the preview to use (ftml/wikidot)",
+  "ftml.preview.refresh": "Refresh preview"
 }

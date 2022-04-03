@@ -33,8 +33,7 @@ zxcv [[span]]hello[[/span]]
 
 [[module listpages category="*"]]
 > %%page_name%%
-%%comments%%
-+++ yes
+comments: %%comments%%
 [[/module]]
 [[/div]]
 [[/div]]

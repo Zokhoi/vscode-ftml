@@ -8,6 +8,9 @@ This extension supports only a subset of [Wikidot text](https://www.wikidot.com/
 
 * Syntax highlighting
 * Wikitext preview
+  * configurable backend: FTML or Wikidot
+    * FTML has live preview and refresh-on-command mode
+    * Wikidot backend has refresh-on-command mode only
   * Locking preview to document
 
 ## Development

@@ -1,6 +1,11 @@
 {
   "ftml.preview.open": "為本wiki文本源碼檔開啟預覽",
   "ftml.preview.openToSide": "在本wiki文本源碼檔旁邊開啟預覽",
-  "ftml.preview.toggleLock": "鎖定或解鎖本預覽對應wiki文本源碼檔",
-  "ftml.preview.lock": "預設開啟預覽時鎖定對應wiki文本源碼檔或否"
+  "ftml.preview.toggleLock": "設定預覽是否僅對應一份wiki文本源碼檔",
+  "ftml.preview.toggleLive": "設定實時預覽與否",
+  "ftml.preview.toggleBackend": "設定預覽後端使用 ftml 或 wikidot",
+  "ftml.preview.lock": "預設開啟預覽時鎖定對應wiki文本源碼檔與否",
+  "ftml.preview.live": "預設預覽為實時預覽與否 (僅在後端為ftml時有效)",
+  "ftml.preview.backend": "預設預覽後端使用 ftml 或 wikidot",
+  "ftml.preview.refresh": "刷新預覽"
 }
