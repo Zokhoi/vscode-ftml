@@ -1,4 +1,5 @@
 import got from "got";
+import { join } from "path";
 
 async function getWikidotPreview({source, pageName, wikiSite}: {
   source: string;
@@ -7,7 +8,7 @@ async function getWikidotPreview({source, pageName, wikiSite}: {
 }) {
   if (!wikiSite.startsWith("http")) { wikiSite = `http://${wikiSite}.wikidot.com` }
   const wikidotToken7 = Math.random().toString(36).substring(4);
-  let res = await got.post(`${wikiSite}/ajax-module-connector.php`, {
+  let res = await got.post(join(wikiSite, "ajax-module-connector.php"), {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0',
       Referer: 'vscode-ftml',

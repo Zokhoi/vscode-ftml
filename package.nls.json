@@ -7,5 +7,6 @@
   "ftml.preview.lock": "Defaults preview to lock to one ftml document or not",
   "ftml.preview.live": "Defaults preview to be live or not (refresh-on-command), only active when using ftml backend",
   "ftml.preview.backend": "Default backend for the preview to use (ftml/wikidot)",
+  "ftml.preview.wikidot": "Default site for wikidot preview to base on",
   "ftml.preview.refresh": "Refresh preview"
 }

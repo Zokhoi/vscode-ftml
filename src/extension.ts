@@ -21,7 +21,7 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
     case "wikidot":
       getWikidotPreview({
         source,
-        wikiSite: "scp-wiki-cn"
+        wikiSite: vscode.workspace.getConfiguration('ftml.preview').get('wikidot')
       }).then(res=>{
         panel.webview.postMessage({
           type: "content",

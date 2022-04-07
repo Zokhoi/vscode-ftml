@@ -7,5 +7,6 @@
   "ftml.preview.lock": "预设开启预览时锁定对应wiki文本源码档与否",
   "ftml.preview.live": "预设预览为实时预览与否 (仅在后端为ftml时有效)",
   "ftml.preview.backend": "预设预览后端使用 ftml 或 wikidot",
+  "ftml.preview.wikidot": "预设 wikidot 预览后端使用网站",
   "ftml.preview.refresh": "刷新预览"
 }

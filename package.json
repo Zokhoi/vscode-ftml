@@ -157,6 +157,11 @@
             "type": "string",
             "default": "ftml",
             "description": "%ftml.preview.backend%"
+          },
+          "ftml.preview.wikidot": {
+            "type": "string",
+            "default": "https://scp-wiki.wikidot.com",
+            "description": "%ftml.preview.wikidot%"
           }
         }
       }
