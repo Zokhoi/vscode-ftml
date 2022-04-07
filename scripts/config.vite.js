@@ -41,5 +41,6 @@ module.exports = {
       fileName: ()=>'extension.js',
     },
     emptyOutDir: true,
+    sourcemap: true,
   },
 };
