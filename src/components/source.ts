@@ -1,16 +1,6 @@
 import * as vscode from 'vscode';
 import fm from 'front-matter';
 
-export type previewInfo = {
-  id: string,
-  fileName: string,
-  viewColumn: number,
-  content: string,
-  styles: string,
-  backend: string,
-  live: boolean,
-}
-
 export type pageMetadata = {
   site: string,
   name: string,
