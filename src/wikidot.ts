@@ -24,7 +24,7 @@ async function getWikidotPreview({source, pageName, wikiSite}: {
   source: string;
   pageName?: string;
   wikiSite: string;
-}) {
+}): Promise<string> {
   if (!wikiSite.startsWith("http")) { wikiSite = `http://${wikiSite}.wikidot.com` }
   const wikidotToken7 = Math.random().toString(36).substring(4);
   let res: WikidotResponse = await got.post(join(wikiSite, "ajax-module-connector.php"), {
