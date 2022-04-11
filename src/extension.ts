@@ -1,27 +1,23 @@
 import * as vscode from 'vscode';
 import { basename } from 'path';
-import ftmlWorker from './ftml.web.worker.js?bundled-worker&dataurl';
 import { readFileSync } from 'fs';
+import ftmlWorker from './ftml.web.worker.js?bundled-worker&dataurl';
 import css from './css/wikidot.css';
 import collapsible from './css/collapsible.css';
 import getWikidotPreview from './wikidot';
-
-type previewInfo = {
-  id: string,
-  fileName: string,
-  viewColumn: number,
-  content: string,
-  styles: string,
-  backend: string,
-  live: boolean,
-}
+import { 
+  previewInfo,
+  parseMetadata
+} from "./utils";
 
 function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: string, backend: string) {
+  let meta = parseMetadata(source);
   switch (backend.toLowerCase()) {
     case "wikidot":
       getWikidotPreview({
-        source,
-        wikiSite: vscode.workspace.getConfiguration('ftml.preview').get('wikidot')
+        source: meta.source,
+        wikiSite: meta.site,
+        pageName: meta.name,
       }).then(res=>{
         panel.webview.postMessage({
           type: "content",
@@ -29,7 +25,9 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
           fileName,
           wdHtml: res,
         });
-      }).catch(e=>console.log(e))
+      }).catch(e=>{
+        vscode.window.showErrorMessage(`${e.message}\n\nSite: ${e.site}\n\nFile: ${basename(fileName)}`);
+      })
       break;
     case "ftml":
     default:
@@ -37,7 +35,7 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
         type: "content",
         backend,
         fileName,
-        ftmlSource: source,
+        ftmlSource: meta.source,
       });
       break;
   }

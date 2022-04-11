@@ -2,6 +2,7 @@ $schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlangua
 name: FTML/Wikidot Code
 patterns:
   - include: '#comment'
+  - include: '#yaml-frontmatter'
   - include: '#css-block'
   - include: '#css-module-block'
   - include: '#html-block'
@@ -129,6 +130,19 @@ repository:
     contentName: meta.embedded.block.css
     patterns:
       - include: source.css
+  yaml-frontmatter:
+    name: markup.inserted.text.yaml
+    begin: \A^(\-{3})
+    beginCaptures:
+      '1':
+        name: punctuation.definition.yfm.begin.ftml
+    end: (\-{3})\s*$
+    endCaptures:
+      '1':
+        name: punctuation.definition.yfm.end.ftml
+    contentName: meta.embedded.block.yaml
+    patterns:
+      - include: source.yaml
   css-module-block:
     name: markup.inserted.text.css
     begin: (?i)(\[\[)\s*(module css)\s*(\]\])
@@ -573,7 +587,7 @@ repository:
   link-triple:
     name: markup.underline.link.ftml
     match: >-
-      (\[\[\[)\s*(\*)?\s*((?:(?!\]\]\])[^\*\n\|])+)\s*(?:(\|)\s*((?:(?!\]\]\]).)+)?)?\s*(?<=[^\]])(\]\]\])
+      ((\[\[\[)\s*(?:\*)?)\s*((?:(?!\]\]\])[^\*\n\|])+)\s*(?:(\|)\s*((?:(?!\]\]\]).)+)?)?\s*(?<=[^\]])(\]\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -590,7 +604,7 @@ repository:
   link-single:
     name: markup.underline.link.ftml
     match: >-
-      (\[)\s*(\*)?\s*((?:\/(?!\/)|\#|(?:[^\:\/]+\:)?\/\/)[^\n\s\|]+)\s*((?:(?!\]).)+)?\s*(?<=[^\]])(\])
+      ((\[)\s*(?:\*)?)\s*((?:\/(?!\/)|\#|(?:[^\:\/]+\:)?\/\/)[^\n\s\|]+)\s*((?:(?!\]).)+)?\s*(?<=[^\]])(\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -616,16 +630,16 @@ repository:
         name: punctuation.definition.tag.ftml
   table:
     name: markup.table.ftml
-    begin: ^(?:\|\|)+\~?
+    begin: ^(\|\|)+\~?
     beginCaptures:
       '1':
         name: punctuation.definition.tag.ftml
-    end: (?:\|\|)$
+    end: (\|\|)\s*$
     endCaptures:
       '1':
         name: punctuation.definition.tag.ftml
     patterns:
-      - match: (?:\|\|)+\~?
+      - match: (\|\|)+\~?
         captures:
           '1':
             name: punctuation.definition.tag.ftml
@@ -633,6 +647,7 @@ repository:
         captures:
           '1':
             name: punctuation.definition.tag.ftml
+      - include: "$self"
   page-variables:
     match: >-
       \%\%((crea|upda|commen)ted_(at|by|by_(unix|id|linked))|(parent_)?((full)?name|category|titl(e|e_linked))|link|content(\{\d+\})?|preview(\(\d+\))|summary|first_paragraph|_?tags(_linked(\|.+)?)?|form_(data|raw|label|hint)(\{.+\})?|children|comments|size|rating(_votes|_percent)|revisions|index|total|limit|total_or_limit|site_(title|name|domain))\%\%
