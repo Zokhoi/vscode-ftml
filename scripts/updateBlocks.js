@@ -8,8 +8,8 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
   const yaml = require('js-yaml');
   const fs = require('fs');
   const path = require('path');
-  const got = (await import('got')).default;
-  let blocks = toml.parse(await got.get(blocktomllink).text());
+  const fetch = require('cross-fetch');
+  let blocks = toml.parse(await (await fetch(blocktomllink)).text());
   let output = {
     blockStandalone: [],
     blockStandaloneMap: [],

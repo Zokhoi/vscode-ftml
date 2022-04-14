@@ -8,5 +8,8 @@
   "ftml.preview.live": "预设预览为实时预览与否 (仅在后端为ftml时有效)",
   "ftml.preview.backend": "预设预览后端使用 ftml 或 wikidot",
   "ftml.preview.wikidot": "预设 wikidot 预览后端使用网站",
-  "ftml.preview.refresh": "刷新预览"
+  "ftml.preview.refresh": "刷新预览",
+  "ftml.remote.wikidot.login": "登入 Wikidot 账户",
+  "ftml.remote.wikidot.fetch": "從 Wikidot 抓取本页面wiki文本",
+  "ftml.remote.wikidot.push": "将本wiki文本上传至 Wikidot"
 }

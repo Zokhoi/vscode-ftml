@@ -1,15 +1,38 @@
 import * as vscode from 'vscode';
-import { basename } from 'path';
 import {
   ctx,
   idToInfo,
   idToTabChangeListener,
   openPreviews,
   lockedPreviews,
-  setActivePreview
+  setActivePreview,
+  basename,
 } from "../global";
 import { serveBackend } from "./source";
 import { genTitle } from "./preview";
+
+
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called once only every N milliseconds.
+// If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce(func: (...args: any[])=>any, wait: number, immediate?: boolean): (...args: any[])=>any {
+	let timeout: NodeJS.Timeout | null;
+  let currentArgs: any[];
+	return function(...args) {
+		let context = this;
+		let later = function() {
+			timeout = null;
+			if (!immediate) return func.apply(context, currentArgs);
+		};
+		let callNow = immediate && !timeout;
+		if (!timeout) timeout = setTimeout(later, wait);
+    currentArgs = args;
+		if (callNow) return func.apply(context, currentArgs);
+	};
+};
+
+const serveBackendDebounced = debounce(serveBackend, 250);
 
 function setListeners(panel: vscode.WebviewPanel, panelId: string) {
   let viewChangeDisposable = panel.onDidChangeViewState(_=>{
@@ -22,10 +45,10 @@ function setListeners(panel: vscode.WebviewPanel, panelId: string) {
   })
   let docChangeDisposable = vscode.workspace.onDidChangeTextDocument(e=>{
     let panelInfo = idToInfo.get(panelId)!;
-    if (lockedPreviews.has(panelId)&&panelInfo.fileName!=e.document.fileName) return;
+    if (lockedPreviews.has(panelId) && panelInfo.fileName!=e.document.fileName) return;
     if (e.document.languageId == 'ftml') {
       if (panelInfo.backend=='ftml' && panelInfo.live) {
-        serveBackend(panel,
+        serveBackendDebounced(panel,
           e.document.fileName,
           e.document.getText(),
           panelInfo.backend);
@@ -59,7 +82,7 @@ function setTabChangeListener(panel: vscode.WebviewPanel, panelId: string) {
       let panelInfo = idToInfo.get(panelId)!;
       panelInfo.fileName = e.document.fileName;
       if (panelInfo.backend=='ftml' && panelInfo.live) {
-        serveBackend(panel,
+        serveBackendDebounced(panel,
           panelInfo.fileName,
           e.document.getText(),
           panelInfo.backend);

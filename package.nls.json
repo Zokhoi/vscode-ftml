@@ -8,5 +8,8 @@
   "ftml.preview.live": "Defaults preview to be live or not (refresh-on-command), only active when using ftml backend",
   "ftml.preview.backend": "Default backend for the preview to use (ftml/wikidot)",
   "ftml.preview.wikidot": "Default site for wikidot preview to base on",
-  "ftml.preview.refresh": "Refresh preview"
+  "ftml.preview.refresh": "Refresh preview",
+  "ftml.remote.wikidot.login": "Login to Wikidot",
+  "ftml.remote.wikidot.fetch": "Fetch current page from Wikidot",
+  "ftml.remote.wikidot.push": "Push current page to Wikidot"
 }

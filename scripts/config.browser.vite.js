@@ -20,7 +20,7 @@ module.exports = {
   plugins: [
     commonjsExternals({ externals: require('./external-packages').default }),
     bundledWorker(),
-    crossPlatform("node"),
+    crossPlatform("browser"),
   ],
   build: {
     target: 'es2020',
@@ -35,7 +35,7 @@ module.exports = {
     lib: {
       entry: resolve(__dirname, '../src/extension'),
       formats: ['cjs'],
-      fileName: ()=>'extension.js',
+      fileName: ()=>'extension.browser.js',
     },
     emptyOutDir: true,
     sourcemap: true,

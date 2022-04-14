@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { basename } from 'path';
+import yaml from "js-yaml";
 import {
   setContext,
   activePreview,
@@ -9,6 +9,7 @@ import {
   setLockedPreviews,
   lockedPreviews,
   initInfo,
+  basename,
 } from "./global";
 import {
   genHtml,
@@ -21,7 +22,9 @@ import {
   setTabChangeListener,
   unsetTabChangeListener,
 } from "./components/listeners";
-import { serveBackend } from "./components/source";
+import { parseMetadata, serveBackend } from "./components/source";
+import { Page } from './wikidot';
+import WikidotAuthProvider from './WikidotAuthProvider';
 
 export function activate(context: vscode.ExtensionContext) {
   setContext(context);
@@ -118,5 +121,93 @@ export function activate(context: vscode.ExtensionContext) {
         }
       }
     }),
+
+    vscode.commands.registerCommand('ftml.remote.wikidot.login', () => {
+      WikidotAuthProvider.createSession().catch(e=>{
+        if (e instanceof Error) {
+          vscode.window.showErrorMessage(e.toString());
+        }
+      });
+    }),
+
+    vscode.commands.registerCommand('ftml.remote.wikidot.fetch', () => {
+      let activeEditor = vscode.window.activeTextEditor;
+      if (activeEditor?.document.languageId == "ftml") {
+        vscode.authentication.getSession('wikidot', [], {
+          clearSessionPreference: true,
+          createIfNone: true,
+        }).then(async sess=>{
+          let data = parseMetadata(activeEditor!.document.getText());
+          if (!data.page) data.page = basename(activeEditor!.document.fileName).split('.')[0];
+          data = await Page.getMetadata({
+            wikiSite: data.site,
+            wikiPage:data.page,
+            session: sess.accessToken});
+          let source = await Page.getSource(data.site, data.page);
+          activeEditor!.edit(builder=>{
+            builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
+                .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
+            builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(data)}---\n${source}`);
+              
+          })
+        }).catch(e=>{
+          if (e instanceof Error) {
+            vscode.window.showErrorMessage(e.toString());
+          }
+        });
+      }
+    }),
+
+    vscode.commands.registerCommand('ftml.remote.wikidot.push', () => {
+      let activeEditor = vscode.window.activeTextEditor;
+      if (activeEditor?.document.languageId == "ftml") {
+        vscode.authentication.getSession('wikidot', [], {
+          clearSessionPreference: true,
+          createIfNone: true
+        }).then(async sess=>{
+          let data = parseMetadata(activeEditor!.document.getText())
+          Page.edit({
+            wikiSite: data.site,
+            wikiPage: data.page,
+            session: sess.accessToken, }, data).then(()=>{
+              vscode.window.showInformationMessage(`Page successfully pushed to ${data.page} on ${data.site}.`)
+            }).catch(async e=>{
+              if (e.src.status == "not_ok") {
+                // Wikidot now dies when new page is created with tags in its options
+                // Redo edit with seperate processing of page creation and tags
+                let tags = data.tags;
+                delete data.tags;
+                await new Promise(res=>setTimeout(res, 3000));
+                Page.edit({
+                  wikiSite: data.site,
+                  wikiPage: data.page,
+                  session: sess.accessToken, }, data);
+                await new Promise(res=>setTimeout(res, 3000));
+                Page.edit({
+                  wikiSite: data.site,
+                  wikiPage: data.page,
+                  session: sess.accessToken, }, {
+                  ...data,
+                  tags
+                }).then(()=>{
+                  vscode.window.showInformationMessage(`Page successfully pushed to ${data.page} on ${data.site}.`)
+                });
+              } else {
+                vscode.window.showErrorMessage(`${e.src.status}: ${e.message}`);
+              }
+            });
+        }).catch(e=>{
+          if (e instanceof Error) {
+            vscode.window.showErrorMessage(e.toString());
+          }
+        });
+      }
+    }),
+
+    vscode.authentication.registerAuthenticationProvider(
+      'wikidot',
+      'Wikidot',
+      WikidotAuthProvider,
+      { supportsMultipleAccounts: true }),
   );
 }

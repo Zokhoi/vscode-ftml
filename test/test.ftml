@@ -1,9 +1,9 @@
 ---
 title: Test
 parent: main
-tags: test1 test2
+tags: test1 _test2
 site: scptestwiki
-name: vscode-ftml-test
+page: vscode-ftml-test
 ---
 [[html]]
 <body>

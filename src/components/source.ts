@@ -1,22 +1,11 @@
 import * as vscode from 'vscode';
 import fm from 'front-matter';
-import { basename } from 'path';
-import getWikidotPreview from '../wikidot';
+import { PageData, getPreview } from "../wikidot";
 
-type pageMetadata = {
-  site: string,
-  name: string,
-  title?: string,
-  parent?: string,
-  tags?: string[] | string,
-  comments?: string,
-  source: string,
-}
-
-function parseMetadata(source: string): pageMetadata {
-  let meta: pageMetadata = {
+function parseMetadata(source: string): PageData {
+  let meta: PageData = {
     site: `${vscode.workspace.getConfiguration('ftml.preview').get('wikidot')}`,
-    name: '',
+    page: '',
     source: '',
   }
   if (fm.test(source)) {
@@ -31,10 +20,10 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
   let meta = parseMetadata(source);
   switch (backend.toLowerCase()) {
     case "wikidot":
-      getWikidotPreview({
+      getPreview({
         source: meta.source,
         wikiSite: meta.site,
-        pageName: meta.name,
+        wikiPage: meta.page,
       }).then(res=>{
         panel.webview.postMessage({
           type: "content",
@@ -43,7 +32,7 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
           wdHtml: res,
         });
       }).catch(e=>{
-        vscode.window.showErrorMessage(`${e.message}\n\nSite: ${e.site}\n\nFile: ${basename(fileName)}`);
+        vscode.window.showErrorMessage(`Wikidot error: ${e.message}\n\nSite: ${e.site}\n\nFile: ${fileName.split("/").pop()}`);
       })
       break;
     case "ftml":
@@ -59,7 +48,6 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
 }
 
 export {
-  pageMetadata,
   parseMetadata,
   serveBackend,
 };

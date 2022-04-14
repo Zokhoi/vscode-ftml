@@ -647,7 +647,7 @@ repository:
         captures:
           '1':
             name: punctuation.definition.tag.ftml
-      - include: "$self"
+      - include: $self
   page-variables:
     match: >-
       \%\%((crea|upda|commen)ted_(at|by|by_(unix|id|linked))|(parent_)?((full)?name|category|titl(e|e_linked))|link|content(\{\d+\})?|preview(\(\d+\))|summary|first_paragraph|_?tags(_linked(\|.+)?)?|form_(data|raw|label|hint)(\{.+\})?|children|comments|size|rating(_votes|_percent)|revisions|index|total|limit|total_or_limit|site_(title|name|domain))\%\%

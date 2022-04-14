@@ -30,10 +30,13 @@ let idToPreview: Map<string, vscode.WebviewPanel>;
 let idToTabChangeListener: Map<string, vscode.Disposable>;
 let lockedPreviews: Set<string>;
 
+const NOOP = () => {};
+const basename = (path: string) => path.split(/[\/\\]/).pop()!;
+
 export {
-  initInfo,
   ctx,
   setContext,
+  initInfo,
   activePreview,
   setActivePreview,
   lockedPreviews,
@@ -42,4 +45,6 @@ export {
   idToInfo,
   idToPreview,
   idToTabChangeListener,
+  NOOP,
+  basename,
 };

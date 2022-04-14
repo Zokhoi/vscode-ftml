@@ -23,9 +23,15 @@
     "onCommand:ftml.preview.open",
     "onCommand:ftml.preview.openToSide",
     "onCommand:ftml.preview.toggleLock",
-    "onCommand:ftml.preview.refresh"
+    "onCommand:ftml.preview.toggleLive",
+    "onCommand:ftml.preview.toggleBackend",
+    "onCommand:ftml.preview.refresh",
+    "onCommand:ftml.remote.wikidot.login",
+    "onCommand:ftml.remote.wikidot.fetch",
+    "onCommand:ftml.remote.wikidot.push"
   ],
-  "main": "./dist/extension",
+  "main": "./dist/extension.js",
+  "browser": "./dist/extension.browser.js",
   "contributes": {
     "languages": [
       {
@@ -92,6 +98,21 @@
         "command": "ftml.preview.refresh",
         "title": "%ftml.preview.refresh%",
         "category": "Ftml"
+      },
+      {
+        "command": "ftml.remote.wikidot.login",
+        "title": "%ftml.remote.wikidot.login%",
+        "category": "Ftml"
+      },
+      {
+        "command": "ftml.remote.wikidot.fetch",
+        "title": "%ftml.remote.wikidot.fetch%",
+        "category": "Ftml"
+      },
+      {
+        "command": "ftml.remote.wikidot.push",
+        "title": "%ftml.remote.wikidot.push%",
+        "category": "Ftml"
       }
     ],
     "menus": {
@@ -99,12 +120,22 @@
         {
           "when": "resourceLangId == ftml",
           "command": "ftml.preview.open",
-          "group": "3_preview"
+          "group": "4_ftml"
         },
         {
           "when": "resourceLangId == ftml",
           "command": "ftml.preview.openToSide",
-          "group": "3_preview"
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.remote.wikidot.fetch",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.remote.wikidot.push",
+          "group": "4_ftml"
         }
       ],
       "editor/title": [
@@ -116,6 +147,16 @@
         {
           "when": "resourceLangId == ftml",
           "command": "ftml.preview.openToSide",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.remote.wikidot.fetch",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml",
+          "command": "ftml.remote.wikidot.push",
           "group": "4_ftml"
         },
         {
@@ -191,7 +232,8 @@
   },
   "dependencies": {
     "@wikijump/ftml-wasm": "^1.6.3",
-    "front-matter": "^4.0.2",
-    "got": "^12.0.2"
+    "cheerio": "^1.0.0-rc.10",
+    "cross-fetch": "^3.1.5",
+    "front-matter": "^4.0.2"
   }
 }

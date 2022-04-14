@@ -1,6 +1,4 @@
 import * as vscode from "vscode";
-import { basename } from 'path';
-import { readFileSync } from 'fs';
 import ftmlWorker from './ftml.web.worker.js?bundled-worker&dataurl';
 import css from './css/wikidot.css';
 import collapsible from './css/collapsible.css';
@@ -9,9 +7,10 @@ import {
   idToPreview,
   openPreviews,
   lockedPreviews,
+  basename,
 } from "../global";
 import { serveBackend } from "./source";
-import { setListeners, } from "./listeners";
+import { setListeners } from "./listeners";
 
 type previewInfo = {
   id: string,
@@ -149,22 +148,19 @@ function createPreviewPanel(viewColumn?: number) {
   idToInfo.set(panelInfo.id, panelInfo);
   
   panel.webview.html = genHtml(panelInfo);
-  if (!panelInfo.fileName) {
-    let activeEditor = vscode.window.activeTextEditor;
-    if (activeEditor?.document.languageId == 'ftml') {
-      panelInfo.fileName = activeEditor.document.fileName;
-      serveBackend(panel,
-        activeEditor.document.fileName,
-        activeEditor.document.getText(),
-        panelInfo.backend);
-      panel.title = genTitle(
-        basename(activeEditor.document.fileName),
-        panelInfo.backend,
-        panelInfo.live,
-        locked);
-    }
-  } else {
-    panel.webview.postMessage({ftmlSource: readFileSync(panelInfo.fileName, 'utf-8')});
+  
+  let activeEditor = vscode.window.activeTextEditor;
+  if (activeEditor?.document.languageId == 'ftml') {
+    panelInfo.fileName = activeEditor.document.fileName;
+    serveBackend(panel,
+      activeEditor.document.fileName,
+      activeEditor.document.getText(),
+      panelInfo.backend);
+    panel.title = genTitle(
+      basename(activeEditor.document.fileName),
+      panelInfo.backend,
+      panelInfo.live,
+      locked);
   }
 
   if (locked) {
