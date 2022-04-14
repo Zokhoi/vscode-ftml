@@ -23,7 +23,7 @@ import {
   unsetTabChangeListener,
 } from "./components/listeners";
 import { parseMetadata, serveBackend } from "./components/source";
-import { Page } from './wikidot';
+import * as wikidot from './wikidot';
 import WikidotAuthProvider from './WikidotAuthProvider';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -136,19 +136,24 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.authentication.getSession('wikidot', [], {
           clearSessionPreference: true,
           createIfNone: true,
-        }).then(async sess=>{
+        }).then(sess=>{
           let data = parseMetadata(activeEditor!.document.getText());
           if (!data.page) data.page = basename(activeEditor!.document.fileName).split('.')[0];
-          data = await Page.getMetadata({
-            wikiSite: data.site,
-            wikiPage:data.page,
-            session: sess.accessToken});
-          let source = await Page.getSource(data.site, data.page);
-          activeEditor!.edit(builder=>{
-            builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
-                .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
-            builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(data)}---\n${source}`);
-              
+          vscode.window.withProgress({
+            cancellable: false,
+            location: vscode.ProgressLocation.Notification
+          }, async (prog)=>{
+            prog.report({message: `Fetching page from ${data.page} on ${data.site}...`})
+            data = await wikidot.Page.getMetadata({
+              wikiSite: data.site,
+              wikiPage: data.page,
+              session: sess.accessToken});
+            let source = await wikidot.Page.getSource(data.site, data.page);
+            activeEditor!.edit(builder=>{
+              builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
+                  .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
+              builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(data)}---\n${source}`);
+            })
           })
         }).catch(e=>{
           if (e instanceof Error) {
@@ -166,36 +171,44 @@ export function activate(context: vscode.ExtensionContext) {
           createIfNone: true
         }).then(async sess=>{
           let data = parseMetadata(activeEditor!.document.getText())
-          Page.edit({
-            wikiSite: data.site,
-            wikiPage: data.page,
-            session: sess.accessToken, }, data).then(()=>{
-              vscode.window.showInformationMessage(`Page successfully pushed to ${data.page} on ${data.site}.`)
-            }).catch(async e=>{
-              if (e.src.status == "not_ok") {
+          vscode.window.withProgress({
+            cancellable: false,
+            location: vscode.ProgressLocation.Notification
+          }, async (prog)=>{
+            prog.report({message: `Pushing page to ${data.page} on ${data.site}...`})
+            try {
+              await wikidot.Page.edit({
+                wikiSite: data.site,
+                wikiPage: data.page,
+                session: sess.accessToken, }, data)
+            } catch (e) {
+              if (e.src?.status == "not_ok") {
                 // Wikidot now dies when new page is created with tags in its options
                 // Redo edit with seperate processing of page creation and tags
                 let tags = data.tags;
                 delete data.tags;
                 await new Promise(res=>setTimeout(res, 3000));
-                Page.edit({
+                await wikidot.Page.edit({
                   wikiSite: data.site,
                   wikiPage: data.page,
                   session: sess.accessToken, }, data);
                 await new Promise(res=>setTimeout(res, 3000));
-                Page.edit({
+                await wikidot.Page.edit({
                   wikiSite: data.site,
                   wikiPage: data.page,
                   session: sess.accessToken, }, {
                   ...data,
                   tags
-                }).then(()=>{
-                  vscode.window.showInformationMessage(`Page successfully pushed to ${data.page} on ${data.site}.`)
-                });
+                })
               } else {
-                vscode.window.showErrorMessage(`${e.src.status}: ${e.message}`);
+                if (typeof e.src?.status == 'number') {
+                  if (e.src.status != 500) {
+                    vscode.window.showErrorMessage(`Error code ${e.src.status}`)
+                  }
+                } else vscode.window.showErrorMessage(`${e.src?.status}: ${e.message}`);
               }
-            });
+            }
+          })
         }).catch(e=>{
           if (e instanceof Error) {
             vscode.window.showErrorMessage(e.toString());

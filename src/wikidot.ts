@@ -5,7 +5,7 @@ const urljoin = (...parts: string[]) => {
   let begin = parts.shift()?.replace(/\/+$/, '');
   let end = parts.pop()?.replace(/^\/+/, '');
   parts = parts.map(v=>v.replace(/(^\/+)|(\/+$)/, '')).filter(v=>!!v);
-  return begin + '/' + parts.join('/') + '/' + end;
+  return parts.length ? begin + '/' + parts.join('/') + '/' + end : begin + '/' + end;
 }
 
 interface PageMetadata {
@@ -65,7 +65,7 @@ async function Ajax(info: {wikiSite: string, session?: string}, params: any): Pr
   }, params);
   let body = new URLSearchParams();
   for (const key in params) { body.append(key, params[key]) }
-  let res: Response = await (await fetch(urljoin(info.wikiSite, "ajax-module-connector.php"), {
+  let rawres = await fetch(urljoin(info.wikiSite, "ajax-module-connector.php"), {
     headers: {
       'User-Agent': 'vscode-ftml/0.0.1',
       Referer: 'vscode-ftml',
@@ -73,7 +73,9 @@ async function Ajax(info: {wikiSite: string, session?: string}, params: any): Pr
     },
     method: "POST",
     body,
-  })).json();
+  });
+  if (!rawres.ok) throw new WikidotAjaxError(rawres, info.wikiSite);
+  let res: Response = await (rawres).json();
   if (res.status != "ok") throw new WikidotAjaxError(res, info.wikiSite);
   return res;
 }
@@ -170,8 +172,7 @@ async function getPreview({source, wikiPage, wikiSite}: {
 namespace Page {
   export async function getHtml(info: {wikiSite: string, wikiPage: string, session?: string}) {
     if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
-    info.wikiPage = `${info.wikiPage}/norender/true`;
-    return await (await fetch(urljoin(info.wikiSite, info.wikiPage), {
+    return await (await fetch(urljoin(info.wikiSite, info.wikiPage, '/norender/true'), {
       headers: {
         'User-Agent': 'vscode-ftml/0.0.1',
         Referer: 'vscode-ftml',

@@ -7,11 +7,18 @@ This extension supports only a subset of [Wikidot text](https://www.wikidot.com/
 ## Features
 
 * Syntax highlighting
-* Wikitext preview
-  * configurable backend: FTML or Wikidot
-    * FTML has live preview and refresh-on-command mode
-    * Wikidot backend has refresh-on-command mode only
-  * Locking preview to document
+  * applicable to file extensions `.ftml`, `.wd`, `.wikidot`, `.wj`, `.wikijump`
+* Wikitext Live preview
+
+![vscode-ftml-live-preview](./docs/vscode-ftml-live-preview.gif)
+
+* Retreiving Wikidot page wikitext source and metadata
+
+![vscode-ftml-fetch](./docs/vscode-ftml-fetch.gif)
+
+* Pushing local wikitext files to Wikidot
+
+![vscode-ftml-push](./docs/vscode-ftml-push.gif)
 
 ## Development
 

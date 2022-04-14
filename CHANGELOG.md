@@ -1,9 +1,5 @@
 # Change Log
 
-## TODO
-
-- Enable usage of extension on vscode for web
-
 ## Unreleased
 
 - Added Wikidot syncing
