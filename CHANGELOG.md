@@ -1,8 +1,8 @@
 # Change Log
 
-## Unreleased
+## 0.0.2: Pre-Alpha 2
 
-- Added Wikidot syncing
+- Added Wikidot syncing features
 
 ## 0.0.1: Pre-Alpha 1
 

@@ -3,7 +3,7 @@
   "publisher": "zokhoi",
   "displayName": "FTML/Wikidot Workshop",
   "description": "VSCode extension for support of FTML",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.65.0"
   },
