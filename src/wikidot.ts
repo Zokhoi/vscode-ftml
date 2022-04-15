@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import fetch from "./cross-fetch.js?cross";
+import fetch from "./cross-fetch?cross";
 import { load } from "cheerio";
 const urljoin = (...parts: string[]) => {
   let begin = parts.shift()?.replace(/\/+$/, '');

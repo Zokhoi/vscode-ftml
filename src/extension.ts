@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 import {
   setContext,
   activePreview,
@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.window.registerWebviewPanelSerializer('ftml.preview', {
-      deserializeWebviewPanel(webviewEditor: vscode.WebviewPanel, state: previewInfo) {
+      async deserializeWebviewPanel(webviewEditor: vscode.WebviewPanel, state: previewInfo) {
         openPreviews.add(state.id);
         idToPreview.set(state.id, webviewEditor);
         idToInfo.set(state.id, state);
@@ -138,7 +138,7 @@ export function activate(context: vscode.ExtensionContext) {
           clearSessionPreference: true,
           createIfNone: true,
         }).then(sess=>{
-          let data = parseMetadata(activeEditor!.document.getText());
+          let data: wikidot.PageMetadata = parseMetadata(activeEditor!.document.getText());
           if (!data.page) data.page = basename(activeEditor!.document.fileName).split('.')[0];
           vscode.window.withProgress({
             cancellable: false,
