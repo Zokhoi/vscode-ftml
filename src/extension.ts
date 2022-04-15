@@ -30,6 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
   setContext(context);
   initInfo();
   setLockedPreviews(context.workspaceState.get('ftml.lockedPreviews'));
+  let WdAuthProvider = new WikidotAuthProvider(context);
 
   context.subscriptions.push(
     vscode.window.registerWebviewPanelSerializer('ftml.preview', {
@@ -123,7 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('ftml.remote.wikidot.login', () => {
-      WikidotAuthProvider.createSession().catch(e=>{
+      WdAuthProvider.createSession().catch(e=>{
         if (e instanceof Error) {
           vscode.window.showErrorMessage(e.toString());
         }
@@ -220,7 +221,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.authentication.registerAuthenticationProvider(
       'wikidot',
       'Wikidot',
-      WikidotAuthProvider,
+      WdAuthProvider,
       { supportsMultipleAccounts: true }),
   );
 }

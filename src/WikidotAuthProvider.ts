@@ -15,9 +15,14 @@ interface WikidotSession extends AuthenticationSession {
  */
 class WikidotAuthProvider implements AuthenticationProvider {
 	private sessions = new Map<string, WikidotSession>();
+	private context: vscode.ExtensionContext;
 	onDidChangeSessions = () => { return { dispose() { } }; };
 
-  constructor() {};
+  constructor(context: vscode.ExtensionContext) {
+		this.context = context;
+		this.restoreSessions();
+	};
+
 	async getSessions(scopes?: readonly string[]): Promise<WikidotSession[]> {
 		let sessionArray = [...this.sessions.values()];
 		for (let i = 0; i < sessionArray.length; i++) {
@@ -40,6 +45,7 @@ class WikidotAuthProvider implements AuthenticationProvider {
 			return [...this.sessions.values()];
 		} else return [this.sessions.get(scopes[0])!];
 	}
+
 	async createSession(scope?: readonly string[], username?: string): Promise<WikidotSession> {
 		let cancel = "Login dialog cancelled";
 		let retry = 0;
@@ -82,14 +88,28 @@ class WikidotAuthProvider implements AuthenticationProvider {
       expireDate: sessinfo!.session_expire_date,
 		};
 		this.sessions.set(`${user.id}`, session);
+		await this.storeSessions();
 		return session;
 	}
 
 	async removeSession(userId: string): Promise<void> {
 		this.sessions.delete(userId);
+		await this.storeSessions();
+	}
+
+	async restoreSessions(): Promise<void> {
+		let stored = await this.context.secrets.get("wikidot.auth") ?? "[]";
+		let sessions: WikidotSession[] = JSON.parse(stored);
+		for (let i = 0; i < sessions.length; i++) {
+			sessions[i].expireDate = new Date(sessions[i].expireDate);
+			this.sessions.set(sessions[i].id, sessions[i]);
+		}
+	}
+
+	async storeSessions(): Promise<void> {
+		let sessionArray = [...this.sessions.values()];
+		return await this.context.secrets.store("wikidot.auth", JSON.stringify(sessionArray))
 	}
 }
 
-let Provider = new WikidotAuthProvider();
-
-export default Provider;
+export default WikidotAuthProvider;

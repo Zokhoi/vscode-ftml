@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+
+- Fixed Wikidot login persistence between vscode sessions
+
 ## 0.0.2: Pre-Alpha 2
 
 - Added Wikidot syncing features
