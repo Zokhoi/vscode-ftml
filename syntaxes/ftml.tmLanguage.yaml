@@ -132,11 +132,11 @@ repository:
       - include: source.css
   yaml-frontmatter:
     name: markup.inserted.text.yaml
-    begin: \A^(\-{3})
+    begin: \A^(\-{3})$
     beginCaptures:
       '1':
         name: punctuation.definition.yfm.begin.ftml
-    end: (\-{3})\s*$
+    end: ^(\-{3})$
     endCaptures:
       '1':
         name: punctuation.definition.yfm.end.ftml
