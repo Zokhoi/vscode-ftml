@@ -1,6 +1,4 @@
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-}
+const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase());
 !(async ()=>{
   const blocktomllink = 'https://raw.githubusercontent.com/scpwiki/wikijump/develop/ftml/conf/blocks.toml';
@@ -21,6 +19,15 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
     blockValueMap: [],
   }
   for (const block in blocks) {
+    if ([
+      // not generic blocks, requires special treatment
+      'module',
+      'include-messy',
+      'html',
+      'css',
+      'math',
+      'code',
+    ].includes(block)) continue;
     let score = blocks[block]['accepts-score'];
     let star = blocks[block]['accepts-star'];
     let aliases = blocks[block].aliases || [];
@@ -43,9 +50,7 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
     let stars = [];
     if (star) stars = aliases.map(n=>`*${n}`);
     output['block'+body+head].push(...aliases, ...stars);
-    if (body=='Begin') output.blockEnd.push(...aliases);
   }
-  output.blockStandaloneValueMap.splice(output.blockStandaloneValueMap.indexOf('include-messy'),1);
   for (const key in output) {
     output[key] = output[key].map(escapeRegExp).join('|');
   }
@@ -74,7 +79,7 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
       regexes[key].regex += '\\s*(\\]\\])';
     }
     if (regexes[key].body) {
-      regexes[key].end = `((\\[\\[)\\/)\\s*(${output[key]})\\s*(\\]\\])`;
+      regexes[key].end = `(?i)((\\[\\[)\\/)\\s*(${output[key]})\\s*(\\]\\])`;
     }
   }
   let tmLangConfigRaw = fs.readFileSync(path.join(process.cwd(), 'syntaxes/ftml.tmLanguage.yaml'), 'utf-8');

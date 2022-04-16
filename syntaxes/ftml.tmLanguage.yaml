@@ -3,12 +3,15 @@ name: FTML/Wikidot Code
 patterns:
   - include: '#comment'
   - include: '#yaml-frontmatter'
-  - include: '#css-block'
-  - include: '#css-module-block'
-  - include: '#html-block'
-  - include: '#math-block'
-  - include: '#math-inline'
-  - include: '#include-block'
+  - include: '#block-css'
+  - include: '#block-module-css'
+  - include: '#block-html'
+  - include: '#block-math'
+  - include: '#inline-math'
+  - include: '#block-include'
+  - include: '#block-code'
+  - include: '#block-module-begin'
+  - include: '#block-module-end'
   # - include: '#block-standalone'
   # - include: '#block-standalone-value'
   - include: '#block-standalone-value-map'
@@ -17,7 +20,7 @@ patterns:
   # - include: '#block-value'
   - include: '#block-value-map'
   - include: '#block-map'
-  - include: '#blocks-align'
+  - include: '#block-align'
   - include: '#inline-align'
   - include: '#header'
   - include: '#list'
@@ -107,7 +110,20 @@ repository:
     name: comment.block.ftml
     begin: \[\!\-\-
     end: \-\-\]
-  css-block:
+  yaml-frontmatter:
+    name: markup.inserted.text.yaml
+    begin: \A^(\-{3})$
+    beginCaptures:
+      '1':
+        name: punctuation.definition.yfm.begin.ftml
+    end: ^(\-{3})$
+    endCaptures:
+      '1':
+        name: punctuation.definition.yfm.end.ftml
+    contentName: meta.embedded.block.yaml
+    patterns:
+      - include: source.yaml
+  block-css:
     name: markup.inserted.text.css
     begin: (?i)(\[\[)\s*(css)\s*(\]\])
     beginCaptures:
@@ -130,20 +146,7 @@ repository:
     contentName: meta.embedded.block.css
     patterns:
       - include: source.css
-  yaml-frontmatter:
-    name: markup.inserted.text.yaml
-    begin: \A^(\-{3})$
-    beginCaptures:
-      '1':
-        name: punctuation.definition.yfm.begin.ftml
-    end: ^(\-{3})$
-    endCaptures:
-      '1':
-        name: punctuation.definition.yfm.end.ftml
-    contentName: meta.embedded.block.yaml
-    patterns:
-      - include: source.yaml
-  css-module-block:
+  block-module-css:
     name: markup.inserted.text.css
     begin: (?i)(\[\[)\s*(module css)\s*(\]\])
     beginCaptures:
@@ -166,7 +169,7 @@ repository:
     contentName: meta.embedded.block.css
     patterns:
       - include: source.css
-  html-block:
+  block-html:
     name: markup.inserted.text.html
     begin: (?i)(\[\[)\s*(html)\s*(\]\])
     beginCaptures:
@@ -189,7 +192,7 @@ repository:
     contentName: meta.embedded.block.html
     patterns:
       - include: text.html.basic
-  math-block:
+  block-math:
     name: markup.inserted.math.display.ftml
     begin: (?i)(\[\[)\s*(math)\s*(\]\])
     beginCaptures:
@@ -212,7 +215,7 @@ repository:
     contentName: meta.embedded.block.katex
     patterns:
       - include: text.katex
-  math-inline:
+  inline-math:
     name: markup.inserted.math.display.ftml
     begin: (\[\[)\s*(\$)
     beginCaptures:
@@ -229,7 +232,7 @@ repository:
     contentName: meta.embedded.inline.katex
     patterns:
       - include: text.katex
-  include-block:
+  block-include:
     name: meta.block.structure.standalone.ftml
     begin: (?i)(\[\[)\s*(include(?:-messy)?)\s*\s+([^\s\]]+)(?=\s|\]\])
     beginCaptures:
@@ -247,6 +250,66 @@ repository:
         name: punctuation.definition.tag.end.ftml
     patterns:
       - include: '#attribute-messy-include'
+  block-code:
+    name: meta.block.structure.standalone.ftml
+    begin: (?i)(\[\[)\s*(code)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+    beginCaptures:
+      '0':
+        name: meta.block.structure.begin.ftml
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.tag.ftml
+      '3':
+        patterns:
+          - include: '#attribute'
+      '4':
+        name: punctuation.definition.tag.end.ftml
+    end: ((\[\[)\/)\s*(code)\s*(\]\])
+    endCaptures:
+      '0':
+        name: meta.block.structure.end.ftml
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: source.css-ignored-vscode
+      '3':
+        name: entity.name.tag.ftml
+      '4':
+        name: punctuation.definition.tag.end.ftml
+    contentName: markup.raw
+  block-module-begin:
+    name: meta.block.structure.ftml
+    match: >-
+      (?i)(\[\[)\s*(module|module654)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+    captures:
+      '0':
+        name: meta.block.structure.begin.ftml
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.tag.ftml
+      '3':
+        name: string.other.value.ftml
+      '4':
+        patterns:
+          - include: '#attribute'
+      '5':
+        name: punctuation.definition.tag.end.ftml
+  block-module-end:
+    name: meta.block.structure.ftml
+    match: (?i)((\[\[)\/)\s*(module|module654)\s*(\]\])
+    captures:
+      '0':
+        name: meta.block.structure.end.ftml
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: source.css-ignored-vscode
+      '3':
+        name: entity.name.tag.ftml
+      '4':
+        name: punctuation.definition.tag.end.ftml
   block-standalone:
     name: meta.block.structure.standalone.ftml
     match: (?i)(\[\[)\s*()\s*(\]\])
@@ -301,7 +364,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
   block:
     name: meta.block.structure.ftml
-    begin: (?i)(\[\[)\s*(css|footnote|html|tabview|tabs)\s*(\]\])
+    begin: (?i)(\[\[)\s*(footnote|tabview|tabs)\s*(\]\])
     beginCaptures:
       '0':
         name: meta.block.structure.begin.ftml
@@ -311,7 +374,7 @@ repository:
         name: entity.name.tag.ftml
       '3':
         name: punctuation.definition.tag.end.ftml
-    end: ((\[\[)\/)\s*(css|footnote|html|tabview|tabs)\s*(\]\])
+    end: (?i)((\[\[)\/)\s*(footnote|tabview|tabs)\s*(\]\])
     endCaptures:
       '0':
         name: meta.block.structure.end.ftml
@@ -339,7 +402,7 @@ repository:
         name: string.other.value.ftml
       '4':
         name: punctuation.definition.tag.end.ftml
-    end: ((\[\[)\/)\s*()\s*(\]\])
+    end: (?i)((\[\[)\/)\s*()\s*(\]\])
     endCaptures:
       '0':
         name: meta.block.structure.end.ftml
@@ -356,7 +419,7 @@ repository:
   block-value-map:
     name: meta.block.structure.ftml
     begin: >-
-      (?i)(\[\[)\s*(ifcategory|iftags|math|module|module654|size|tab)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+      (?i)(\[\[)\s*(ifcategory|iftags|size|tab)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
     beginCaptures:
       '0':
         name: meta.block.structure.begin.ftml
@@ -371,7 +434,7 @@ repository:
           - include: '#attribute'
       '5':
         name: punctuation.definition.tag.end.ftml
-    end: ((\[\[)\/)\s*(ifcategory|iftags|math|module|module654|size|tab)\s*(\]\])
+    end: (?i)((\[\[)\/)\s*(ifcategory|iftags|size|tab)\s*(\]\])
     endCaptures:
       '0':
         name: meta.block.structure.end.ftml
@@ -388,7 +451,7 @@ repository:
   block-map:
     name: meta.block.structure.ftml
     begin: >-
-      (?i)(\[\[)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|code|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+      (?i)(\[\[)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
     beginCaptures:
       '0':
         name: meta.block.structure.begin.ftml
@@ -402,7 +465,7 @@ repository:
       '4':
         name: punctuation.definition.tag.end.ftml
     end: >-
-      ((\[\[)\/)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|code|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)\s*(\]\])
+      (?i)((\[\[)\/)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)\s*(\]\])
     endCaptures:
       '0':
         name: meta.block.structure.end.ftml
@@ -416,7 +479,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
     patterns:
       - include: $self
-  blocks-align:
+  block-align:
     name: meta.block.structure.ftml
     begin: (\[\[)\s*(\<|\>|\=|\=\=)\s*(\]\])
     beginCaptures:
