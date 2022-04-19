@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added overwrite safeguarding for Wikidot syncing features
 - Fixed Wikidot login persistence between vscode sessions
 - Fixed some FTML syntax bugs
 

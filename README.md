@@ -1,4 +1,6 @@
-# vscode-ftml
+# FTML/Wikidot Workshop for VSCode
+
+[![version](https://img.shields.io/vscode-marketplace/v/zokhoi.vscode-ftml.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=zokhoi.vscode-ftml)
 
 A VSCode extension for support of FTML, the markup language of SCP Foundation.
 

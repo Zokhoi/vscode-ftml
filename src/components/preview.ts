@@ -68,10 +68,7 @@ function genHtml(panelInfo: previewInfo) {
     ftml.addEventListener('message', e => {
       const { html, styles } = e.data;
       previewContent.innerHTML = html;
-      previewStyles.innerHTML = '';
-      for (let i = 0; i < styles.length; i++) {
-        previewStyles.innerHTML += \`\\n\\n<style>\\n\${styles[i].replace(/\\</g, '&lt;')}\\n</style>\`;
-      }
+      previewStyles.innerHTML = styles.map(v=>\`<style>\\n\${v.replace(/\\</g, '&lt;')}\\n</style>\`).join("\\n\\n");
       state.content = html;
       state.styles = previewStyles.innerHTML;
       vscode.setState(state);

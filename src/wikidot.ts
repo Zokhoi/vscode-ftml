@@ -14,6 +14,7 @@ interface PageMetadata {
   title?: string;
   parent?: string;
   tags?: string[] | string;
+  revision?: number;
 }
 
 interface PageData extends PageMetadata {
@@ -206,6 +207,9 @@ namespace Page {
     }
     let parent = chpg("#breadcrumbs")?.children("a").last().attr("href");
     if (parent) meta.parent = parent.substring(1);
+    chpg("#page-info")?.children("span")?.remove();
+    let rev = chpg("#page-info")?.text().match(/\d+/)?.[0];
+    if (rev) meta.revision = parseInt(rev);
     return meta;
   }
     

@@ -22,7 +22,7 @@ import {
   setTabChangeListener,
   unsetTabChangeListener,
 } from "./components/listeners";
-import { parseMetadata, serveBackend } from "./components/source";
+import { parsePageData, serveBackend } from "./components/source";
 import * as wikidot from './wikidot';
 import WikidotAuthProvider from './WikidotAuthProvider';
 
@@ -138,22 +138,36 @@ export function activate(context: vscode.ExtensionContext) {
           clearSessionPreference: true,
           createIfNone: true,
         }).then(sess=>{
-          let data: wikidot.PageMetadata = parseMetadata(activeEditor!.document.getText());
+          let data = parsePageData(activeEditor!.document.getText());
           if (!data.page) data.page = basename(activeEditor!.document.fileName).split('.')[0];
           vscode.window.withProgress({
             cancellable: false,
             location: vscode.ProgressLocation.Notification
           }, async (prog)=>{
-            prog.report({message: `Fetching page from ${data.page} on ${data.site}...`})
-            data = await wikidot.Page.getMetadata({
+            prog.report({message: `Fetching page ${data.page} from ${data.site}...`});
+            let fetched = await wikidot.Page.getMetadata({
               wikiSite: data.site,
               wikiPage: data.page,
-              session: sess.accessToken});
+              session: sess.accessToken})
+            if (fetched.revision === undefined) {
+              vscode.window.showInformationMessage(`The remote page ${data.page} does not exist on site ${data.site}.`);
+              return;
+            };
+            if (data.revision === undefined || data.revision < fetched.revision) {
+              let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Overwrite local copy?`, "Yes", "No");
+              if (answer != "Yes") return;
+            } else if (data.revision !== undefined && data.revision >= fetched.revision) {
+              vscode.window.showInformationMessage(`Your local copy of ${data.page} is already at the latest version.`);
+              return;
+            };
+            for (const key in data) {
+              if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
+            }
             let source = await wikidot.Page.getSource(data.site, data.page);
-            activeEditor!.edit(builder=>{
+            await activeEditor!.edit(builder=>{
               builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
                   .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
-              builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(data)}---\n${source}`);
+              builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${source}`);
             })
           })
         }).catch(e=>{
@@ -171,17 +185,28 @@ export function activate(context: vscode.ExtensionContext) {
           clearSessionPreference: true,
           createIfNone: true
         }).then(async sess=>{
-          let data = parseMetadata(activeEditor!.document.getText())
+          let data = parsePageData(activeEditor!.document.getText());
           vscode.window.withProgress({
             cancellable: false,
             location: vscode.ProgressLocation.Notification
           }, async (prog)=>{
-            prog.report({message: `Pushing page to ${data.page} on ${data.site}...`})
+            prog.report({message: `Pushing to page ${data.page} on ${data.site}...`});
             try {
+              let fetched = await wikidot.Page.getMetadata({
+                wikiSite: data.site,
+                wikiPage: data.page,
+                session: sess.accessToken})
+              if (data.revision !== undefined && fetched.revision !== undefined && data.revision < fetched.revision) {
+                let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Overwrite remote page?`, "Yes", "No");
+                if (answer != "Yes") return;
+              }
               await wikidot.Page.edit({
                 wikiSite: data.site,
                 wikiPage: data.page,
-                session: sess.accessToken, }, data)
+                session: sess.accessToken, }, {
+                  ...data,
+                  parentPage: data.parent,
+                })
             } catch (e) {
               if (e.src?.status == "not_ok") {
                 // Wikidot now dies when new page is created with tags in its options
@@ -192,13 +217,17 @@ export function activate(context: vscode.ExtensionContext) {
                 await wikidot.Page.edit({
                   wikiSite: data.site,
                   wikiPage: data.page,
-                  session: sess.accessToken, }, data);
+                  session: sess.accessToken, }, {
+                    ...data,
+                    parentPage: data.parent,
+                  });
                 await new Promise(res=>setTimeout(res, 3000));
                 await wikidot.Page.edit({
                   wikiSite: data.site,
                   wikiPage: data.page,
                   session: sess.accessToken, }, {
                   ...data,
+                  parentPage: data.parent,
                   tags
                 })
               } else {
@@ -207,7 +236,22 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage(`Error code ${e.src.status}`)
                   }
                 } else vscode.window.showErrorMessage(`${e.src?.status}: ${e.message}`);
+                return;
               }
+            } finally {
+              await new Promise(res=>setTimeout(res, 3000));
+              let fetched = await wikidot.Page.getMetadata({
+                wikiSite: data.site,
+                wikiPage: data.page,
+                session: sess.accessToken});
+              for (const key in data) {
+                if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
+              }
+              await activeEditor!.edit(builder=>{
+                builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
+                    .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
+                builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${data.source}`);
+              })
             }
           })
         }).catch(e=>{

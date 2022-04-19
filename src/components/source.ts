@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import fm from 'front-matter';
 import { PageData, getPreview } from "../wikidot";
 
-function parseMetadata(source: string): PageData {
+function parsePageData(source: string): PageData {
   let meta: PageData = {
     site: `${vscode.workspace.getConfiguration('ftml.preview').get('wikidot')}`,
     page: '',
@@ -17,7 +17,7 @@ function parseMetadata(source: string): PageData {
 }
 
 function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: string, backend: string) {
-  let meta = parseMetadata(source);
+  let meta = parsePageData(source);
   switch (backend.toLowerCase()) {
     case "wikidot":
       getPreview({
@@ -48,6 +48,6 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
 }
 
 export {
-  parseMetadata,
+  parsePageData,
   serveBackend,
 };
