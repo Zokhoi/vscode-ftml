@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Fixed Wikidot login persistence between vscode sessions
+- Fixed some FTML syntax bugs
 
 ## 0.0.2: Pre-Alpha 2
 
