@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.0.3: Pre-Alpha 3
 
 - Added overwrite safeguarding for Wikidot syncing features
 - Fixed Wikidot login persistence between vscode sessions
