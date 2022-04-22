@@ -1,6 +1,6 @@
 import type { AuthenticationProvider, AuthenticationSession } from "vscode";
 import * as vscode from "vscode";
-import { Session, login, getUserInfo } from "./wikidot";
+import { Session, login, getUserInfo } from "./interface";
 
 /**
  * Represents a session of a currently logged in Wikidot user.

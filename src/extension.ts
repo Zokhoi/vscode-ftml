@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as yaml from "js-yaml";
+import { diffLines } from "diff";
 import {
   setContext,
   activePreview,
@@ -8,6 +9,7 @@ import {
   openPreviews,
   setLockedPreviews,
   lockedPreviews,
+  WdRevUriToSourceEditor,
   initInfo,
   basename,
 } from "./global";
@@ -23,8 +25,9 @@ import {
   unsetTabChangeListener,
 } from "./components/listeners";
 import { parsePageData, serveBackend } from "./components/source";
-import * as wikidot from './wikidot';
-import WikidotAuthProvider from './WikidotAuthProvider';
+import * as wikidot from './wikidot/interface';
+import WikidotAuthProvider from './wikidot/WikidotAuthProvider';
+import { toWikidotRevUri, WikidotRevContentProvider } from './wikidot/WikidotRevContentProvider';
 
 export function activate(context: vscode.ExtensionContext) {
   setContext(context);
@@ -131,7 +134,7 @@ export function activate(context: vscode.ExtensionContext) {
       });
     }),
 
-    vscode.commands.registerCommand('ftml.remote.wikidot.fetch', () => {
+    vscode.commands.registerCommand('ftml.remote.wikidot.fetch', (fetchedData?: wikidot.PageMetadata) => {
       let activeEditor = vscode.window.activeTextEditor;
       if (activeEditor?.document.languageId == "ftml") {
         vscode.authentication.getSession('wikidot', [], {
@@ -145,7 +148,7 @@ export function activate(context: vscode.ExtensionContext) {
             location: vscode.ProgressLocation.Notification
           }, async (prog)=>{
             prog.report({message: `Fetching page ${data.page} from ${data.site}...`});
-            let fetched = await wikidot.Page.getMetadata({
+            let fetched = fetchedData ?? await wikidot.Page.getMetadata({
               wikiSite: data.site,
               wikiPage: data.page,
               session: sess.accessToken})
@@ -153,22 +156,38 @@ export function activate(context: vscode.ExtensionContext) {
               vscode.window.showInformationMessage(`The remote page ${data.page} does not exist on site ${data.site}.`);
               return;
             };
+            let source = await wikidot.Page.getSource(data.site, data.page);
             if (data.revision === undefined || data.revision < fetched.revision) {
-              let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Overwrite local copy?`, "Yes", "No");
-              if (answer != "Yes") return;
+              let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Please choose an action.`, "Open diff editor", "Overwrite content", "Cancel");
+              switch (answer) {
+                case "Open diff editor":
+                  WdRevUriToSourceEditor.set(toWikidotRevUri(data.site, data.page).toString(), activeEditor!);
+                  await vscode.commands.executeCommand(
+                    "vscode.diff",
+                    activeEditor!.document.uri,
+                    toWikidotRevUri(data.site, data.page),
+                    `${basename(activeEditor!.document.fileName)} ← ${data.page}`);
+                  break;
+                case "Overwrite content":
+                  for (const key in data) {
+                    if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
+                  }
+                  await activeEditor!.edit(builder=>{
+                    builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
+                        .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
+                    builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${source}`);
+                  })
+                  break;
+                case "Cancel":
+                default:
+                  break;
+              }
+              return;
             } else if (data.revision !== undefined && data.revision >= fetched.revision) {
               vscode.window.showInformationMessage(`Your local copy of ${data.page} is already at the latest version.`);
               return;
             };
-            for (const key in data) {
-              if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
-            }
-            let source = await wikidot.Page.getSource(data.site, data.page);
-            await activeEditor!.edit(builder=>{
-              builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
-                  .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
-              builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${source}`);
-            })
+            
           })
         }).catch(e=>{
           if (e instanceof Error) {
@@ -196,9 +215,17 @@ export function activate(context: vscode.ExtensionContext) {
                 wikiSite: data.site,
                 wikiPage: data.page,
                 session: sess.accessToken})
-              if (data.revision !== undefined && fetched.revision !== undefined && data.revision < fetched.revision) {
-                let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Overwrite remote page?`, "Yes", "No");
-                if (answer != "Yes") return;
+              if (fetched.revision !== undefined && (data.revision === undefined || data.revision < fetched.revision)) {
+                let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Please choose an action.`, "Fetch remote page", "Overwrite remote page", "Cancel");
+                switch (answer) {
+                  case "Cancel":
+                    return;
+                  case "Fetch remote page":
+                    return vscode.commands.executeCommand('ftml.remote.wikidot.fetch', fetched);
+                  case "Overwrite remote page":
+                  default:
+                    break;
+                }
               }
               await wikidot.Page.edit({
                 wikiSite: data.site,
@@ -238,21 +265,20 @@ export function activate(context: vscode.ExtensionContext) {
                 } else vscode.window.showErrorMessage(`${e.src?.status}: ${e.message}`);
                 return;
               }
-            } finally {
-              await new Promise(res=>setTimeout(res, 3000));
-              let fetched = await wikidot.Page.getMetadata({
-                wikiSite: data.site,
-                wikiPage: data.page,
-                session: sess.accessToken});
-              for (const key in data) {
-                if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
-              }
-              await activeEditor!.edit(builder=>{
-                builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
-                    .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
-                builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${data.source}`);
-              })
             }
+            await new Promise(res=>setTimeout(res, 3000));
+            let fetched = await wikidot.Page.getMetadata({
+              wikiSite: data.site,
+              wikiPage: data.page,
+              session: sess.accessToken});
+            for (const key in data) {
+              if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
+            }
+            await activeEditor!.edit(builder=>{
+              builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
+                  .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
+              builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${data.source}`);
+            })
           })
         }).catch(e=>{
           if (e instanceof Error) {
@@ -262,10 +288,81 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }),
 
+    vscode.commands.registerCommand('ftml.diff.merge.selected', async () => {
+      let activeEditor = vscode.window.activeTextEditor;
+      if (!activeEditor) return;
+      if (!WdRevUriToSourceEditor.get(activeEditor.document.uri.toString())) return;
+      let origEditor = vscode.window.visibleTextEditors.find(e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(activeEditor!.document.uri.toString())!.document.uri.toString())!
+      let countNew = 0, countOld = 0;
+      let changes = diffLines(origEditor.document.getText().replace(/\r\n/g, "\n"), activeEditor.document.getText().replace(/\r\n/g, "\n")).map(v=>{
+        v.atNewLine = countNew;
+        v.atOldLine = countOld;
+        if (v.added) {
+          countNew += v.count!;
+        } else if (v.removed) {
+          countOld += v.count!;
+        } else {
+          countNew += v.count!;
+          countOld += v.count!;
+        }
+        return v;
+      });
+      await origEditor.edit(builder=>{
+        try {
+          for (let i = 0; i < activeEditor!.selections.length; i++) {
+            let startline = activeEditor!.document.lineAt(activeEditor!.selections[i].start);
+            let endline = activeEditor!.document.lineAt(activeEditor!.selections[i].end);
+            let startchange = changes.findIndex(v=>(v.added || !v.added && !v.removed) && v.atNewLine+v.count!>startline.lineNumber)!;
+            let endchange = changes.findIndex(v=>(v.added || !v.added && !v.removed) && v.atNewLine+v.count!>endline.lineNumber)!;
+            if (changes.filter((_, i)=> i>=startchange && i<=endchange).every(v=>!v.added && !v.removed)) continue;
+            if (startchange>0 && changes[startchange-1].removed) --startchange;
+            let insertOnly = changes.filter((_, i)=> i>=startchange && i<=endchange).every(v=>v.added);
+            let startlinenum = changes[startchange].atOldLine;
+            let endlinenum = insertOnly ? changes[endchange].atOldLine : changes[endchange].atOldLine-1;
+            if (!changes[startchange].added && !changes[startchange].removed) {
+              startlinenum += startline.lineNumber-changes[startchange].atNewLine;
+            }
+            if (!changes[endchange].added && !changes[endchange].removed) {
+              endlinenum += endline.lineNumber-changes[endchange].atNewLine+1;
+            }
+            let remove = origEditor.document.lineAt(startlinenum).range.union( origEditor.document.lineAt(endlinenum).range );
+            if (insertOnly) {
+              builder.insert(remove.start, activeEditor!.document.getText(startline.range.union(endline.rangeIncludingLineBreak)));
+            } else {
+              builder.replace(remove, activeEditor!.document.getText(startline.range.union(endline.range)));
+            }
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      })
+    }),
+
+    vscode.commands.registerCommand('ftml.diff.merge.all', async () => {
+      let activeEditor = vscode.window.activeTextEditor;
+      if (!activeEditor) return;
+      if (!WdRevUriToSourceEditor.get(activeEditor.document.uri.toString())) return;
+      let origEditor = vscode.window.visibleTextEditors.find(
+        e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(activeEditor!.document.uri.toString())!.document.uri.toString())!
+      await origEditor.edit(builder=>{
+        builder.delete(origEditor.document.lineAt(origEditor.document.lineCount-1).rangeIncludingLineBreak
+            .union(new vscode.Range(0,0,origEditor.document.lineCount-1,0)))
+        builder.insert(new vscode.Position(0,0), activeEditor!.document.getText());
+      })
+    }),
+
     vscode.authentication.registerAuthenticationProvider(
       'wikidot',
       'Wikidot',
       WdAuthProvider,
       { supportsMultipleAccounts: true }),
+    
+    vscode.workspace.registerTextDocumentContentProvider("wikidot-rev", new WikidotRevContentProvider()),
+
+    vscode.workspace.onDidCloseTextDocument(e =>{
+      if (e.uri.scheme == "wikidot-rev" && WdRevUriToSourceEditor.has(e.uri.toString())) {
+        WdRevUriToSourceEditor.delete(e.uri.toString());
+      }
+    }),
   );
 }

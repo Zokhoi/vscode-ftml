@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import fetch from "./cross-fetch?cross";
+import fetch from "../cross-fetch?cross";
 import { load } from "cheerio";
 const urljoin = (...parts: string[]) => {
   let begin = parts.shift()?.replace(/\/+$/, '');
@@ -77,7 +77,11 @@ async function Ajax(info: {wikiSite: string, session?: string}, params: any): Pr
   });
   if (!rawres.ok) throw new WikidotAjaxError(rawres, info.wikiSite);
   let res: Response = await (rawres).json();
-  if (res.status != "ok") throw new WikidotAjaxError(res, info.wikiSite);
+  if (res.status != "ok") {
+    if (res.message?.includes("Nonsecure access is not enabled")) {
+      return await Ajax({ wikiSite: info.wikiSite.replace('http', 'https'), session: info.session }, params);
+    } else throw new WikidotAjaxError(res, info.wikiSite);
+  };
   return res;
 }
 

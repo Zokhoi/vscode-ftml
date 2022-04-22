@@ -12,6 +12,7 @@ function initInfo() {
   idToInfo = new Map<string, previewInfo>();
   idToPreview = new Map<string, vscode.WebviewPanel>();
   idToTabChangeListener = new Map<string, vscode.Disposable>();
+  WdRevUriToSourceEditor = new Map<string, vscode.TextEditor>();
   lockedPreviews = new Set();
 }
 function setLockedPreviews(previewIds: string[] | undefined) {
@@ -28,6 +29,7 @@ let openPreviews: Set<string>;
 let idToInfo: Map<string, previewInfo>;
 let idToPreview: Map<string, vscode.WebviewPanel>;
 let idToTabChangeListener: Map<string, vscode.Disposable>;
+let WdRevUriToSourceEditor: Map<string, vscode.TextEditor>;
 let lockedPreviews: Set<string>;
 
 const NOOP = () => {};
@@ -45,6 +47,7 @@ export {
   idToInfo,
   idToPreview,
   idToTabChangeListener,
+  WdRevUriToSourceEditor,
   NOOP,
   basename,
 };

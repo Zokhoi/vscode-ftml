@@ -112,50 +112,80 @@
         "command": "ftml.remote.wikidot.push",
         "title": "%ftml.remote.wikidot.push%",
         "category": "Ftml"
+      },
+      {
+        "command": "ftml.diff.merge.selected",
+        "title": "%ftml.diff.merge.selected%",
+        "category": "Ftml"
+      },
+      {
+        "command": "ftml.diff.merge.all",
+        "title": "%ftml.diff.merge.all%",
+        "category": "Ftml"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.preview.open",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.preview.openToSide",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.remote.wikidot.fetch",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.remote.wikidot.push",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "command": "ftml.diff.merge.selected",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "command": "ftml.diff.merge.all",
           "group": "4_ftml"
         }
       ],
       "editor/title": [
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.preview.open",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.preview.openToSide",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.remote.wikidot.fetch",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml",
+          "when": "resourceLangId == ftml && !isInDiffEditor",
           "command": "ftml.remote.wikidot.push",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "command": "ftml.diff.merge.selected",
+          "group": "4_ftml"
+        },
+        {
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "command": "ftml.diff.merge.all",
           "group": "4_ftml"
         },
         {
@@ -219,6 +249,7 @@
     "watch": "tsc -w -p ./"
   },
   "devDependencies": {
+    "@types/diff": "^5.0.2",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^17.0.23",
     "@types/vscode": "^1.65.0",
@@ -234,6 +265,7 @@
     "@wikijump/ftml-wasm": "^1.6.3",
     "cheerio": "^1.0.0-rc.10",
     "cross-fetch": "^3.1.5",
+    "diff": "^5.0.0",
     "front-matter": "^4.0.2"
   }
 }

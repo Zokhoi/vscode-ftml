@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import fm from 'front-matter';
-import { PageData, getPreview } from "../wikidot";
+import { PageData, getPreview } from "../wikidot/interface";
 
 function parsePageData(source: string): PageData {
   let meta: PageData = {
