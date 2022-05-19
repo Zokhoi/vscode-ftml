@@ -1,12 +1,7 @@
 import * as vscode from "vscode";
 import fetch from "../cross-fetch?cross";
 import { load } from "cheerio";
-const urljoin = (...parts: string[]) => {
-  let begin = parts.shift()?.replace(/\/+$/, '');
-  let end = parts.pop()?.replace(/^\/+/, '');
-  parts = parts.map(v=>v.replace(/(^\/+)|(\/+$)/, '')).filter(v=>!!v);
-  return parts.length ? begin + '/' + parts.join('/') + '/' + end : begin + '/' + end;
-}
+import { urljoin, unixNamify } from "../utils";
 
 interface PageMetadata {
   site: string;
@@ -152,7 +147,7 @@ async function loginPrompt() {
 }
 
 async function getUserInfo(username: string) {
-  let unixname = username.trim().replace(/[^\w]+/g, '-').replace(/^\-+/, '').replace(/\-+$/, '');
+  let unixname = unixNamify(username, { acceptsCategory: false });
   let pg = await (await fetch("https://www.wikidot.com/user:info/"+unixname)).text();
   return {
     name: load(pg)("h1.profile-title")?.text().replace(/\n/g, '').trim(),
@@ -168,7 +163,7 @@ async function getPreview({source, wikiPage, wikiSite}: {
 }): Promise<string> {
   let res = await AjaxModule({ wikiSite }, "edit/PagePreviewModule", {
     mode: "page",
-    page_unix_name: wikiPage ?? "",
+    page_unix_name: unixNamify(wikiPage ?? ""),
     source: source,
   });
   return res.body;
@@ -177,7 +172,7 @@ async function getPreview({source, wikiPage, wikiSite}: {
 namespace Page {
   export async function getHtml(info: {wikiSite: string, wikiPage: string, session?: string}) {
     if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
-    return await (await fetch(urljoin(info.wikiSite, info.wikiPage, '/norender/true'), {
+    return await (await fetch(urljoin(info.wikiSite, unixNamify(info.wikiPage), '/norender/true'), {
       headers: {
         'User-Agent': 'vscode-ftml/0.0.1',
         Referer: 'vscode-ftml',
@@ -197,7 +192,7 @@ namespace Page {
   export async function getMetadata(info: {wikiSite: string, wikiPage: string, session?: string}) {
     let meta: PageMetadata = {
       site: info.wikiSite,
-      page: info.wikiPage,
+      page: unixNamify(info.wikiPage),
     };
     let chpg = load(await getHtml(info));
     let title = chpg("#page-title")?.text().trim();
@@ -238,14 +233,14 @@ namespace Page {
   export async function edit(meta: {wikiSite: string, wikiPage: string, session?: string}, params: any) {
     let lock = await AjaxModule(meta, 'edit/PageEditModule', {
       mode: 'page',
-      wiki_page: meta.wikiPage,
+      wiki_page: unixNamify(meta.wikiPage),
       force_lock: true})
     if (lock.status!='ok') {
       throw new WikidotAjaxError(lock, meta.wikiSite);
     }
     return await AjaxAction(meta, 'WikiPageAction', Object.assign({
       event: 'savePage',
-      wiki_page: meta.wikiPage,
+      wiki_page: unixNamify(meta.wikiPage),
       lock_id: lock.lock_id,
       lock_secret: lock.lock_secret,
       revision_id: lock.page_revision_id ?? null,

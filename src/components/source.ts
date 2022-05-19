@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import fm from 'front-matter';
 import { PageData, getPreview } from "../wikidot/interface";
+import { unixNamify } from '../utils';
 
 function parsePageData(source: string): PageData {
   let meta: PageData = {
@@ -13,6 +14,7 @@ function parsePageData(source: string): PageData {
     Object.assign(meta, fmparsed.attributes);
     meta.source = fmparsed.body;
   } else meta.source = source;
+  meta.page = unixNamify(meta.page);
   return meta;
 }
 
