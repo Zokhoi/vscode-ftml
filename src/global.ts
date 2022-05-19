@@ -1,12 +1,23 @@
 import * as vscode from 'vscode';
 import { previewInfo } from "./components/preview";
 
+/**
+ * Set the extension context for internal tracking purposes.
+ */
 function setContext(context: vscode.ExtensionContext) {
   ctx = context;
 }
+
+/**
+ * Set the currently active preview to the specified one, for internal tracking purposes.
+ */
 function setActivePreview(previewId: string) {
   activePreview = previewId;
 }
+
+/**
+ * Inits internal trackers.
+ */
 function initInfo() {
   openPreviews = new Set<string>();
   idToInfo = new Map<string, previewInfo>();
@@ -15,6 +26,11 @@ function initInfo() {
   WdRevUriToSourceEditor = new Map<string, vscode.TextEditor>();
   lockedPreviews = new Set();
 }
+
+/**
+ * Sets some preview panels to be locked, from recovered past session data.
+ * @param previewIds The preview panel ids. These are ids we assign.
+ */
 function setLockedPreviews(previewIds: string[] | undefined) {
   if (previewIds) {
     for (let i = 0; i < previewIds.length; i++) {

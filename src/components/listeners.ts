@@ -12,10 +12,12 @@ import { serveBackend } from "./source";
 import { genTitle } from "./preview";
 
 
-// Returns a function, that, as long as it continues to be invoked, will not
-// be triggered. The function will be called once only every N milliseconds.
-// If `immediate` is passed, trigger the function on the
-// leading edge, instead of the trailing.
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called once only every N milliseconds.
+ * If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing.
+ */
 function debounce(func: (...args: any[])=>any, wait: number, immediate?: boolean): (...args: any[])=>any {
 	let timeout: NodeJS.Timeout | null;
   let currentArgs: any[];
@@ -34,6 +36,11 @@ function debounce(func: (...args: any[])=>any, wait: number, immediate?: boolean
 
 const serveBackendDebounced = debounce(serveBackend, 250);
 
+/**
+ * Sets all the source change listeners for a preview panel.
+ * @param panel The preview panel.
+ * @param panelId The preview panel id. This is an id we assign.
+ */
 function setListeners(panel: vscode.WebviewPanel, panelId: string) {
   let viewChangeDisposable = panel.onDidChangeViewState(_=>{
     vscode.commands.executeCommand('setContext', 'ftmlPreviewFocus', panel.active);
@@ -76,6 +83,11 @@ function setListeners(panel: vscode.WebviewPanel, panelId: string) {
   })
 }
 
+/**
+ * Sets only the tab change listener for a preview panel.
+ * @param panel The preview panel.
+ * @param panelId The preview panel id. This is an id we assign.
+ */
 function setTabChangeListener(panel: vscode.WebviewPanel, panelId: string) {
   let tabChangeDisposable = vscode.window.onDidChangeActiveTextEditor(e=>{
     if (e?.document.languageId == 'ftml') {
@@ -101,6 +113,11 @@ function setTabChangeListener(panel: vscode.WebviewPanel, panelId: string) {
   }
 }
 
+/**
+ * Unsets only the tab change listener for a preview panel.
+ * @param panel The preview panel.
+ * @param panelId The preview panel id. This is an id we assign.
+ */
 function unsetTabChangeListener(panel: vscode.WebviewPanel, panelId: string) {
   idToTabChangeListener.get(panelId)?.dispose();
   idToTabChangeListener.delete(panelId);

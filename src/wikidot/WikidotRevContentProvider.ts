@@ -2,6 +2,12 @@ import { CancellationToken, TextDocumentContentProvider, Uri, authentication } f
 import { Page } from "./interface";
 import { dump } from "js-yaml";
 
+/**
+ * Constructs a Wikidot Revision Uri from the provided data.
+ * @param wikiSite The Wikidot site.
+ * @param wikiPage The Wikidot page unix name.
+ * @param revisionOrId The Wikidot page revision number or revision id.
+ */
 export function toWikidotRevUri(wikiSite: string, wikiPage: string, revisionOrId?: number | string): Uri {
   let rev: string | undefined;
   if (revisionOrId !== undefined) {
@@ -15,6 +21,9 @@ export function toWikidotRevUri(wikiSite: string, wikiPage: string, revisionOrId
   });
 }
 
+/**
+ * A provider for Wikidot Revision Uri.
+ */
 export class WikidotRevContentProvider implements TextDocumentContentProvider {
   constructor() {}
   async provideTextDocumentContent(uri: Uri, token: CancellationToken): Promise<string> {

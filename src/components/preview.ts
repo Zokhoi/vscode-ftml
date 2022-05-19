@@ -12,6 +12,9 @@ import {
 import { serveBackend } from "./source";
 import { setListeners } from "./listeners";
 
+/**
+ * All the metadata associated with a preview tab.
+ */
 type previewInfo = {
   id: string,
   fileName: string,
@@ -22,12 +25,22 @@ type previewInfo = {
   live: boolean,
 }
 
+/**
+ * Generates a tab title for the preview.
+ * @param fileName Name of source file for the preview.
+ * @param backend The backend to be used.
+ * @param live The preview being live or not.
+ * @param lock The preview being locked to a file or not.
+ */
 function genTitle(fileName: string, backend: string, live: boolean, lock: boolean) {
   let prefix = backend=="ftml" && live ? `Live ${backend}` : backend;
   prefix = lock ? `[${prefix}]` : prefix;
   return `${prefix} ${fileName}`;
 }
 
+/**
+ * Generates an HTML body for the preview.
+ */
 function genHtml(panelInfo: previewInfo) {
   return `<!DOCTYPE html>
   <html lang="en">
@@ -108,7 +121,10 @@ function genHtml(panelInfo: previewInfo) {
   </html>`
 }
 
-  
+/**
+ * Creates a preview panel at the specified column.
+ * @param viewColumn Column to create at.
+ */
 function createPreviewPanel(viewColumn?: number) {
   let backend = `${vscode.workspace.getConfiguration('ftml.preview').get('backend')}`.toLowerCase();
   let panelInfo = {
