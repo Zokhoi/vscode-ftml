@@ -24,10 +24,10 @@ patterns:
   - include: '#inline-align'
   - include: '#header'
   - include: '#list'
-  - include: '#shorthands'
-  - include: '#links'
   - include: '#horizontal-rule'
   - include: '#separator-rule'
+  - include: '#shorthands'
+  - include: '#links'
   - include: '#table'
   - include: '#page-variables'
   - include: '#user-variables'
@@ -688,13 +688,13 @@ repository:
         name: punctuation.definition.tag.end.ftml
   horizontal-rule:
     name: markup.hr.ftml
-    match: ^(\-{4,})/s*$
+    match: ^(\-{4,})\s*$
     captures:
       '1':
         name: punctuation.definition.tag.ftml
   separator-rule:
     name: markup.hr.ftml
-    match: ^(\={4,})/s*$
+    match: ^(\={4,})\s*$
     captures:
       '1':
         name: punctuation.definition.tag.ftml
