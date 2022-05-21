@@ -1,0 +1,31 @@
+/* Ruby by Nanimono Demonai */
+.ruby, ruby {
+  display: inline-table;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1;
+  height: 1em;
+  vertical-align: text-bottom;
+}
+.rt, rt {
+  display: table-header-group;
+  font-size: 0.6em;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Keycap */
+.keycap {
+  border: 1px solid;
+  border-color: #ddd #bbb #bbb #ddd;
+  border-bottom-width: 2px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #f9f9f9;
+  padding: 1px 3px;
+  font-family: inherit;
+  font-size: 0.85em;
+  white-space: nowrap;
+}

@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import ftmlWorker from './ftml.web.worker.js?bundled-worker&dataurl';
 import css from './css/wikidot.css';
+import cssponyfill from './css/ponyfill.css';
 import collapsible from './css/collapsible.css';
 import {
   idToInfo,
@@ -50,6 +51,7 @@ function genHtml(panelInfo: previewInfo) {
     <title>Wikitext Preview</title>
     <style>
     ${css}
+    ${cssponyfill}
     ${collapsible}
     </style>
   </head>
