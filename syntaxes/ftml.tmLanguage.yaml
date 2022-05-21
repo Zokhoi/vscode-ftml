@@ -46,6 +46,7 @@ repository:
       - include: '#raw'
       - include: '#teletype'
       - include: '#escape'
+      - include: '#ruby-short'
   links:
     comments: These are link syntaxes, and no other syntaxes are allowed within.
     patterns:
@@ -327,7 +328,7 @@ repository:
     name: meta.block.structure.$2.standalone.ftml
   block-standalone-value:
     match: >-
-      (?i)(\[\[)\s*(char|character|equation|eref|eqref|lines|newlines|rb|ruby2|target|target|anchortarget|user|\*user)\s+((?:(?!\]\]).)+)\s*(\]\])
+      (?i)(\[\[)\s*(char|character|equation|eref|eqref|lines|newlines|target|target|anchortarget|user|\*user)\s+((?:(?!\]\]).)+)\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -686,6 +687,23 @@ repository:
         name: string.other.value.ftml
       '5':
         name: punctuation.definition.tag.end.ftml
+  ruby-short:
+    match: >-
+      (?i)(\[\[)\s*(rb|ruby2)\s+((?:(?!\]\]|\|).)+)\s*(\|)\s*((?:(?!\]\]|\|).)+)\s*(\]\])
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.tag.ftml
+      '3':
+        name: string.other.value.ftml
+      '4':
+        name: punctuation.separator.key-value.ftml
+      '5':
+        name: string.other.value.ftml
+      '6':
+        name: punctuation.definition.tag.end.ftml
+    name: meta.block.structure.$2.standalone.ftml
   horizontal-rule:
     name: markup.hr.ftml
     match: ^(\-{4,})\s*$

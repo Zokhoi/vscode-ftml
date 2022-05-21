@@ -1,12 +1,16 @@
+const fs = require('fs');
+const path = require('path');
+
+const toml = require('toml');
+const yaml = require('js-yaml');
+const fetch = require('cross-fetch');
+
 const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase());
+
+const blocktomllink = 'https://raw.githubusercontent.com/scpwiki/wikijump/develop/ftml/conf/blocks.toml';
+
 !(async ()=>{
-  const blocktomllink = 'https://raw.githubusercontent.com/scpwiki/wikijump/develop/ftml/conf/blocks.toml';
-  const toml = require('toml');
-  const yaml = require('js-yaml');
-  const fs = require('fs');
-  const path = require('path');
-  const fetch = require('cross-fetch');
   let blocks = toml.parse(await (await fetch(blocktomllink)).text());
   let output = {
     blockStandalone: [],
@@ -27,6 +31,7 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
       'css',
       'math',
       'code',
+      'ruby-short'
     ].includes(block)) continue;
     let score = blocks[block]['accepts-score'];
     let star = blocks[block]['accepts-star'];
