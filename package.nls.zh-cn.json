@@ -10,8 +10,10 @@
   "ftml.preview.wikidot": "预设 wikidot 预览后端使用网站",
   "ftml.preview.refresh": "刷新预览",
   "ftml.remote.wikidot.login": "登入 Wikidot 账户",
+  "ftml.remote.wikidot.switchAccount": "更改目前使用 Wikidot 账户",
   "ftml.remote.wikidot.fetch": "從 Wikidot 抓取本页面wiki文本",
   "ftml.remote.wikidot.push": "将本wiki文本上传至 Wikidot",
   "ftml.diff.merge.selected": "将已选择的更改合并至本wiki文本",
-  "ftml.diff.merge.all": "将所有更改合并至本wiki文本"
+  "ftml.diff.merge.all": "将所有更改合并至本wiki文本",
+  "ftml.remote.sync.accountSelect": "每次抓取或上传wikidot页面文本皆显示账号选择列表"
 }

@@ -134,11 +134,19 @@ export function activate(context: vscode.ExtensionContext) {
       });
     }),
 
+    vscode.commands.registerCommand('ftml.remote.wikidot.switchAccount', () => {
+      vscode.authentication.getSession('wikidot', [], {
+        clearSessionPreference: true,
+        createIfNone: true,
+      })
+    }),
+
     vscode.commands.registerCommand('ftml.remote.wikidot.fetch', (fetchedData?: wikidot.PageMetadata) => {
       let activeEditor = vscode.window.activeTextEditor;
       if (activeEditor?.document.languageId == "ftml") {
+        let accountSelect: boolean = !!vscode.workspace.getConfiguration('ftml.remote.sync').get('accountSelect');
         vscode.authentication.getSession('wikidot', [], {
-          clearSessionPreference: true,
+          clearSessionPreference: accountSelect,
           createIfNone: true,
         }).then(sess=>{
           let data = parsePageData(activeEditor!.document.getText());
@@ -200,8 +208,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('ftml.remote.wikidot.push', () => {
       let activeEditor = vscode.window.activeTextEditor;
       if (activeEditor?.document.languageId == "ftml") {
+        let accountSelect: boolean = !!vscode.workspace.getConfiguration('ftml.remote.sync').get('accountSelect');
         vscode.authentication.getSession('wikidot', [], {
-          clearSessionPreference: true,
+          clearSessionPreference: accountSelect,
           createIfNone: true
         }).then(async sess=>{
           let data = parsePageData(activeEditor!.document.getText());

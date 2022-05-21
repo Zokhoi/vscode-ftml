@@ -104,6 +104,11 @@
         "category": "Ftml"
       },
       {
+        "command": "ftml.remote.wikidot.switchAccount",
+        "title": "%ftml.remote.wikidot.switchAccount%",
+        "category": "Ftml"
+      },
+      {
         "command": "ftml.remote.wikidot.fetch",
         "title": "%ftml.remote.wikidot.fetch%",
         "category": "Ftml"
@@ -233,6 +238,11 @@
             "type": "string",
             "default": "https://scp-wiki.wikidot.com",
             "description": "%ftml.preview.wikidot%"
+          },
+          "ftml.remote.sync.accountSelect": {
+            "type": "boolean",
+            "default": true,
+            "description": "%ftml.remote.sync.accountSelect%"
           }
         }
       }

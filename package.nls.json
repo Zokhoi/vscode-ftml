@@ -10,8 +10,10 @@
   "ftml.preview.wikidot": "Default site for wikidot preview to base on",
   "ftml.preview.refresh": "Refresh preview",
   "ftml.remote.wikidot.login": "Login to Wikidot",
+  "ftml.remote.wikidot.switchAccount": "Change your currently selected Wikidot account",
   "ftml.remote.wikidot.fetch": "Fetch current page from Wikidot",
   "ftml.remote.wikidot.push": "Push current page to Wikidot",
   "ftml.diff.merge.selected": "Merge selected lines into current document",
-  "ftml.diff.merge.all": "Merge all changes into current document"
+  "ftml.diff.merge.all": "Merge all changes into current document",
+  "ftml.remote.sync.accountSelect": "Allow selecting account every time fetching or pushing a page"
 }
