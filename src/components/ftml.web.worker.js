@@ -1,4 +1,4 @@
-let ftml = require("@wikijump/ftml-wasm");
+let ftml = require("@vscode-ftml/ftml-wasm");
 ftml.init();
 onmessage = async (e) => {
   if (!ftml.ready) await ftml.loading;

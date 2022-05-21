@@ -1,5 +1,5 @@
 const { parentPort } = require('worker_threads');
-const ftml = require('@wikijump/ftml-wasm');
+const ftml = require('@vscode-ftml/ftml-wasm');
 
 ftml.init();
 // ftml.init(fs.readFileSync(wasmPath));
