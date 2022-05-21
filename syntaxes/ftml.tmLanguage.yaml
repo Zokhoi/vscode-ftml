@@ -13,12 +13,12 @@ patterns:
   - include: '#block-module-begin'
   - include: '#block-module-end'
   # - include: '#block-standalone'
-  # - include: '#block-standalone-value'
+  - include: '#block-standalone-value'
   - include: '#block-standalone-value-map'
   - include: '#block-standalone-map'
   - include: '#block'
-  # - include: '#block-value'
-  - include: '#block-value-map'
+  - include: '#block-value'
+  # - include: '#block-value-map'
   - include: '#block-map'
   - include: '#block-align'
   - include: '#inline-align'
@@ -326,7 +326,8 @@ repository:
         name: punctuation.definition.tag.end.ftml
     name: meta.block.structure.$2.standalone.ftml
   block-standalone-value:
-    match: (?i)(\[\[)\s*()\s+((?:(?!\]\]).)+)\s*(\]\])
+    match: >-
+      (?i)(\[\[)\s*(char|character|equation|eref|eqref|lines|newlines|rb|ruby2|target|target|anchortarget|user|\*user)\s+((?:(?!\]\]).)+)\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -339,7 +340,7 @@ repository:
     name: meta.block.structure.$2.standalone.ftml
   block-standalone-value-map:
     match: >-
-      (?i)(\[\[)\s*(char|character|date|embed|equation|eref|eqref|iframe|image|=image|<image|>image|f<image|f>image|include-elements|lines|newlines|radio|radio-button|\*radio|\*radio-button|user|\*user)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+      (?i)(\[\[)\s*(date|embed|iframe|image|=image|<image|>image|f<image|f>image|include-elements|radio|radio-button|\*radio|\*radio-button)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -394,7 +395,7 @@ repository:
     patterns:
       - include: $self
   block-value:
-    begin: (?i)(\[\[)\s*()\s+((?:(?!\]\]).)+)\s*(\]\])
+    begin: (?i)(\[\[)\s*(ifcategory|iftags|size|tab)\s+((?:(?!\]\]).)+)\s*(\]\])
     beginCaptures:
       '0':
         name: meta.block.structure.begin.ftml
@@ -405,38 +406,6 @@ repository:
       '3':
         name: string.other.value.ftml
       '4':
-        name: punctuation.definition.tag.end.ftml
-    end: (?i)((\[\[)\/)\s*()\s*(\]\])
-    endCaptures:
-      '0':
-        name: meta.block.structure.end.ftml
-      '1':
-        name: punctuation.definition.tag.begin.ftml
-      '2':
-        name: source.css-ignored-vscode
-      '3':
-        name: entity.name.tag.ftml
-      '4':
-        name: punctuation.definition.tag.end.ftml
-    name: meta.block.structure.$2.ftml
-    patterns:
-      - include: $self
-  block-value-map:
-    begin: >-
-      (?i)(\[\[)\s*(ifcategory|iftags|size|tab)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
-    beginCaptures:
-      '0':
-        name: meta.block.structure.begin.ftml
-      '1':
-        name: punctuation.definition.tag.begin.ftml
-      '2':
-        name: entity.name.tag.ftml
-      '3':
-        name: string.other.value.ftml
-      '4':
-        patterns:
-          - include: '#attribute'
-      '5':
         name: punctuation.definition.tag.end.ftml
     end: (?i)((\[\[)\/)\s*(ifcategory|iftags|size|tab)\s*(\]\])
     endCaptures:
@@ -453,9 +422,40 @@ repository:
     name: meta.block.structure.$2.ftml
     patterns:
       - include: $self
+  block-value-map:
+    begin: (?i)(\[\[)\s*()\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+    beginCaptures:
+      '0':
+        name: meta.block.structure.begin.ftml
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.tag.ftml
+      '3':
+        name: string.other.value.ftml
+      '4':
+        patterns:
+          - include: '#attribute'
+      '5':
+        name: punctuation.definition.tag.end.ftml
+    end: (?i)((\[\[)\/)\s*()\s*(\]\])
+    endCaptures:
+      '0':
+        name: meta.block.structure.end.ftml
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: source.css-ignored-vscode
+      '3':
+        name: entity.name.tag.ftml
+      '4':
+        name: punctuation.definition.tag.end.ftml
+    name: meta.block.structure.$2.ftml
+    patterns:
+      - include: $self
   block-map:
     begin: >-
-      (?i)(\[\[)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+      (?i)(\[\[)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|ruby|rt|rubytext|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
     beginCaptures:
       '0':
         name: meta.block.structure.begin.ftml
@@ -469,7 +469,7 @@ repository:
       '4':
         name: punctuation.definition.tag.end.ftml
     end: >-
-      (?i)((\[\[)\/)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)\s*(\]\])
+      (?i)((\[\[)\/)\s*(anchor_|a_|anchor|a|\*anchor_|\*a_|\*anchor|\*a|blockquote|quote|bold|b|strong|collapsible|del|deletion|div_|div|hidden|ins|insertion|invisible|italics|i|em|emphasis|ol_|ol|ul_|ul|li_|li|mark|highlight|monospace|tt|mono|paragraph|p|ruby|rt|rubytext|span_|span|strikethrough|s|subscript|sub|superscript|sup|super|table|cell|hcell|row|underline|u)\s*(\]\])
     endCaptures:
       '0':
         name: meta.block.structure.end.ftml

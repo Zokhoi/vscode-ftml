@@ -38,9 +38,11 @@ const kebabize = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs
         head = 'Map';
         break;
       case 'value':
-        head = 'Value'
+        head = 'Value';
+        break;
       case 'value+map':
-        head = 'ValueMap'
+        head = 'ValueMap';
+        break;
       case 'none':
       default:
         break;
