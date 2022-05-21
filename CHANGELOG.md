@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.1.0: Beta 1
 
 - Added page diffing between local and remote content
 - Added config option for account selecting when page fetch or push
