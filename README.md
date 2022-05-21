@@ -15,6 +15,7 @@ This extension supports only a subset of [Wikidot text](https://www.wikidot.com/
 ![vscode-ftml-live-preview](./docs/vscode-ftml-live-preview.gif)
 
 * Retreiving Wikidot page wikitext source and metadata
+* Diffing between local and remote content
 
 ![vscode-ftml-fetch](./docs/vscode-ftml-fetch.gif)
 
@@ -24,7 +25,7 @@ This extension supports only a subset of [Wikidot text](https://www.wikidot.com/
 
 ## Development
 
-This repository uses pnpm for package managing.
+This repository uses pnpm for package management.
 
 Install development dependencies and use
 ```bash

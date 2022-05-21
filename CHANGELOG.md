@@ -5,6 +5,7 @@
 - Added page diffing between local and remote content
 - Fixed FTML syntax bug for horizontal rule (4+ dashes) and sperator rule (4+ equals)
 - Page name from user input is now sanitized to wikidot unix names
+- Upgraded ftml version to 1.16.2
 
 ## 0.0.3: Pre-Alpha 3
 
