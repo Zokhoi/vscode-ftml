@@ -27,6 +27,7 @@
     "onCommand:ftml.preview.toggleBackend",
     "onCommand:ftml.preview.refresh",
     "onCommand:ftml.remote.wikidot.login",
+    "onCommand:ftml.remote.wikidot.switchAccount",
     "onCommand:ftml.remote.wikidot.fetch",
     "onCommand:ftml.remote.wikidot.push"
   ],
@@ -121,12 +122,28 @@
       {
         "command": "ftml.diff.merge.selected",
         "title": "%ftml.diff.merge.selected%",
+        "enablement": "resourceLangId == ftml && isInDiffEditor",
         "category": "Ftml"
       },
       {
         "command": "ftml.diff.merge.all",
         "title": "%ftml.diff.merge.all%",
+        "enablement": "resourceLangId == ftml && isInDiffEditor",
         "category": "Ftml"
+      },
+      {
+        "command": "ftml.diff.save",
+        "title": "%ftml.diff.save%",
+        "enablement": "resourceLangId == ftml && isInDiffEditor",
+        "category": "Ftml"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "ftml.diff.save",
+        "key": "ctrl+s",
+        "mac": "cmd+s",
+        "when": "resourceLangId == ftml && isInDiffEditor"
       }
     ],
     "menus": {

@@ -6,6 +6,7 @@ patterns:
   - include: '#block-css'
   - include: '#block-module-css'
   - include: '#block-html'
+  - include: '#block-iframe'
   - include: '#block-math'
   - include: '#inline-math'
   - include: '#block-include'
@@ -177,7 +178,7 @@ repository:
       - include: source.css
   block-html:
     name: markup.inserted.text.html
-    begin: (?i)(\[\[)\s*(html)\s*(\]\])
+    begin: (?i)(\[\[)\s*(html|embed)\s*(\]\])
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -185,7 +186,7 @@ repository:
         name: entity.name.tag.ftml
       '3':
         name: punctuation.definition.tag.end.ftml
-    end: (?i)((\[\[)\s*\/)\s*(html)\s*(\]\])
+    end: (?i)((\[\[)\s*\/)\s*(html|embed)\s*(\]\])
     endCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
@@ -198,6 +199,21 @@ repository:
     contentName: meta.embedded.block.html
     patterns:
       - include: text.html.basic
+  block-iframe:
+    match: (?i)(\[\[)\s*(iframe)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+    captures:
+      '1':
+        name: punctuation.definition.tag.begin.ftml
+      '2':
+        name: entity.name.tag.ftml
+      '3':
+        name: string.other.value.ftml
+      '4':
+        patterns:
+          - include: '#attribute'
+      '5':
+        name: punctuation.definition.tag.end.ftml
+    name: meta.block.structure.$2.standalone.ftml
   block-math:
     name: markup.inserted.math.display.ftml
     begin: (?i)(\[\[)\s*(math)\s*(\]\])
@@ -341,7 +357,7 @@ repository:
     name: meta.block.structure.$2.standalone.ftml
   block-standalone-value-map:
     match: >-
-      (?i)(\[\[)\s*(date|embed|iframe|image|=image|<image|>image|f<image|f>image|include-elements|radio|radio-button|\*radio|\*radio-button)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+      (?i)(\[\[)\s*(date|image|=image|<image|>image|f<image|f>image|include-elements|radio|radio-button|\*radio|\*radio-button)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml

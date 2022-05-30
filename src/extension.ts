@@ -141,7 +141,7 @@ export function activate(context: vscode.ExtensionContext) {
       })
     }),
 
-    vscode.commands.registerCommand('ftml.remote.wikidot.fetch', (fetchedData?: wikidot.PageMetadata) => {
+    vscode.commands.registerCommand('ftml.remote.wikidot.fetch', (_ctxWindow?: vscode.Uri, _ctxWindowGroup?: any, fetchedData?: wikidot.PageMetadata) => {
       let activeEditor = vscode.window.activeTextEditor;
       if (activeEditor?.document.languageId == "ftml") {
         let accountSelect: boolean = !!vscode.workspace.getConfiguration('ftml.remote.sync').get('accountSelect');
@@ -230,7 +230,7 @@ export function activate(context: vscode.ExtensionContext) {
                   case "Cancel":
                     return;
                   case "Fetch remote page":
-                    return vscode.commands.executeCommand('ftml.remote.wikidot.fetch', fetched);
+                    return vscode.commands.executeCommand('ftml.remote.wikidot.fetch', activeEditor!.document.uri, undefined, fetched);
                   case "Overwrite remote page":
                   default:
                     break;
@@ -298,12 +298,12 @@ export function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('ftml.diff.merge.selected', async () => {
-      let activeEditor = vscode.window.activeTextEditor;
-      if (!activeEditor) return;
-      if (!WdRevUriToSourceEditor.get(activeEditor.document.uri.toString())) return;
-      let origEditor = vscode.window.visibleTextEditors.find(e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(activeEditor!.document.uri.toString())!.document.uri.toString())!
+      let rhsEditor = vscode.window.activeTextEditor;
+      if (!rhsEditor) return;
+      if (!WdRevUriToSourceEditor.get(rhsEditor.document.uri.toString())) return;
+      let lhsEditor = vscode.window.visibleTextEditors.find(e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(rhsEditor!.document.uri.toString())!.document.uri.toString())!
       let countNew = 0, countOld = 0;
-      let changes = diffLines(origEditor.document.getText().replace(/\r\n/g, "\n"), activeEditor.document.getText().replace(/\r\n/g, "\n")).map(v=>{
+      let changes = diffLines(lhsEditor.document.getText().replace(/\r\n/g, "\n"), rhsEditor.document.getText().replace(/\r\n/g, "\n")).map(v=>{
         v.atNewLine = countNew;
         v.atOldLine = countOld;
         if (v.added) {
@@ -316,11 +316,11 @@ export function activate(context: vscode.ExtensionContext) {
         }
         return v;
       });
-      await origEditor.edit(builder=>{
+      await lhsEditor.edit(builder=>{
         try {
-          for (let i = 0; i < activeEditor!.selections.length; i++) {
-            let startline = activeEditor!.document.lineAt(activeEditor!.selections[i].start);
-            let endline = activeEditor!.document.lineAt(activeEditor!.selections[i].end);
+          for (let i = 0; i < rhsEditor!.selections.length; i++) {
+            let startline = rhsEditor!.document.lineAt(rhsEditor!.selections[i].start);
+            let endline = rhsEditor!.document.lineAt(rhsEditor!.selections[i].end);
             let startchange = changes.findIndex(v=>(v.added || !v.added && !v.removed) && v.atNewLine+v.count!>startline.lineNumber)!;
             let endchange = changes.findIndex(v=>(v.added || !v.added && !v.removed) && v.atNewLine+v.count!>endline.lineNumber)!;
             if (changes.filter((_, i)=> i>=startchange && i<=endchange).every(v=>!v.added && !v.removed)) continue;
@@ -334,11 +334,11 @@ export function activate(context: vscode.ExtensionContext) {
             if (!changes[endchange].added && !changes[endchange].removed) {
               endlinenum += endline.lineNumber-changes[endchange].atNewLine+1;
             }
-            let remove = origEditor.document.lineAt(startlinenum).range.union( origEditor.document.lineAt(endlinenum).range );
+            let remove = lhsEditor.document.lineAt(startlinenum).range.union( lhsEditor.document.lineAt(endlinenum).range );
             if (insertOnly) {
-              builder.insert(remove.start, activeEditor!.document.getText(startline.range.union(endline.rangeIncludingLineBreak)));
+              builder.insert(remove.start, rhsEditor!.document.getText(startline.range.union(endline.rangeIncludingLineBreak)));
             } else {
-              builder.replace(remove, activeEditor!.document.getText(startline.range.union(endline.range)));
+              builder.replace(remove, rhsEditor!.document.getText(startline.range.union(endline.range)));
             }
           }
         } catch (e) {
@@ -348,16 +348,37 @@ export function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('ftml.diff.merge.all', async () => {
-      let activeEditor = vscode.window.activeTextEditor;
-      if (!activeEditor) return;
-      if (!WdRevUriToSourceEditor.get(activeEditor.document.uri.toString())) return;
-      let origEditor = vscode.window.visibleTextEditors.find(
-        e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(activeEditor!.document.uri.toString())!.document.uri.toString())!
-      await origEditor.edit(builder=>{
-        builder.delete(origEditor.document.lineAt(origEditor.document.lineCount-1).rangeIncludingLineBreak
-            .union(new vscode.Range(0,0,origEditor.document.lineCount-1,0)))
-        builder.insert(new vscode.Position(0,0), activeEditor!.document.getText());
+      let rhsEditor = vscode.window.activeTextEditor;
+      if (!rhsEditor) return;
+      if (!WdRevUriToSourceEditor.get(rhsEditor.document.uri.toString())) return;
+      let lhsEditor = vscode.window.visibleTextEditors.find(
+        e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(rhsEditor!.document.uri.toString())!.document.uri.toString())!
+      await lhsEditor.edit(builder=>{
+        builder.delete(lhsEditor.document.lineAt(lhsEditor.document.lineCount-1).rangeIncludingLineBreak
+            .union(new vscode.Range(0,0,lhsEditor.document.lineCount-1,0)))
+        builder.insert(new vscode.Position(0,0), rhsEditor!.document.getText());
       })
+    }),
+
+    vscode.commands.registerCommand('ftml.diff.save', async () => {
+      let savingEditor = vscode.window.activeTextEditor;
+      if (!savingEditor) return;
+      if (WdRevUriToSourceEditor.get(savingEditor.document.uri.toString())) {
+        savingEditor = vscode.window.visibleTextEditors.find(
+          e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(savingEditor!.document.uri.toString())!.document.uri.toString())!
+      }
+      console.log(savingEditor)
+      try {
+        await vscode.workspace.fs.stat(savingEditor.document.uri);
+        vscode.workspace.fs.writeFile(savingEditor.document.uri, Buffer.from(savingEditor.document.getText()));
+      } catch (e) {
+        let saveFile = await vscode.window.showSaveDialog({
+          defaultUri: savingEditor.document.uri
+        });
+        if (!saveFile) return;
+        vscode.workspace.fs.writeFile(saveFile, Buffer.from(savingEditor.document.getText()));
+      }
+      // vscode.commands.executeCommand("workbench.action.files.save", savingEditor.document.uri)
     }),
 
     vscode.authentication.registerAuthenticationProvider(

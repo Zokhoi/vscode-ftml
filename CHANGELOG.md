@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+- Fixed fetch command in context menu not working
+- Fixed preview changing to fetched content in diff editor
+- Fixed iframe and embed blocks not highlighting html syntax
+
 ## 0.1.0: Beta 1
 
 - Added page diffing between local and remote content

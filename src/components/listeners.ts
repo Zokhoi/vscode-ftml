@@ -90,7 +90,7 @@ function setListeners(panel: vscode.WebviewPanel, panelId: string) {
  */
 function setTabChangeListener(panel: vscode.WebviewPanel, panelId: string) {
   let tabChangeDisposable = vscode.window.onDidChangeActiveTextEditor(e=>{
-    if (e?.document.languageId == 'ftml') {
+    if (e?.document.languageId == 'ftml' && e?.document.uri.scheme != 'wikidot-rev') {
       let panelInfo = idToInfo.get(panelId)!;
       panelInfo.fileName = e.document.fileName;
       if (panelInfo.backend=='ftml' && panelInfo.live) {
