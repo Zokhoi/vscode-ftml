@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.1.1: Beta 1 patch 1
 
 - Fixed fetch command in context menu not working
 - Fixed preview changing to fetched content in diff editor
