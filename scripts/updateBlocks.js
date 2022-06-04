@@ -28,7 +28,6 @@ const blocktomllink = 'https://raw.githubusercontent.com/scpwiki/wikijump/develo
       'module',
       'include-messy',
       'html',
-      'iframe',
       'embed',
       'css',
       'math',

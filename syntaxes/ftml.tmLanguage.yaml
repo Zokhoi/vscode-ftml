@@ -6,7 +6,6 @@ patterns:
   - include: '#block-css'
   - include: '#block-module-css'
   - include: '#block-html'
-  - include: '#block-iframe'
   - include: '#block-math'
   - include: '#inline-math'
   - include: '#block-include'
@@ -199,21 +198,6 @@ repository:
     contentName: meta.embedded.block.html
     patterns:
       - include: text.html.basic
-  block-iframe:
-    match: (?i)(\[\[)\s*(iframe)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
-    captures:
-      '1':
-        name: punctuation.definition.tag.begin.ftml
-      '2':
-        name: entity.name.tag.ftml
-      '3':
-        name: string.other.value.ftml
-      '4':
-        patterns:
-          - include: '#attribute'
-      '5':
-        name: punctuation.definition.tag.end.ftml
-    name: meta.block.structure.$2.standalone.ftml
   block-math:
     name: markup.inserted.math.display.ftml
     begin: (?i)(\[\[)\s*(math)\s*(\]\])
@@ -357,7 +341,7 @@ repository:
     name: meta.block.structure.$2.standalone.ftml
   block-standalone-value-map:
     match: >-
-      (?i)(\[\[)\s*(date|image|=image|<image|>image|f<image|f>image|include-elements|radio|radio-button|\*radio|\*radio-button)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
+      (?i)(\[\[)\s*(date|iframe|image|=image|<image|>image|f<image|f>image|include-elements|radio|radio-button|\*radio|\*radio-button)\s+([^\s\]]+)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
     captures:
       '1':
         name: punctuation.definition.tag.begin.ftml
