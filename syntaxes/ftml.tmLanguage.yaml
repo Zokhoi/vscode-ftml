@@ -3,7 +3,7 @@ name: FTML/Wikidot Code
 patterns:
   - include: '#comment'
   - include: '#yaml-frontmatter'
-  - include: '#block-css'
+  # - include: '#block-css'
   - include: '#block-module-css'
   - include: '#block-html'
   - include: '#block-math'
@@ -129,29 +129,30 @@ repository:
     contentName: meta.embedded.block.yaml
     patterns:
       - include: source.yaml
-  block-css:
-    name: markup.inserted.text.css
-    begin: (?i)(\[\[)\s*(css)\s*(\]\])
-    beginCaptures:
-      '1':
-        name: punctuation.definition.tag.begin.ftml
-      '2':
-        name: entity.name.tag.ftml
-      '3':
-        name: punctuation.definition.tag.end.ftml
-    end: (?i)((\[\[)\s*\/)\s*(css)\s*(\]\])
-    endCaptures:
-      '1':
-        name: punctuation.definition.tag.begin.ftml
-      '2':
-        name: source.css-ignored-vscode
-      '3':
-        name: entity.name.tag.ftml
-      '4':
-        name: punctuation.definition.tag.end.ftml
-    contentName: meta.embedded.block.css
-    patterns:
-      - include: source.css
+  ### This was removed from ftml in https://github.com/scpwiki/wikijump/pull/1178
+  # block-css:
+  #   name: markup.inserted.text.css
+  #   begin: (?i)(\[\[)\s*(css)\s*(\]\])
+  #   beginCaptures:
+  #     '1':
+  #       name: punctuation.definition.tag.begin.ftml
+  #     '2':
+  #       name: entity.name.tag.ftml
+  #     '3':
+  #       name: punctuation.definition.tag.end.ftml
+  #   end: (?i)((\[\[)\s*\/)\s*(css)\s*(\]\])
+  #   endCaptures:
+  #     '1':
+  #       name: punctuation.definition.tag.begin.ftml
+  #     '2':
+  #       name: source.css-ignored-vscode
+  #     '3':
+  #       name: entity.name.tag.ftml
+  #     '4':
+  #       name: punctuation.definition.tag.end.ftml
+  #   contentName: meta.embedded.block.css
+  #   patterns:
+  #     - include: source.css
   block-module-css:
     name: markup.inserted.text.css
     begin: (?i)(\[\[)\s*(module css)\s*(\]\])

@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+
+- Removed [[css]] block, see [scpwiki/wikijump#1178](https://github.com/scpwiki/wikijump/pull/1178)
+
 ## 0.1.1: Beta 1 patch 1
 
 - Fixed fetch command in context menu not working
