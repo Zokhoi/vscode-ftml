@@ -47,7 +47,18 @@ const unixNamify = (
   return output;
 }
 
+/**
+ * Name of the extension.
+ */
+const pkgname = "vscode-ftml";
+/**
+ * Version of the extension.
+ */
+const pkgver = "0.1.1";
+
 export {
   urljoin,
   unixNamify,
+  pkgname,
+  pkgver,
 }

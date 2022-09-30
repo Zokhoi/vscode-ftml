@@ -3,6 +3,9 @@
 ## Unreleased
 
 - Removed [[css]] block, see [scpwiki/wikijump#1178](https://github.com/scpwiki/wikijump/pull/1178)
+- Fixed cannot fetch remote page when remote site forces using https
+- Upgraded ftml version to 1.18.1
+- Other minor bug fixes
 
 ## 0.1.1: Beta 1 patch 1
 

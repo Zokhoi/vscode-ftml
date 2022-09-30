@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import fetch from "../cross-fetch?cross";
 import { load } from "cheerio";
-import { urljoin, unixNamify } from "../utils";
+import { urljoin, unixNamify, pkgname } from "../utils";
 
 /**
  * Represents the metadata of a Wikidot page at a certain revision.
@@ -102,8 +102,8 @@ async function Ajax(info: {wikiSite: string, session?: string}, params: any): Pr
   for (const key in params) { body.append(key, params[key]) }
   let rawres = await fetch(urljoin(info.wikiSite, "ajax-module-connector.php"), {
     headers: {
-      'User-Agent': 'vscode-ftml/0.0.1',
-      Referer: 'vscode-ftml',
+      'User-Agent': `${pkgname}/0.0.1`,
+      Referer: pkgname,
       Cookie: `wikidot_token7=${wikidotToken7}; ${info.session ?? ''}`,
     },
     method: "POST",
@@ -113,6 +113,7 @@ async function Ajax(info: {wikiSite: string, session?: string}, params: any): Pr
   let res: Response = await (rawres).json();
   if (res.status != "ok") {
     if (res.message?.includes("Nonsecure access is not enabled")) {
+      delete params.wikidot_token7;
       return await Ajax({ wikiSite: info.wikiSite.replace('http', 'https'), session: info.session }, params);
     } else throw new WikidotAjaxError(res, info.wikiSite);
   };
@@ -161,9 +162,9 @@ async function login(username: string, password: string): Promise<Session> {
   for (const key in params) { body.append(key, params[key]) }
   let res = await fetch('https://www.wikidot.com/default--flow/login__LoginPopupScreen', {
     headers: {
-      'User-Agent': 'vscode-ftml/0.0.1',
-      Referer: 'vscode-ftml',
-      Cookie: `wikidot_token7=${wikidotToken7}`
+      'User-Agent': `${pkgname}/0.0.1`,
+      Referer: pkgname,
+      Cookie: `wikidot_token7=${wikidotToken7}`,
     },
     method: "POST",
     body,
@@ -244,8 +245,8 @@ namespace Page {
     if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
     return await (await fetch(urljoin(info.wikiSite, unixNamify(info.wikiPage), '/norender/true'), {
       headers: {
-        'User-Agent': 'vscode-ftml/0.0.1',
-        Referer: 'vscode-ftml',
+        'User-Agent': `${pkgname}/0.0.1`,
+        Referer: pkgname,
         Cookie: info.session,
       },
     })).text();

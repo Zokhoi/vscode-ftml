@@ -71,7 +71,7 @@ class WikidotAuthProvider implements AuthenticationProvider {
 				retry = -1;
 			} catch (err) {
 				retry = 1;
-				e = err;
+				e = err as Error;
 			}
 		}
     let user = await getUserInfo(newUsername!);
