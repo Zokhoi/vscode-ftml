@@ -1,6 +1,6 @@
 import type { AuthenticationProvider, AuthenticationSession } from "vscode";
 import * as vscode from "vscode";
-import { Session, login, getUserInfo } from "./interface";
+import { Session, login, getUserInfo, AjaxModule } from "./interface";
 
 /**
  * Represents a session of a currently logged in Wikidot user.
@@ -20,27 +20,13 @@ class WikidotAuthProvider implements AuthenticationProvider {
 
   constructor(context: vscode.ExtensionContext) {
 		this.context = context;
-		this.restoreSessions();
+		this.restoreSessions().then(()=>{
+			this.validateAllSessions();
+		});
 	};
 
 	async getSessions(scopes?: readonly string[]): Promise<WikidotSession[]> {
-		let sessionArray = [...this.sessions.values()];
-		for (let i = 0; i < sessionArray.length; i++) {
-			if (sessionArray[i].expireDate.getTime() < Date.now()) {
-				let choice = await vscode.window.showWarningMessage(
-					`${sessionArray[i].account.label}'s login session has expired.`,
-					"Sign in again")
-				if (choice) {
-					try {
-						await this.createSession([], sessionArray[i].account.label);
-					} catch (_) {
-						await this.removeSession(sessionArray[i].id);
-					}
-				} else {
-					await this.removeSession(sessionArray[i].id);
-				}
-			};
-		}
+		this.validateAllSessions();
 		if (!scopes?.length) {
 			return [...this.sessions.values()];
 		} else return [this.sessions.get(scopes[0])!];
@@ -108,7 +94,47 @@ class WikidotAuthProvider implements AuthenticationProvider {
 
 	async storeSessions(): Promise<void> {
 		let sessionArray = [...this.sessions.values()];
-		return await this.context.secrets.store("wikidot.auth", JSON.stringify(sessionArray))
+		return await this.context.secrets.store("wikidot.auth", JSON.stringify(sessionArray));
+	}
+
+	async validateSession(session: WikidotSession): Promise<void> {
+		if (session.expireDate.getTime() < Date.now()) {
+			this.showExpireMessage(session);
+		} else {
+			let status = await AjaxModule({
+				wikiSite: "https://www.wikidot.com",
+				session: session.accessToken,
+			}, "dashboard/settings/DSAccountModule", {});
+			if (status.status === "no_permission") {
+				// The session is invalid
+				this.showExpireMessage(session);
+			}
+		}
+	}
+
+	async validateAllSessions(): Promise<void> {
+		let sessionArray = [...this.sessions.values()];
+		for (let i = 0; i < sessionArray.length; i++) {
+			await this.validateSession(sessionArray[i]);
+		}
+	}
+
+	/**
+	 * Prompt that the session has expired and asks for relogin in VSCode window.
+	 */
+	async showExpireMessage(session: WikidotSession) {
+		let choice = await vscode.window.showWarningMessage(
+			`${session.account.label}'s login session has expired.`,
+			"Sign in again")
+			if (choice) {
+				try {
+					await this.createSession([], session.account.label);
+				} catch (_) {
+					await this.removeSession(session.id);
+				}
+			} else {
+				await this.removeSession(session.id);
+			}
 	}
 }
 

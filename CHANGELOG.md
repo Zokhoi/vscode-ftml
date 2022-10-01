@@ -4,6 +4,7 @@
 
 - Removed [[css]] block, see [scpwiki/wikijump#1178](https://github.com/scpwiki/wikijump/pull/1178)
 - Fixed cannot fetch remote page when remote site forces using https
+- Improved Wikidot account session validity checking process
 - Upgraded ftml version to 1.18.1
 - Other minor bug fixes
 
