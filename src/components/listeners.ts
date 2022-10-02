@@ -19,19 +19,19 @@ import { genTitle } from "./preview";
  * leading edge, instead of the trailing.
  */
 function debounce(func: (...args: any[])=>any, wait: number, immediate?: boolean): (...args: any[])=>any {
-	let timeout: NodeJS.Timeout | null;
+  let timeout: NodeJS.Timeout | null;
   let currentArgs: any[];
-	return function(...args) {
-		let context = this;
-		let later = function() {
-			timeout = null;
-			if (!immediate) return func.apply(context, currentArgs);
-		};
-		let callNow = immediate && !timeout;
-		if (!timeout) timeout = setTimeout(later, wait);
+  return function(...args) {
+    let context = this;
+    let later = function() {
+      timeout = null;
+      if (!immediate) return func.apply(context, currentArgs);
+    };
+    let callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
     currentArgs = args;
-		if (callNow) return func.apply(context, currentArgs);
-	};
+    if (callNow) return func.apply(context, currentArgs);
+  };
 };
 
 const serveBackendDebounced = debounce(serveBackend, 250);

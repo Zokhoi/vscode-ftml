@@ -444,9 +444,9 @@ Cherry
 
 [!-- collapsible-multiline --]
 [[collapsible
-	show="+ Show stuff"
-	hide="- Hide stuff"
-	hideLocation  =  "both"
+  show="+ Show stuff"
+  hide="- Hide stuff"
+  hideLocation  =  "both"
 ]]
 Apple
 [[/collapsible]]
@@ -1604,8 +1604,8 @@ abc
 
 [!-- span-mulitiline --]
 [[span
-	class="my-class"
-	style  = "color: red;"
+  class="my-class"
+  style  = "color: red;"
 
 ]]Banana[[/span]]
 

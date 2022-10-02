@@ -10,75 +10,75 @@ blockquote, .blockquote {
 
 table.wiki-content-table,
 table.wj-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-	margin: 0.5em auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0.5em auto;
 }
 table.wiki-content-table td,
 table.wj-table td {
-	border: 1px solid #666;
-	padding: 0.3em 0.7em;
+  border: 1px solid #666;
+  padding: 0.3em 0.7em;
 }
 table.wiki-content-table th,
 table.wj-table th {
-	border: 1px solid #666;
-	padding: 0.3em 0.7em;
-	background-color: #333;
+  border: 1px solid #666;
+  padding: 0.3em 0.7em;
+  background-color: #333;
 }
 
 .wj-align-center {
-	text-align: center;
+  text-align: center;
 }
 .wj-align-left {
-	text-align: left;
+  text-align: left;
 }
 .wj-align-right {
-	text-align: right;
+  text-align: right;
 }
 .wj-align-justify {
-	text-align: justify;
+  text-align: justify;
 }
 
 
 #toc {
-	margin: 1em auto 1em 0;
-	padding: 0em 0.5em;
-	border: 1px dashed gray;
-	background-color: #F7F7F7;
-	display: table;
+  margin: 1em auto 1em 0;
+  padding: 0em 0.5em;
+  border: 1px dashed gray;
+  background-color: #F7F7F7;
+  display: table;
 
 }
 
 #toc .title {
-	font-weight: bold;
-	margin: 0.2em 0  ;
-	padding: 0 2em;
-	text-align: center;
+  font-weight: bold;
+  margin: 0.2em 0  ;
+  padding: 0 2em;
+  text-align: center;
 }
 
 #toc #toc-action-bar{
-	padding: 2px;
+  padding: 2px;
 }
 
 #toc-list{
-	margin: 0.5em 0;
+  margin: 0.5em 0;
 }
 #toc.floatright{
-	float: right;
-	margin: 1em;
+  float: right;
+  margin: 1em;
 }
 #toc.floatleft{
-	float: left;
-	margin: 1em;
+  float: left;
+  margin: 1em;
 }
 
 .code, code {
-	border: 1px dashed #999;
-	background-color: #333;
-	font-family: 'Andale Mono', 'Courier New', Courier, monospace;
-	padding: 0 0.7em;
-	margin: 1em 0;
-	overflow: auto;
+  border: 1px dashed #999;
+  background-color: #333;
+  font-family: 'Andale Mono', 'Courier New', Courier, monospace;
+  padding: 0 0.7em;
+  margin: 1em 0;
+  overflow: auto;
 }
 
 
