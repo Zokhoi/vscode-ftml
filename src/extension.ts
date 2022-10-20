@@ -159,13 +159,13 @@ export function activate(context: vscode.ExtensionContext) {
             let fetched = fetchedData ?? await wikidot.Page.getMetadata({
               wikiSite: data.site,
               wikiPage: data.page,
-              session: sess.accessToken})
-            if (fetched.revision === undefined) {
+              session: sess.accessToken,
+              checkExist: true })
+            if (!fetched.exist) {
               vscode.window.showInformationMessage(`The remote page ${data.page} does not exist on site ${data.site}.`);
               return;
             };
-            let source = await wikidot.Page.getSource(data.site, data.page);
-            if (data.revision === undefined || data.revision < fetched.revision) {
+            if (data.revision === undefined || fetched.revision === undefined || fetched.revision !== undefined && (data.revision < fetched.revision)) {
               let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Please choose an action.`, "Open diff editor", "Overwrite content", "Cancel");
               switch (answer) {
                 case "Open diff editor":
@@ -177,6 +177,8 @@ export function activate(context: vscode.ExtensionContext) {
                     `${basename(activeEditor!.document.fileName)} ← ${data.page}`);
                   break;
                 case "Overwrite content":
+                  delete fetched.exist;
+                  let source = await wikidot.Page.getSource(data.site, data.page);
                   for (const key in data) {
                     if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
                   }
@@ -191,7 +193,7 @@ export function activate(context: vscode.ExtensionContext) {
                   break;
               }
               return;
-            } else if (data.revision !== undefined && data.revision >= fetched.revision) {
+            } else if (data.revision !== undefined && fetched.revision !== undefined && data.revision >= fetched.revision) {
               vscode.window.showInformationMessage(`Your local copy of ${data.page} is already at the latest version.`);
               return;
             };
@@ -223,7 +225,8 @@ export function activate(context: vscode.ExtensionContext) {
               let fetched = await wikidot.Page.getMetadata({
                 wikiSite: data.site,
                 wikiPage: data.page,
-                session: sess.accessToken})
+                session: sess.accessToken,
+                checkExist: true })
               if (fetched.revision !== undefined && (data.revision === undefined || data.revision < fetched.revision)) {
                 let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Please choose an action.`, "Fetch remote page", "Overwrite remote page", "Cancel");
                 switch (answer) {

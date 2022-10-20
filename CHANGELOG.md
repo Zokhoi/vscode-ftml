@@ -4,6 +4,7 @@
 
 - Added auto saving metadata after pushing to Wikidot remote
 - Fixed saving in diff editor
+- Fixed pages with bottom toolbar disabled taken to be non-existent
 
 ## 0.1.2: Beta 1 patch 2
 

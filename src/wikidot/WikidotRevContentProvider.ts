@@ -32,8 +32,10 @@ export class WikidotRevContentProvider implements TextDocumentContentProvider {
       wikiSite: uri.authority.split('.')[0],
       wikiPage: uri.path.substring(1).split('.')[0],
       session: session?.accessToken,
+      checkExist: true,
     });
-    let source = meta.revision !== undefined ? await Page.getSource(uri.authority.split('.')[0], uri.path?.substring(1).split('.')[0]) : '';
+    let source = meta.exist ? await Page.getSource(uri.authority.split('.')[0], uri.path?.substring(1).split('.')[0]) : '';
+    delete meta.exist;
     return `---\n${dump(meta)}---\n${source}`;
   }
 }

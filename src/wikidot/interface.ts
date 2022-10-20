@@ -13,6 +13,7 @@ interface PageMetadata {
   parent?: string;
   tags?: string[] | string;
   revision?: number;
+  exist?: boolean;
 }
 
 /**
@@ -241,15 +242,24 @@ namespace Page {
   /**
    * Gets the raw html of a page.
    */
-  export async function getHtml(info: {wikiSite: string, wikiPage: string, session?: string}) {
+  export async function getHtml(info: {wikiSite: string, wikiPage: string, session?: string, checkExist?: boolean, useOkRange?: boolean}) {
     if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
-    return await (await fetch(urljoin(info.wikiSite, unixNamify(info.wikiPage), '/norender/true'), {
+    info.checkExist ??= false;
+    info.useOkRange ??= false;
+    let res = await fetch(urljoin(info.wikiSite, unixNamify(info.wikiPage), '/norender/true'), {
       headers: {
         'User-Agent': `${pkgname}/0.0.1`,
         Referer: pkgname,
         Cookie: info.session,
       },
-    })).text();
+    });
+    let text = await res.text();
+    return (info.checkExist) ? {
+      html: text,
+      exist: (info.useOkRange ?? false) ? !res.ok : res.status!=404,
+    } : {
+      html: text,
+    }
   }
   
   /**
@@ -258,22 +268,38 @@ namespace Page {
    * @param wikiPage The Wikidot page name.
    */
   export async function getId(wikiSite: string, wikiPage: string) {
-    let chpg = load(await getHtml({wikiSite, wikiPage}));
+    let chpg = load((await getHtml({wikiSite, wikiPage})).html);
     let pageId = chpg(chpg("head").children("script")
           .filter((_,el)=>chpg(el).html()!.includes("WIKIREQUEST"))).html()!
           .match(/WIKIREQUEST\.info\.pageId\s*=\s*(\d+)\s*;/)?.[1];
     return pageId;
   }
+
+  /**
+   * Checks if the page exist on Wikidot.
+   */
+  export async function existsPage(info: {wikiSite: string, wikiPage: string, session?: string, useOkRange?: boolean }): Promise<boolean> {
+    if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
+    let res = (await fetch(urljoin(info.wikiSite, unixNamify(info.wikiPage), '/norender/true'), {
+      headers: {
+        'User-Agent': `${pkgname}/0.0.1`,
+        Referer: pkgname,
+        Cookie: info.session,
+      },
+    }))
+    return (info.useOkRange ?? false) ? !res.ok : res.status!==404;
+  }
   
   /**
-   * Gets the metadata of a page. It assumes that the page exists.
+   * Gets the metadata of a page.
    */
-  export async function getMetadata(info: {wikiSite: string, wikiPage: string, session?: string}) {
+  export async function getMetadata(info: {wikiSite: string, wikiPage: string, session?: string, checkExist?: boolean, useOkRange?: boolean}) {
     let meta: PageMetadata = {
       site: info.wikiSite,
       page: unixNamify(info.wikiPage),
     };
-    let chpg = load(await getHtml(info));
+    let source = await getHtml(info);
+    let chpg = load(source.html);
     let title = chpg("#page-title")?.text().trim();
     if (title) meta.title = title;
     let tags = chpg("div.page-tags span").children("a");
@@ -288,6 +314,7 @@ namespace Page {
     chpg("#page-info")?.children("span")?.remove();
     let rev = chpg("#page-info")?.text().match(/\d+/)?.[0];
     if (rev) meta.revision = parseInt(rev);
+    if (info.checkExist) meta.exist = source.exist;
     return meta;
   }
   
