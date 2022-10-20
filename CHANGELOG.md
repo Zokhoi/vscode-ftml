@@ -1,5 +1,10 @@
 # Change Log
 
+## Unreleased
+
+- Added auto saving metadata after pushing to Wikidot remote
+- Fixed saving in diff editor
+
 ## 0.1.2: Beta 1 patch 2
 
 - Removed [[css]] block, see [scpwiki/wikijump#1178](https://github.com/scpwiki/wikijump/pull/1178)

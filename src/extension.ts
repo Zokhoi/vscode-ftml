@@ -288,6 +288,7 @@ export function activate(context: vscode.ExtensionContext) {
                   .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
               builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${data.source}`);
             })
+            await activeEditor!.document.save();
           })
         }).catch(e=>{
           if (e instanceof Error) {
@@ -367,18 +368,7 @@ export function activate(context: vscode.ExtensionContext) {
         savingEditor = vscode.window.visibleTextEditors.find(
           e=>e.document.uri.toString() === WdRevUriToSourceEditor.get(savingEditor!.document.uri.toString())!.document.uri.toString())!
       }
-      console.log(savingEditor)
-      try {
-        await vscode.workspace.fs.stat(savingEditor.document.uri);
-        vscode.workspace.fs.writeFile(savingEditor.document.uri, Buffer.from(savingEditor.document.getText()));
-      } catch (e) {
-        let saveFile = await vscode.window.showSaveDialog({
-          defaultUri: savingEditor.document.uri
-        });
-        if (!saveFile) return;
-        vscode.workspace.fs.writeFile(saveFile, Buffer.from(savingEditor.document.getText()));
-      }
-      // vscode.commands.executeCommand("workbench.action.files.save", savingEditor.document.uri)
+      await savingEditor.document.save();
     }),
 
     vscode.authentication.registerAuthenticationProvider(
