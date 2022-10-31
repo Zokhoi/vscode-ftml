@@ -291,7 +291,7 @@ export function activate(context: vscode.ExtensionContext) {
                   .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
               builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${data.source}`);
             })
-            await activeEditor!.document.save();
+            if (!activeEditor!.document.isUntitled) await activeEditor!.document.save();
           })
         }).catch(e=>{
           if (e instanceof Error) {
