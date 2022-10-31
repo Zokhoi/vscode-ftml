@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.1.3: Beta 1 patch 3
 
 - Added auto saving metadata after pushing to Wikidot remote
 - Fixed saving in diff editor
