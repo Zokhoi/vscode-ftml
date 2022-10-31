@@ -235,6 +235,15 @@ async function getPreview({source, wikiPage, wikiSite}: {
   return res.body;
 }
 
+async function listPages(wikiSite: string, params: any) {
+  return await AjaxModule({ wikiSite }, "list/ListPagesModule", Object.assign({
+    category: "*",
+    perPage: "20",
+    separate: "false",
+    module_body: ``
+  }, params))
+}
+
 /**
  * Namespace for operations related to a single Wikidot page.
  */
@@ -267,8 +276,8 @@ namespace Page {
    * @param wikiSite The Wikidot site.
    * @param wikiPage The Wikidot page name.
    */
-  export async function getId(wikiSite: string, wikiPage: string) {
-    let chpg = load((await getHtml({wikiSite, wikiPage})).html);
+  export async function getId(wikiSite: string, wikiPage: string, source?: string) {
+    let chpg = load(source ?? (await getHtml({wikiSite, wikiPage})).html);
     let pageId = chpg(chpg("head").children("script")
           .filter((_,el)=>chpg(el).html()!.includes("WIKIREQUEST"))).html()!
           .match(/WIKIREQUEST\.info\.pageId\s*=\s*(\d+)\s*;/)?.[1];
@@ -314,6 +323,35 @@ namespace Page {
     chpg("#page-info")?.children("span")?.remove();
     let rev = chpg("#page-info")?.text().match(/\d+/)?.[0];
     if (rev) meta.revision = parseInt(rev);
+    else if (source.exist) {
+      /* Toolbar is hidden, assume that the page is private */
+      /* We cannot get most of the metadata from private page, */
+      /* so fetch metadata by listpages */
+      let lp = await listPages(meta.site, {
+        fullname: meta.page,
+        module_body: `[[div_ id="list-title"]]
+        %%title%%
+        [[/div]]
+        [[div_ id="list-parent"]]
+        %%parent_fullname%%
+        [[/div]]
+        [[div_ id="list-tags"]]
+        %%_tags%% %%tags%%
+        [[/div]]
+        [[div_ id="list-rev"]]
+        %%revisions%%
+        [[/div]]`,
+      })
+      let listed = load(lp.body);
+      let title = listed(listed("#u-list-title")[0]).text().trim();
+      if (title) meta.title = title;
+      let parent = listed(listed("#u-list-parent")[0]).text().trim();
+      if (parent) meta.parent = parent;
+      let tags = listed(listed("#u-list-tags")[0]).text().trim();
+      if (tags) meta.tags = tags.split(" ");
+      let revision = parseInt(listed(listed("#u-list-rev")[0]).text().trim());
+      if (revision) meta.revision = revision;
+    }
     if (info.checkExist) meta.exist = source.exist;
     return meta;
   }
@@ -345,6 +383,29 @@ namespace Page {
     return (await AjaxModule({wikiSite}, "edit/TemplateSourceModule", Object.assign({
       page_id,
     }, params))).body;
+  }
+
+  /**
+   * Gets the history revision list of a Wikidot page as from the bottom toolbar.
+   * @param params The params passed when calling the revision list ajax.
+   */
+  export async function getHistory(wikiSite: string, pageOrId: string | number, params?: any): Promise<string> {
+    let page_id = await resolveId(wikiSite, pageOrId);
+    if (!page_id) throw new WikidotError({ site: wikiSite, page: pageOrId },"Wikidot page does not exist.");
+    return (await AjaxModule({wikiSite}, "history/PageRevisionListModule", Object.assign({
+      page_id,
+      page: "1",
+      perpage: "20",
+    }, params))).body;
+  }
+
+  /**
+   * Gets the latest revision number of a Wikidot page as from revision list.
+   * @param params The params passed when calling the revision list ajax.
+   */
+  export async function getLatestRevisionNumber(wikiSite: string, pageOrId: string | number, params?: any): Promise<number> {
+    let rev = load(await getHistory(wikiSite, pageOrId, params));
+    return parseInt(rev(rev('tr[id|="revision-row"]')[0])?.text().trim());
   }
   
   /**
@@ -379,6 +440,7 @@ export {
   Ajax,
   AjaxModule,
   AjaxAction,
+  listPages,
   login,
   loginPrompt,
   getUserInfo,
