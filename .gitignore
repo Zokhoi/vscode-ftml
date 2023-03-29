@@ -2,3 +2,4 @@ node_modules
 *.vsix
 dist/
 syntaxes/ftml.tmLanguage.json
+docs/sources

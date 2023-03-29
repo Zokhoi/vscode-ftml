@@ -54,7 +54,7 @@ const pkgname = "vscode-ftml";
 /**
  * Version of the extension.
  */
-const pkgver = "0.1.2";
+const pkgver = "0.1.3";
 
 export {
   urljoin,

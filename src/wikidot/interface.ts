@@ -88,7 +88,7 @@ class WikidotAjaxError extends WikidotError {
 }
 
 /**
- * To connect to the ajax enpoint of a Wikidot site.
+ * To connect to the ajax endpoint of a Wikidot site.
  * @param info An object containing the site you are requesting and the session cookie to use.
  * @param params Objects to be sent to the ajax endpoint.
  */
@@ -296,7 +296,7 @@ namespace Page {
         Cookie: info.session,
       },
     }))
-    return (info.useOkRange ?? false) ? !res.ok : res.status!==404;
+    return (info.useOkRange ?? false) ? !!res.ok : res.status!==404;
   }
   
   /**
