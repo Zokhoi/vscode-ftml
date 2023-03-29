@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import fetch from "../cross-fetch?cross";
-import { load } from "cheerio";
+import { parseHTML } from "linkedom";
 import { urljoin, unixNamify, pkgname } from "../utils";
 
 /**
@@ -213,7 +213,7 @@ async function getUserInfo(username: string) {
   let unixname = unixNamify(username, { acceptsCategory: false });
   let pg = await (await fetch("https://www.wikidot.com/user:info/"+unixname)).text();
   return {
-    name: load(pg)("h1.profile-title")?.text().replace(/\n/g, '').trim(),
+    name: (parseHTML(pg).document.querySelector("h1.profile-title") as HTMLElement)?.innerText.replace(/\n/g, '').trim(),
     unixname,
     id: pg.match(/USERINFO\.userId\s*\=\s*(\d+)\s*\;/)?.[1],
   }
@@ -277,9 +277,9 @@ namespace Page {
    * @param wikiPage The Wikidot page name.
    */
   export async function getId(wikiSite: string, wikiPage: string, source?: string) {
-    let chpg = load(source ?? (await getHtml({wikiSite, wikiPage})).html);
-    let pageId = chpg(chpg("head").children("script")
-          .filter((_,el)=>chpg(el).html()!.includes("WIKIREQUEST"))).html()!
+    let chpg = parseHTML(source ?? (await getHtml({wikiSite, wikiPage})).html);
+    let pageId = Array.from(chpg.document.querySelector("head")!.querySelectorAll("script"))
+          .filter((el)=>el.innerHTML.includes("WIKIREQUEST"))[0].innerHTML
           .match(/WIKIREQUEST\.info\.pageId\s*=\s*(\d+)\s*;/)?.[1];
     return pageId;
   }
@@ -308,20 +308,21 @@ namespace Page {
       page: unixNamify(info.wikiPage),
     };
     let source = await getHtml(info);
-    let chpg = load(source.html);
-    let title = chpg("#page-title")?.text().trim();
+    let chpg = parseHTML(source.html).document;
+    let title = chpg.getElementById("page-title")?.innerText.trim();
     if (title) meta.title = title;
-    let tags = chpg("div.page-tags span").children("a");
-    if (tags.length) {
+    let tags = chpg.querySelector("div.page-tags span")?.getElementsByTagName("a");
+    if (tags?.length) {
       meta.tags = [];
       for (let i = 0; i < tags.length; i++) {
-        meta.tags.push(chpg(tags[i]).text().trim());
+        meta.tags.push((tags[i] as HTMLElement).innerText.trim());
       }
     }
-    let parent = chpg("#breadcrumbs")?.children("a").last().attr("href");
+    let parent = chpg.getElementById("breadcrumbs")?.getElementsByTagName("a")[-1].href;
     if (parent) meta.parent = parent.substring(1);
-    chpg("#page-info")?.children("span")?.remove();
-    let rev = chpg("#page-info")?.text().match(/\d+/)?.[0];
+    let spans = chpg.getElementById("page-info")?.getElementsByTagName("span");
+    if (spans) Array.from(spans).forEach(v=>v.remove());
+    let rev = chpg.getElementById("page-info")?.innerText.match(/\d+/)?.[0];
     if (rev) meta.revision = parseInt(rev);
     else if (source.exist) {
       /* Toolbar is hidden, assume that the page is private */
@@ -342,15 +343,15 @@ namespace Page {
         %%revisions%%
         [[/div]]`,
       })
-      let listed = load(lp.body);
-      let title = listed(listed("#u-list-title")[0]).text().trim();
+      let listed = parseHTML(lp.body).document;
+      let title = listed.getElementById("u-list-title")?.innerText.trim();
       if (title) meta.title = title;
-      let parent = listed(listed("#u-list-parent")[0]).text().trim();
+      let parent = listed.getElementById("u-list-parent")?.innerText.trim();
       if (parent) meta.parent = parent;
-      let tags = listed(listed("#u-list-tags")[0]).text().trim();
+      let tags = listed.getElementById("u-list-tags")?.innerText.trim();
       if (tags) meta.tags = tags.split(" ");
-      let revision = parseInt(listed(listed("#u-list-rev")[0]).text().trim());
-      if (revision) meta.revision = revision;
+      let revision = listed.getElementById("u-list-rev")?.innerText.trim();
+      if (revision && !isNaN(parseInt(revision))) meta.revision = parseInt(revision);
     }
     if (info.checkExist) meta.exist = source.exist;
     return meta;
@@ -404,8 +405,8 @@ namespace Page {
    * @param params The params passed when calling the revision list ajax.
    */
   export async function getLatestRevisionNumber(wikiSite: string, pageOrId: string | number, params?: any): Promise<number> {
-    let rev = load(await getHistory(wikiSite, pageOrId, params));
-    return parseInt(rev(rev('tr[id|="revision-row"]')[0])?.text().trim());
+    let rev = parseHTML(await getHistory(wikiSite, pageOrId, params)).document;
+    return parseInt((rev.querySelector('tr[id|="revision-row"]') as HTMLElement)?.innerText.trim());
   }
   
   /**

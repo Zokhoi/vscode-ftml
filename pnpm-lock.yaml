@@ -1,42 +1,49 @@
 lockfileVersion: 5.4
 
-specifiers:
-  '@types/diff': ^5.0.2
-  '@types/js-yaml': ^4.0.5
-  '@types/node': ^17.0.23
-  '@types/vscode': ^1.65.0
-  '@types/vscode-webview': ^1.57.0
-  '@vscode-ftml/ftml-wasm': ^1.18
-  cheerio: ^1.0.0-rc.10
-  cross-fetch: ^3.1.5
-  diff: ^5.0.0
-  esbuild: ^0.14.27
-  front-matter: ^4.0.2
-  js-yaml: ^4.1.0
-  toml: ^3.0.0
-  typescript: ^4.6.2
-  vite: ^2.9
-  vite-plugin-commonjs-externals: ^0.1.1
+importers:
 
-dependencies:
-  '@vscode-ftml/ftml-wasm': 1.18.1
-  cheerio: 1.0.0-rc.10
-  cross-fetch: 3.1.5
-  diff: 5.0.0
-  front-matter: 4.0.2
+  .:
+    specifiers:
+      '@types/diff': ^5.0.2
+      '@types/js-yaml': ^4.0.5
+      '@types/node': ^17.0.23
+      '@types/vscode': ^1.65.0
+      '@types/vscode-webview': ^1.57.0
+      '@vscode-ftml/ftml-wasm': ^1.18
+      cross-fetch: ^3.1.5
+      diff: ^5.0.0
+      esbuild: ^0.14.27
+      front-matter: ^4.0.2
+      js-yaml: ^4.1.0
+      linkedom: ^0.14.25
+      toml: ^3.0.0
+      typescript: ^4.6.2
+      vite: ^2.8.6
+      vite-plugin-commonjs-externals: ^0.1.1
+    dependencies:
+      '@vscode-ftml/ftml-wasm': 1.18.1
+      cross-fetch: 3.1.5
+      diff: 5.0.0
+      front-matter: 4.0.2
+      linkedom: 0.14.25
+    devDependencies:
+      '@types/diff': 5.0.2
+      '@types/js-yaml': 4.0.5
+      '@types/node': 17.0.23
+      '@types/vscode': 1.65.0
+      '@types/vscode-webview': 1.57.0
+      esbuild: 0.14.27
+      js-yaml: 4.1.0
+      toml: 3.0.0
+      typescript: 4.6.2
+      vite: 2.9.15
+      vite-plugin-commonjs-externals: 0.1.1
 
-devDependencies:
-  '@types/diff': 5.0.2
-  '@types/js-yaml': 4.0.5
-  '@types/node': 17.0.23
-  '@types/vscode': 1.65.0
-  '@types/vscode-webview': 1.57.0
-  esbuild: 0.14.27
-  js-yaml: 4.1.0
-  toml: 3.0.0
-  typescript: 4.6.2
-  vite: 2.9.15
-  vite-plugin-commonjs-externals: 0.1.1
+  cross-dom:
+    specifiers:
+      cheerio: ^1.0.0-rc.10
+    dependencies:
+      cheerio: 1.0.0-rc.10
 
 packages:
 
@@ -125,9 +132,23 @@ packages:
       nth-check: 2.0.1
     dev: false
 
+  /css-select/5.1.0:
+    resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 6.1.0
+      domhandler: 5.0.3
+      domutils: 3.0.1
+      nth-check: 2.0.1
+    dev: false
+
   /css-what/6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
     engines: {node: '>= 6'}
+    dev: false
+
+  /cssom/0.5.0:
+    resolution: {integrity: sha512-iKuQcq+NdHqlAcwUY0o/HL69XQrUaQdMjmStJ8JFmUaiiQErlhrmuigkg/CU4E2J0IyUKUrMAgl36TvN67MqTw==}
     dev: false
 
   /diff/5.0.0:
@@ -143,12 +164,27 @@ packages:
       entities: 2.2.0
     dev: false
 
+  /dom-serializer/2.0.0:
+    resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      entities: 4.4.0
+    dev: false
+
   /domelementtype/2.3.0:
     resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
     dev: false
 
   /domhandler/4.3.1:
     resolution: {integrity: sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ==}
+    engines: {node: '>= 4'}
+    dependencies:
+      domelementtype: 2.3.0
+    dev: false
+
+  /domhandler/5.0.3:
+    resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
     dependencies:
       domelementtype: 2.3.0
@@ -162,8 +198,21 @@ packages:
       domhandler: 4.3.1
     dev: false
 
+  /domutils/3.0.1:
+    resolution: {integrity: sha512-z08c1l761iKhDFtfXO04C7kTdPBLi41zwOZl00WS8b5eiaebNpY00HKbztwBq+e3vyqWNwWF3mP9YLUeqIrF+Q==}
+    dependencies:
+      dom-serializer: 2.0.0
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+    dev: false
+
   /entities/2.2.0:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
+    dev: false
+
+  /entities/4.4.0:
+    resolution: {integrity: sha512-oYp7156SP8LkeGD0GF85ad1X9Ai79WtRsZ2gxJqtBuzH+98YUV6jkHEKlZkMbcrjJjIVJNIDP/3WL9wQkoPbWA==}
+    engines: {node: '>=0.12'}
     dev: false
 
   /es-module-lexer/0.4.1:
@@ -409,6 +458,10 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /html-escaper/3.0.3:
+    resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
+    dev: false
+
   /htmlparser2/6.1.0:
     resolution: {integrity: sha512-gyyPk6rgonLFEDGoeRgQNaEUvdJ4ktTmmUh/h2t7s+M8oPpIPxgNACWa+6ESR57kXstwqPiCut0V8NRpcwgU7A==}
     dependencies:
@@ -416,6 +469,15 @@ packages:
       domhandler: 4.3.1
       domutils: 2.8.0
       entities: 2.2.0
+    dev: false
+
+  /htmlparser2/8.0.2:
+    resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      domutils: 3.0.1
+      entities: 4.4.0
     dev: false
 
   /is-core-module/2.8.1:
@@ -438,6 +500,16 @@ packages:
     dependencies:
       argparse: 2.0.1
     dev: true
+
+  /linkedom/0.14.25:
+    resolution: {integrity: sha512-Q5BvQVFzMveMxHvZ9L3E60duxSVPIWQRzY2HJKpCV4pRzY3jS/r/a1upLeo/Nup9mDRJ5MS0FX2hRR+wRo+Hiw==}
+    dependencies:
+      css-select: 5.1.0
+      cssom: 0.5.0
+      html-escaper: 3.0.3
+      htmlparser2: 8.0.2
+      uhyphen: 0.2.0
+    dev: false
 
   /magic-string/0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
@@ -548,6 +620,10 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
+
+  /uhyphen/0.2.0:
+    resolution: {integrity: sha512-qz3o9CHXmJJPGBdqzab7qAYuW8kQGKNEuoHFYrBwV6hWIMcpAmxDLXojcHfFr9US1Pe6zUswEIJIbLI610fuqA==}
+    dev: false
 
   /vite-plugin-commonjs-externals/0.1.1:
     resolution: {integrity: sha512-XRFsdFos/D1Dam0t40qBM+8b1Mrn5vH6aOwaTt8CW5myGx9uKivFXPukP2CsEo6cSukbPlBImsL1voiV6e3o5w==}
