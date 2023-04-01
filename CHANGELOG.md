@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.2.0: Beta 2
 
 - Added experimental VSCode for web support with limited functionality
 - Moved backend html parsing and traversing from cheerio to [linkedom](https://www.npmjs.com/package/linkedom)
