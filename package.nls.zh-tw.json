@@ -15,5 +15,6 @@
   "ftml.remote.wikidot.push": "將本wiki文本上傳至 Wikidot",
   "ftml.diff.merge.selected": "將已選擇的更改合併至本wiki文本",
   "ftml.diff.merge.all": "將所有更改合併至本wiki文本",
+  "ftml.diff.save": "儲存該檔案",
   "ftml.remote.sync.accountSelect": "每次抓取或上傳wikidot頁面文本皆顯示帳戶選擇列表"
 }

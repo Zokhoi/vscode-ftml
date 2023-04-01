@@ -15,5 +15,6 @@
   "ftml.remote.wikidot.push": "Push current page to Wikidot",
   "ftml.diff.merge.selected": "Merge selected lines into current document",
   "ftml.diff.merge.all": "Merge all changes into current document",
+  "ftml.diff.save": "Save current file",
   "ftml.remote.sync.accountSelect": "Allow selecting account every time fetching or pushing a page"
 }
