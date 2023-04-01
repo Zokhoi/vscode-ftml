@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+- Added experimental VSCode for web support with limited functionality
+- Moved backend html parsing and traversing from cheerio to [linkedom](https://www.npmjs.com/package/linkedom)
+- Other minor bug fixes
+
 ## 0.1.3: Beta 1 patch 3
 
 - Added auto saving metadata after pushing to Wikidot remote

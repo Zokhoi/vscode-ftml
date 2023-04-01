@@ -32,6 +32,7 @@
     "onCommand:ftml.remote.wikidot.push"
   ],
   "main": "./dist/extension.js",
+  "browser": "./dist/extension.browser.js",
   "contributes": {
     "languages": [
       {
@@ -92,6 +93,7 @@
       {
         "command": "ftml.preview.toggleBackend",
         "title": "%ftml.preview.toggleBackend%",
+        "enablement": "!isWeb",
         "category": "Ftml"
       },
       {
@@ -102,39 +104,43 @@
       {
         "command": "ftml.remote.wikidot.login",
         "title": "%ftml.remote.wikidot.login%",
+        "enablement": "!isWeb",
         "category": "Ftml"
       },
       {
         "command": "ftml.remote.wikidot.switchAccount",
         "title": "%ftml.remote.wikidot.switchAccount%",
+        "enablement": "!isWeb",
         "category": "Ftml"
       },
       {
         "command": "ftml.remote.wikidot.fetch",
         "title": "%ftml.remote.wikidot.fetch%",
+        "enablement": "!isWeb",
         "category": "Ftml"
       },
       {
         "command": "ftml.remote.wikidot.push",
         "title": "%ftml.remote.wikidot.push%",
+        "enablement": "!isWeb",
         "category": "Ftml"
       },
       {
         "command": "ftml.diff.merge.selected",
         "title": "%ftml.diff.merge.selected%",
-        "enablement": "resourceLangId == ftml && isInDiffEditor",
+        "enablement": "resourceLangId == ftml && isInDiffEditor && !isWeb",
         "category": "Ftml"
       },
       {
         "command": "ftml.diff.merge.all",
         "title": "%ftml.diff.merge.all%",
-        "enablement": "resourceLangId == ftml && isInDiffEditor",
+        "enablement": "resourceLangId == ftml && isInDiffEditor && !isWeb",
         "category": "Ftml"
       },
       {
         "command": "ftml.diff.save",
         "title": "%ftml.diff.save%",
-        "enablement": "resourceLangId == ftml && isInDiffEditor",
+        "enablement": "resourceLangId == ftml && isInDiffEditor && !isWeb",
         "category": "Ftml"
       }
     ],
@@ -143,7 +149,7 @@
         "command": "ftml.diff.save",
         "key": "ctrl+s",
         "mac": "cmd+s",
-        "when": "resourceLangId == ftml && isInDiffEditor"
+        "when": "resourceLangId == ftml && isInDiffEditor && !isWeb"
       }
     ],
     "menus": {
@@ -159,22 +165,22 @@
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && !isInDiffEditor",
+          "when": "resourceLangId == ftml && !isInDiffEditor && !isWeb",
           "command": "ftml.remote.wikidot.fetch",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && !isInDiffEditor",
+          "when": "resourceLangId == ftml && !isInDiffEditor && !isWeb",
           "command": "ftml.remote.wikidot.push",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly && !isWeb",
           "command": "ftml.diff.merge.selected",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly && !isWeb",
           "command": "ftml.diff.merge.all",
           "group": "4_ftml"
         }
@@ -191,22 +197,22 @@
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && !isInDiffEditor",
+          "when": "resourceLangId == ftml && !isInDiffEditor && !isWeb",
           "command": "ftml.remote.wikidot.fetch",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && !isInDiffEditor",
+          "when": "resourceLangId == ftml && !isInDiffEditor && !isWeb",
           "command": "ftml.remote.wikidot.push",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly && !isWeb",
           "command": "ftml.diff.merge.selected",
           "group": "4_ftml"
         },
         {
-          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly",
+          "when": "resourceLangId == ftml && isInDiffEditor && editorReadonly && !isWeb",
           "command": "ftml.diff.merge.all",
           "group": "4_ftml"
         },
@@ -221,7 +227,7 @@
           "group": "4_ftml"
         },
         {
-          "when": "ftmlPreviewFocus",
+          "when": "ftmlPreviewFocus && !isWeb",
           "command": "ftml.preview.toggleBackend",
           "group": "4_ftml"
         },

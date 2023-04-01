@@ -8,7 +8,7 @@ const mode = process.env.MODE || 'production';
 
 const configs = [
   join(process.cwd(), 'scripts/config.vite.js'),
-  // join(process.cwd(), 'scripts/config.browser.vite.js'),
+  join(process.cwd(), 'scripts/config.browser.vite.js'),
 ];
 
 
