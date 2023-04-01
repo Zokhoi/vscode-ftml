@@ -51,8 +51,8 @@
         ],
         "configuration": "./language-configuration.json",
         "icon": {
-          "dark": "assets/ftmlang.64x64.png",
-          "light": "assets/ftmlang.64x64.png"
+          "dark": "./assets/ftmlang.64x64.png",
+          "light": "./assets/ftmlang.64x64.png"
         }
       }
     ],
