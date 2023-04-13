@@ -1,5 +1,8 @@
 # Change Log
 
+## Unreleased
+- Fixed error when trying to pull pages with parent page
+
 ## 0.2.0: Beta 2
 
 - Added experimental VSCode for web support with limited functionality

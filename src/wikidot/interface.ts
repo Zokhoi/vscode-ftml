@@ -318,8 +318,8 @@ namespace Page {
         meta.tags.push((tags[i] as HTMLElement).innerText.trim());
       }
     }
-    let parent = chpg.getElementById("breadcrumbs")?.getElementsByTagName("a")[-1].href;
-    if (parent) meta.parent = parent.substring(1);
+    let parent = chpg.getElementById("breadcrumbs")?.getElementsByTagName("a");
+    if (parent?.length) meta.parent = parent[parent.length].href.substring(1);
     let spans = chpg.getElementById("page-info")?.getElementsByTagName("span");
     if (spans) Array.from(spans).forEach(v=>v.remove());
     let rev = chpg.getElementById("page-info")?.innerText.match(/\d+/)?.[0];

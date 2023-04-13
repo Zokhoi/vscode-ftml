@@ -346,7 +346,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
           }
         } catch (e) {
-          console.log(e)
+          vscode.window.showErrorMessage(e.message);
         }
       })
     }),
