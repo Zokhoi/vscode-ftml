@@ -319,7 +319,7 @@ namespace Page {
       }
     }
     let parent = chpg.getElementById("breadcrumbs")?.getElementsByTagName("a");
-    if (parent?.length) meta.parent = parent[parent.length].href.substring(1);
+    if (parent?.length) meta.parent = parent[parent.length-1].href.substring(1);
     let spans = chpg.getElementById("page-info")?.getElementsByTagName("span");
     if (spans) Array.from(spans).forEach(v=>v.remove());
     let rev = chpg.getElementById("page-info")?.innerText.match(/\d+/)?.[0];
