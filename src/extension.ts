@@ -172,48 +172,51 @@ export function activate(context: vscode.ExtensionContext) {
             location: vscode.ProgressLocation.Notification
           }, async (prog)=>{
             prog.report({message: `Fetching page ${data.page} from ${data.site}...`});
-            let fetched = fetchedData ?? await wikidot.Page.getMetadata({
-              wikiSite: data.site,
-              wikiPage: data.page,
-              session: sess.accessToken,
-              checkExist: true })
-            if (!fetched.exist) {
-              vscode.window.showInformationMessage(`The remote page ${data.page} does not exist on site ${data.site}.`);
-              return;
-            };
-            if (data.revision === undefined || fetched.revision === undefined || fetched.revision !== undefined && (data.revision < fetched.revision)) {
-              let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Please choose an action.`, "Open diff editor", "Overwrite content", "Cancel");
-              switch (answer) {
-                case "Open diff editor":
-                  WdRevUriToSourceEditor.set(toWikidotRevUri(data.site, data.page).toString(), activeEditor!);
-                  await vscode.commands.executeCommand(
-                    "vscode.diff",
-                    activeEditor!.document.uri,
-                    toWikidotRevUri(data.site, data.page),
-                    `${basename(activeEditor!.document.fileName)} ← ${data.page}`);
-                  break;
-                case "Overwrite content":
-                  delete fetched.exist;
-                  let source = await wikidot.Page.getSource(data.site, data.page);
-                  for (const key in data) {
-                    if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
-                  }
-                  await activeEditor!.edit(builder=>{
-                    builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
-                        .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
-                    builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${source}`);
-                  })
-                  break;
-                case "Cancel":
-                default:
-                  break;
-              }
-              return;
-            } else if (data.revision !== undefined && fetched.revision !== undefined && data.revision >= fetched.revision) {
-              vscode.window.showInformationMessage(`Your local copy of ${data.page} is already at the latest version.`);
-              return;
-            };
-            
+            try {
+              let fetched = fetchedData ?? await wikidot.Page.getMetadata({
+                wikiSite: data.site,
+                wikiPage: data.page,
+                session: sess.accessToken,
+                checkExist: true })
+              if (!fetched.exist) {
+                vscode.window.showInformationMessage(`The remote page ${data.page} does not exist on site ${data.site}.`);
+                return;
+              };
+              if (data.revision === undefined || fetched.revision === undefined || fetched.revision !== undefined && (data.revision < fetched.revision)) {
+                let answer = await vscode.window.showWarningMessage(`The remote page ${data.page} has a revision newer than the local copy. Please choose an action.`, "Open diff editor", "Overwrite content", "Cancel");
+                switch (answer) {
+                  case "Open diff editor":
+                    WdRevUriToSourceEditor.set(toWikidotRevUri(data.site, data.page).toString(), activeEditor!);
+                    await vscode.commands.executeCommand(
+                      "vscode.diff",
+                      activeEditor!.document.uri,
+                      toWikidotRevUri(data.site, data.page),
+                      `${basename(activeEditor!.document.fileName)} ← ${data.page}`);
+                    break;
+                  case "Overwrite content":
+                    delete fetched.exist;
+                    let source = await wikidot.Page.getSource({wikiSite: data.site, session: sess.accessToken}, data.page);
+                    for (const key in data) {
+                      if (key!="source" && !Object.prototype.hasOwnProperty.call(fetched, key)) { fetched[key] = data[key]; }
+                    }
+                    await activeEditor!.edit(builder=>{
+                      builder.delete(activeEditor!.document.lineAt(activeEditor!.document.lineCount-1).rangeIncludingLineBreak
+                          .union(new vscode.Range(0,0,activeEditor!.document.lineCount-1,0)))
+                      builder.insert(new vscode.Position(0,0), `---\n${yaml.dump(fetched)}---\n${source}`);
+                    })
+                    break;
+                  case "Cancel":
+                  default:
+                    break;
+                }
+                return;
+              } else if (data.revision !== undefined && fetched.revision !== undefined && data.revision >= fetched.revision) {
+                vscode.window.showInformationMessage(`Your local copy of ${data.page} is already at the latest version.`);
+                return;
+              };
+            } catch (e) {
+              vscode.window.showErrorMessage(`Error: ${e.message}`);
+            }
           })
         }).catch(e=>{
           if (e instanceof Error) {

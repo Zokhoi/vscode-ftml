@@ -273,11 +273,9 @@ namespace Page {
   
   /**
    * Gets the id of a page, if the page exists, or else undefined.
-   * @param wikiSite The Wikidot site.
-   * @param wikiPage The Wikidot page name.
    */
-  export async function getId(wikiSite: string, wikiPage: string, source?: string) {
-    let chpg = parseHTML(source ?? (await getHtml({wikiSite, wikiPage})).html);
+  export async function getId(info: {wikiSite: string, wikiPage: string, session?: string}, source?: string) {
+    let chpg = parseHTML(source ?? (await getHtml(info)).html);
     let pageId = Array.from(chpg.document.querySelector("head")!.querySelectorAll("script"))
           .filter((el)=>el.innerHTML.includes("WIKIREQUEST"))[0].innerHTML
           .match(/WIKIREQUEST\.info\.pageId\s*=\s*(\d+)\s*;/)?.[1];
@@ -362,10 +360,10 @@ namespace Page {
    * @param wikiSite The Wikidot site.
    * @param pageOrId The Wikidot page name or id.
    */
-  export async function resolveId(wikiSite: string, pageOrId: string | number) {
+  export async function resolveId(wikiSite: string, pageOrId: string | number, session?: string) {
     let page_id: string | undefined;
     if (typeof pageOrId == "string") {
-      page_id = await getId(wikiSite, pageOrId);
+      page_id = await getId({wikiSite, wikiPage: pageOrId, session});
     } else if (typeof pageOrId == "number") {
       page_id = `${pageOrId}`;
     } else throw new TypeError(`pageOrId requires a String or Number. Received ${typeof pageOrId}`);
@@ -378,10 +376,10 @@ namespace Page {
    * this result may be out of date.
    * @param params The params passed when calling the editing box ajax.
    */
-  export async function getSource(wikiSite: string, pageOrId: string | number, params?: any): Promise<string> {
-    let page_id = await resolveId(wikiSite, pageOrId);
-    if (!page_id) throw new WikidotError({ site: wikiSite, page: pageOrId },"Wikidot page does not exist.");
-    return (await AjaxModule({wikiSite}, "edit/TemplateSourceModule", Object.assign({
+  export async function getSource(meta: {wikiSite: string, session?: string}, pageOrId: string | number, params?: any): Promise<string> {
+    let page_id = await resolveId(meta.wikiSite, pageOrId, meta.session);
+    if (!page_id) throw new WikidotError({ site: meta.wikiSite, page: pageOrId },"Wikidot page does not exist.");
+    return (await AjaxModule(meta, "edit/TemplateSourceModule", Object.assign({
       page_id,
     }, params))).body;
   }
@@ -390,10 +388,10 @@ namespace Page {
    * Gets the history revision list of a Wikidot page as from the bottom toolbar.
    * @param params The params passed when calling the revision list ajax.
    */
-  export async function getHistory(wikiSite: string, pageOrId: string | number, params?: any): Promise<string> {
-    let page_id = await resolveId(wikiSite, pageOrId);
-    if (!page_id) throw new WikidotError({ site: wikiSite, page: pageOrId },"Wikidot page does not exist.");
-    return (await AjaxModule({wikiSite}, "history/PageRevisionListModule", Object.assign({
+  export async function getHistory(meta: {wikiSite: string, session?: string}, pageOrId: string | number, params?: any): Promise<string> {
+    let page_id = await resolveId(meta.wikiSite, pageOrId);
+    if (!page_id) throw new WikidotError({ site: meta.wikiSite, page: pageOrId },"Wikidot page does not exist.");
+    return (await AjaxModule(meta, "history/PageRevisionListModule", Object.assign({
       page_id,
       page: "1",
       perpage: "20",
@@ -404,8 +402,8 @@ namespace Page {
    * Gets the latest revision number of a Wikidot page as from revision list.
    * @param params The params passed when calling the revision list ajax.
    */
-  export async function getLatestRevisionNumber(wikiSite: string, pageOrId: string | number, params?: any): Promise<number> {
-    let rev = parseHTML(await getHistory(wikiSite, pageOrId, params)).document;
+  export async function getLatestRevisionNumber(meta: {wikiSite: string, session?: string}, pageOrId: string | number, params?: any): Promise<number> {
+    let rev = parseHTML(await getHistory(meta, pageOrId, params)).document;
     return parseInt((rev.querySelector('tr[id|="revision-row"]') as HTMLElement)?.innerText.trim());
   }
   

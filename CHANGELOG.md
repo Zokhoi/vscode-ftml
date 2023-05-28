@@ -2,6 +2,7 @@
 
 ## Unreleased
 - Added Wikidot logout command
+- Fixed behaviour when dealing with private sites
 
 ## ~~0.2.1: Beta 2 patch 1~~ 0.2.2: Beta 2 patch 2
 - Fixed error when trying to pull pages with parent page

@@ -284,6 +284,7 @@
     "compile:ts": "tsc -p ./",
     "compile:yaml": "pnpx js-yaml ./syntaxes/ftml.tmLanguage.yaml > ./syntaxes/ftml.tmLanguage.json",
     "compile": "pnpm run compile:yaml && pnpm run compile:vite",
+    "package": "vsce package --no-dependencies",
     "lint": "eslint . --ext .ts,.tsx",
     "watch": "tsc -w -p ./"
   },
