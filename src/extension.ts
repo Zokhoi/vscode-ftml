@@ -134,6 +134,22 @@ export function activate(context: vscode.ExtensionContext) {
       });
     }),
 
+    vscode.commands.registerCommand('ftml.remote.wikidot.logout', () => {
+      vscode.authentication.getSession('wikidot', [], {
+        clearSessionPreference: true,
+        createIfNone: true,
+      }).then(sess=>{
+        if (sess) {
+          WdAuthProvider.removeSession(sess.id).catch(e=>{
+            if (e instanceof Error) {
+              vscode.window.showErrorMessage(e.toString());
+            }
+          });
+        }
+      })
+      
+    }),
+
     vscode.commands.registerCommand('ftml.remote.wikidot.switchAccount', () => {
       vscode.authentication.getSession('wikidot', [], {
         clearSessionPreference: true,

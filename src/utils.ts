@@ -42,7 +42,7 @@ const unixNamify = (
       .filter(v=>!!v&&v!="_")
       .join(":");
   } else {
-    output = output.replace(/[^a-z]+/g, "-").replace(/^\-+|\-+$/g, "");
+    output = output.replace(/[^a-z0-9]+/g, "-").replace(/^\-+|\-+$/g, "");
   }
   return output;
 }

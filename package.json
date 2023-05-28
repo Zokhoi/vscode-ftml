@@ -108,6 +108,12 @@
         "category": "Ftml"
       },
       {
+        "command": "ftml.remote.wikidot.logout",
+        "title": "%ftml.remote.wikidot.logout%",
+        "enablement": "!isWeb",
+        "category": "Ftml"
+      },
+      {
         "command": "ftml.remote.wikidot.switchAccount",
         "title": "%ftml.remote.wikidot.switchAccount%",
         "enablement": "!isWeb",

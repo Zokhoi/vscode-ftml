@@ -62,7 +62,7 @@ class WikidotAuthProvider implements AuthenticationProvider {
     }
     let user = await getUserInfo(newUsername!);
 
-    const session = {
+    const session: WikidotSession = {
       scopes: [],
       id: `${user.id}`,
       account: {
