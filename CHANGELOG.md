@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.2.4: Beta 2 patch 4
 - Fixed CSS module arguments
 
 ## 0.2.3: Beta 2 patch 3
