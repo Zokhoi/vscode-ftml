@@ -155,13 +155,18 @@ repository:
   #     - include: source.css
   block-module-css:
     name: markup.inserted.text.css
-    begin: (?i)(\[\[)\s*(module css)\s*(\]\])
+    begin: (?i)(\[\[)\s*(module|module654)\s+(css)(?:\s+((?:(?!\]\]).)+))?\s*(\]\])
     beginCaptures:
       '1':
         name: punctuation.definition.tag.begin.ftml
       '2':
         name: entity.name.tag.ftml
       '3':
+        name: string.other.value.ftml
+      '4':
+        patterns:
+          - include: '#attribute'
+      '5':
         name: punctuation.definition.tag.end.ftml
     end: (?i)((\[\[)\s*\/)\s*(module)\s*(\]\])
     endCaptures:

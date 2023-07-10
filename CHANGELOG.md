@@ -1,5 +1,8 @@
 # Change Log
 
+## Unreleased
+- Fixed CSS module arguments
+
 ## 0.2.3: Beta 2 patch 3
 - Added Wikidot logout command
 - Fixed behaviour when dealing with private sites
