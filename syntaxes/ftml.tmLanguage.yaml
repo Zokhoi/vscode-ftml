@@ -1,5 +1,12 @@
 $schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
 name: FTML/Wikidot Code
+scopeName: text.ftml
+fileTypes:
+  - ftml
+  - wd
+  - wj
+  - wikidot
+  - wikijump
 patterns:
   - include: '#comment'
   - include: '#yaml-frontmatter'
@@ -759,4 +766,3 @@ repository:
     match: >-
       \%\%(linked_title|page_unix_name|(full_)?page_name|author|date|(author|user|date)_edited|description|short|text|long|body)\%\%
     name: invalid.deprecated.variable.other.ftmlmodules.$1.ftml
-scopeName: text.ftml
