@@ -566,7 +566,7 @@ repository:
       - include: $self
   italics:
     name: markup.italic.ftml
-    begin: \/\/
+    begin: (?<!\:)\/\/
     beginCaptures:
       '0':
         name: punctuation.definition.tag.begin.ftml
