@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased:
+- Prevent URI from being treated as italics
+- Updated ftml version to 1.28.0
+
 ## 0.2.4: Beta 2 patch 4
 - Fixed CSS module arguments
 
