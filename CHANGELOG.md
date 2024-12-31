@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased:
+## 0.2.5: Beta 2 patch 5
 - Prevent URI from being treated as italics
 - Updated ftml version to 1.28.0
 
