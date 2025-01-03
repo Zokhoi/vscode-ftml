@@ -21,7 +21,6 @@ type previewInfo = {
   fileName: string,
   viewColumn: number,
   content: string,
-  styles: string,
   backend: string,
   live: boolean,
 }
@@ -56,7 +55,6 @@ function genHtml(panelInfo: previewInfo) {
     </style>
   </head>
   <body>
-  <div id="preview-styles"></div>
   <div id="preview-content">loading...</div>
   <script>
     const vscode = acquireVsCodeApi();
@@ -65,27 +63,22 @@ function genHtml(panelInfo: previewInfo) {
       fileName: ${JSON.stringify(panelInfo.fileName)},
       viewColumn: ${panelInfo.viewColumn},
       content: ${JSON.stringify(panelInfo.content)},
-      styles: ${JSON.stringify(panelInfo.styles)},
       backend: ${JSON.stringify(panelInfo.backend)},
       live: ${panelInfo.live},
     };
     const ftmlWorker = ${JSON.stringify(ftmlWorker)};
-    const previewStyles = document.getElementById('preview-styles');
     const previewContent = document.getElementById('preview-content');
   
     if (state.content) previewContent.innerHTML = state.content;
-    if (state.styles) previewStyles.innerHTML = state.styles;
   
     let ftml = new Worker(ftmlWorker, {
       type: 'module',
     });
   
     ftml.addEventListener('message', e => {
-      const { html, styles } = e.data;
+      const { html } = e.data;
       previewContent.innerHTML = html;
-      previewStyles.innerHTML = styles.map(v=>\`<style>\\n\${v.replace(/\\</g, '&lt;')}\\n</style>\`).join("\\n\\n");
       state.content = html;
-      state.styles = previewStyles.innerHTML;
       vscode.setState(state);
     });
   
@@ -134,7 +127,6 @@ function createPreviewPanel(viewColumn?: number) {
     fileName: '',
     viewColumn: viewColumn ?? vscode.ViewColumn.Active,
     content: '',
-    styles: '',
     backend: backend == "wikidot" ? "wikidot" : "ftml",
     live: backend == "wikidot" ? false : !!vscode.workspace.getConfiguration('ftml.preview').get('live'),
   }

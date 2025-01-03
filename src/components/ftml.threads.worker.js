@@ -10,9 +10,9 @@ ftml.init();
   parentPort.on('message', (value) => {
     const { ftmlSource } = value;
   
-    const { html, styles } = ftml.renderHTML(ftmlSource);
+    const { html } = ftml.renderHTML(ftmlSource);
   
     // sending message back to main thread
-    parentPort.postMessage({ html, styles });
+    parentPort.postMessage({ html });
   });
 })();
