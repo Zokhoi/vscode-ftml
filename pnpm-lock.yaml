@@ -6,7 +6,7 @@ specifiers:
   '@types/node': ^17.0.23
   '@types/vscode': ^1.65.0
   '@types/vscode-webview': ^1.57.0
-  '@vscode-ftml/ftml-wasm': ^1.28
+  '@vscode-ftml/ftml-wasm': ^1.28.1-2
   cross-fetch: ^3.1.5
   diff: ^5.0.0
   esbuild: ^0.14.27
@@ -19,7 +19,7 @@ specifiers:
   vite-plugin-commonjs-externals: ^0.1.1
 
 dependencies:
-  '@vscode-ftml/ftml-wasm': 1.28.0
+  '@vscode-ftml/ftml-wasm': 1.28.1-2
   cross-fetch: 3.2.0
   diff: 5.2.0
   front-matter: 4.0.2
@@ -73,8 +73,8 @@ packages:
     resolution: {integrity: sha512-qvZbSZo+K4ZYmmDuaodMbAa67Pl6VDQzLKFka6rq+3WUTY4Kro7Bwoi0CuZLO/wema0ygcmpwow7zZfPJTs5jg==}
     dev: true
 
-  /@vscode-ftml/ftml-wasm/1.28.0:
-    resolution: {integrity: sha512-enmSXz2exQiFL9qKjyK1++t0pawNASyKMSpFgOhrTBL60JiNVqzh2vBG3rEhqnzf290LQpzeA18xoNx9DP9QMA==}
+  /@vscode-ftml/ftml-wasm/1.28.1-2:
+    resolution: {integrity: sha512-t/Pu8dJeGlTCbqtvcXzACJv4Wqz7YOWbP5xAPmBgz4vKjkRsRyssKuegugS9SV5s4HNvjR7pdhfTSFG+XgzgLQ==}
     dev: false
 
   /acorn/8.14.0:
