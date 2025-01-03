@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.6: Beta 2 patch 6
+- Fixed changes due to ftml upgrade
+- Updated ftml version to 1.28.1
+
 ## 0.2.5: Beta 2 patch 5
 - Prevent URI from being treated as italics
 - Updated ftml version to 1.28.0
