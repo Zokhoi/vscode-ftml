@@ -2,6 +2,7 @@
 
 ## Unreleased
 - Fixed Wikidot username during session relogin
+- Fixed live preview not loading
 
 ## 0.2.6: Beta 2 patch 6
 - Fixed changes due to ftml upgrade

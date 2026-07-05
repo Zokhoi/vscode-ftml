@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import ftmlWorker from './ftml.web.worker.js?bundled-worker&dataurl';
+import ftmlWorker from './ftml.web.worker.js?bundled-worker';
 import css from './css/wikidot.css';
 import cssponyfill from './css/ponyfill.css';
 import collapsible from './css/collapsible.css';
@@ -66,13 +66,14 @@ function genHtml(panelInfo: previewInfo) {
       backend: ${JSON.stringify(panelInfo.backend)},
       live: ${panelInfo.live},
     };
-    const ftmlWorker = ${JSON.stringify(ftmlWorker)};
+    const ftmlWorkerSource = ${JSON.stringify(ftmlWorker)};
+    const ftmlWorker = URL.createObjectURL(new Blob([ftmlWorkerSource]));
     const previewContent = document.getElementById('preview-content');
   
     if (state.content) previewContent.innerHTML = state.content;
   
     let ftml = new Worker(ftmlWorker, {
-      type: 'module',
+      name: 'ftml-renderer',
     });
   
     ftml.addEventListener('message', e => {
