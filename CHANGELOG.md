@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.2.7: Beta 2 patch 7
 - Fixed Wikidot username during session relogin
 - Fixed live preview not loading
 
