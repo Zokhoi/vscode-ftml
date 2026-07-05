@@ -150,6 +150,12 @@
         "category": "Ftml"
       }
     ],
+    "authentication": [
+      {
+        "label": "Wikidot",
+        "id": "wikidot"
+      }
+    ],
     "keybindings": [
       {
         "command": "ftml.diff.save",

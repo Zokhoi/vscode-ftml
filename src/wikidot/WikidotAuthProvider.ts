@@ -32,7 +32,7 @@ class WikidotAuthProvider implements AuthenticationProvider {
     } else return [this.sessions.get(scopes[0])!];
   }
 
-  async createSession(scope?: readonly string[], username?: string): Promise<WikidotSession> {
+  async createSession(scopes?: readonly string[], options?: vscode.AuthenticationProviderSessionOptions): Promise<WikidotSession> {
     let cancel = "Login dialog cancelled";
     let retry = 0;
     let newUsername: string | undefined;
@@ -42,7 +42,7 @@ class WikidotAuthProvider implements AuthenticationProvider {
       newUsername = await vscode.window.showInputBox({
         title: "Login to wikidot",
         placeHolder: "Your wikidot username",
-        value: username,
+        value: options?.account?.label,
         prompt: retry ? e?.message : undefined,
       })
       if (!newUsername) throw cancel;
@@ -128,7 +128,7 @@ class WikidotAuthProvider implements AuthenticationProvider {
       "Sign in again")
       if (choice) {
         try {
-          await this.createSession([], session.account.label);
+          await this.createSession([], session);
         } catch (_) {
           await this.removeSession(session.id);
         }

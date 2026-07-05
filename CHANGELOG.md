@@ -1,5 +1,8 @@
 # Change Log
 
+## Unreleased
+- Fixed Wikidot username during session relogin
+
 ## 0.2.6: Beta 2 patch 6
 - Fixed changes due to ftml upgrade
 - Updated ftml version to 1.28.1
