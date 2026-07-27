@@ -1,6 +1,6 @@
 # FTML/Wikidot Workshop for VSCode
 
-[![version](https://img.shields.io/vscode-marketplace/v/zokhoi.vscode-ftml.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=zokhoi.vscode-ftml)
+[VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=zokhoi.vscode-ftml)
 
 A VSCode extension for support of FTML, the markup language of SCP Foundation.
 
@@ -37,5 +37,5 @@ for compiling.
 
 ## References
 
-* [FTML Blocks documentation](https://github.com/scpwiki/wikijump/blob/develop/ftml/docs/Blocks.md)
+* [FTML Blocks documentation](https://github.com/scpwiki/ftml/blob/main/docs/Blocks.md)
 * [FTML file specficiation](https://gist.github.com/Zokhoi/06dbc890a4f2fab3eadcd7d2ed0d8698)
