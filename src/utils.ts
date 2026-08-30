@@ -47,6 +47,18 @@ const unixNamify = (
   return output;
 }
 
+const backendProviders = [
+  "ftml",
+  "wdpr",
+  "wikidot",
+]
+
+enum BackendEnum {
+  Ftml = "ftml",
+  Wdpr = "wdpr",
+  Wikidot = "wikidot",
+}
+
 /**
  * Name of the extension.
  */
@@ -59,6 +71,8 @@ const pkgver = "0.2.7";
 export {
   urljoin,
   unixNamify,
+  backendProviders,
+  BackendEnum,
   pkgname,
   pkgver,
 }
