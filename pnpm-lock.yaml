@@ -12,11 +12,11 @@ importers:
         specifier: 1.28.1-2
         version: 1.28.1-2
       '@wdprlib/parser':
-        specifier: ^5.1.5
-        version: 5.1.5
+        specifier: ^5.1.6
+        version: 5.1.6
       '@wdprlib/render':
-        specifier: ^4.0.5
-        version: 4.0.5
+        specifier: ^4.0.7
+        version: 4.0.7
       cross-fetch:
         specifier: ^3.1.5
         version: 3.2.0
@@ -96,14 +96,14 @@ packages:
   '@vscode-ftml/ftml-wasm@1.28.1-2':
     resolution: {integrity: sha512-t/Pu8dJeGlTCbqtvcXzACJv4Wqz7YOWbP5xAPmBgz4vKjkRsRyssKuegugS9SV5s4HNvjR7pdhfTSFG+XgzgLQ==}
 
-  '@wdprlib/ast@4.0.1':
-    resolution: {integrity: sha512-pd8atGtevDK/La77RE+WjtmhL5yH/8/fVaeCyDCp/D/ofYN332kBSmMVpgtJ3vEq4kbw/IUVmbPJooTYgAaz0g==}
+  '@wdprlib/ast@4.0.2':
+    resolution: {integrity: sha512-fWZNcQIgL59hc3eslwxZvZfP8fwauMx+jUnazAOqw48yr/UISYq7jXeIMINAQWcKRyfRLWLU/nAQSWl1WcImxg==}
 
-  '@wdprlib/parser@5.1.5':
-    resolution: {integrity: sha512-EXMmQvjGNo5s50pJFF1HuPNrcM/oSBBKh2PxdEtiM0U/22Sbg+phYwyFqTeUcJDYKuOCCwW70QuQXqmaD5CmEg==}
+  '@wdprlib/parser@5.1.6':
+    resolution: {integrity: sha512-mu81Wl4OAxVUWp54JuYbBqM0vpcuq8pA8MQIKJqiPxMgM59BDzctU962RGUDZyG0FXV6e/6oUdIt+ydsJfMjWQ==}
 
-  '@wdprlib/render@4.0.5':
-    resolution: {integrity: sha512-upGOzYWYZY/Dm2AfMq01+HhovktPiasMTKYyqtLvPd5OGbfdPC2l/umMtUNS36sT9iYeNT+oH8uEBIew7NpKMQ==}
+  '@wdprlib/render@4.0.7':
+    resolution: {integrity: sha512-D2UPh7MGXuQHCLN17zDHKUyPAT01/wyNYvkNs4BwOYEU8/x1ZCxaQiVMnYRqQ9yjrHZSewcsvfHcHHIl5MwTHA==}
 
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
@@ -495,16 +495,16 @@ snapshots:
 
   '@vscode-ftml/ftml-wasm@1.28.1-2': {}
 
-  '@wdprlib/ast@4.0.1': {}
+  '@wdprlib/ast@4.0.2': {}
 
-  '@wdprlib/parser@5.1.5':
+  '@wdprlib/parser@5.1.6':
     dependencies:
       '@braintree/sanitize-url': 7.1.2
-      '@wdprlib/ast': 4.0.1
+      '@wdprlib/ast': 4.0.2
 
-  '@wdprlib/render@4.0.5':
+  '@wdprlib/render@4.0.7':
     dependencies:
-      '@wdprlib/ast': 4.0.1
+      '@wdprlib/ast': 4.0.2
       domhandler: 5.0.3
       htmlparser2: 10.1.0
       sanitize-html: 2.17.7

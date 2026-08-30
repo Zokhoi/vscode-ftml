@@ -309,8 +309,8 @@
   },
   "dependencies": {
     "@vscode-ftml/ftml-wasm": "^1.28",
-    "@wdprlib/parser": "^5.1.5",
-    "@wdprlib/render": "^4.0.5",
+    "@wdprlib/parser": "^5.1.6",
+    "@wdprlib/render": "^4.0.7",
     "cross-fetch": "^3.1.5",
     "diff": "^5.0.0",
     "front-matter": "^4.0.2",
