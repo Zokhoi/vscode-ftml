@@ -1,7 +1,3 @@
-// This has to be in esm because wdprlib commonjs builds
-// use node:modules instead of require to import modules,
-// which confuses esbuild's module resolver
-
 import { parse } from "@wdprlib/parser";
 import { renderToHtml } from "@wdprlib/render";
 
