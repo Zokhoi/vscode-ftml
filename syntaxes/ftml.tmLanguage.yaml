@@ -54,6 +54,7 @@ repository:
       - include: '#teletype'
       - include: '#escape'
       - include: '#ruby-short'
+      - include: '#em-dash'
   links:
     comments: These are link syntaxes, and no other syntaxes are allowed within.
     patterns:
@@ -716,6 +717,12 @@ repository:
       '6':
         name: punctuation.definition.tag.end.ftml
     name: meta.block.structure.$2.standalone.ftml
+  em-dash:
+    name: markup.emdash.ftml
+    match: \-\-
+    captures:
+      '0':
+        name: punctuation.definition.tag.ftml
   horizontal-rule:
     name: markup.hr.ftml
     match: ^(\-{4,})\s*$
