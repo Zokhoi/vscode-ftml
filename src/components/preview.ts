@@ -35,7 +35,7 @@ type previewInfo = {
  * @param lock The preview being locked to a file or not.
  */
 function genTitle(fileName: string, backend: string, live: boolean, lock: boolean) {
-  let prefix = backend=="ftml" && live ? `Live ${backend}` : backend;
+  let prefix = backend != BackendEnum.Wikidot && live ? `Live ${backend}` : backend;
   prefix = lock ? `[${prefix}]` : prefix;
   return `${prefix} ${fileName}`;
 }
@@ -151,7 +151,7 @@ function createPreviewPanel(viewColumn?: number) {
     viewColumn: viewColumn ?? vscode.ViewColumn.Active,
     content: '',
     backend,
-    live: backend == "wikidot" ? false : !!vscode.workspace.getConfiguration('ftml.preview').get('live'),
+    live: backend == BackendEnum.Wikidot ? false : !!vscode.workspace.getConfiguration('ftml.preview').get('live'),
   }
   while (openPreviews.has(panelInfo.id)) {
     panelInfo.id = Math.random().toString(36).substring(4);

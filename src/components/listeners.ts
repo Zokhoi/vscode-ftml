@@ -54,7 +54,7 @@ function setListeners(panel: vscode.WebviewPanel, panelId: string) {
     let panelInfo = idToInfo.get(panelId)!;
     if (lockedPreviews.has(panelId) && panelInfo.fileName!=e.document.fileName) return;
     if (e.document.languageId == 'ftml') {
-      if (panelInfo.backend=='ftml' && panelInfo.live) {
+      if (['ftml', 'wdpr'].includes(panelInfo.backend) && panelInfo.live) {
         serveBackendDebounced(panel,
           e.document.fileName,
           e.document.getText(),
@@ -93,7 +93,7 @@ function setTabChangeListener(panel: vscode.WebviewPanel, panelId: string) {
     if (e?.document.languageId == 'ftml' && e?.document.uri.scheme != 'wikidot-rev') {
       let panelInfo = idToInfo.get(panelId)!;
       panelInfo.fileName = e.document.fileName;
-      if (panelInfo.backend=='ftml' && panelInfo.live) {
+      if (['ftml', 'wdpr'].includes(panelInfo.backend) && panelInfo.live) {
         serveBackendDebounced(panel,
           panelInfo.fileName,
           e.document.getText(),
