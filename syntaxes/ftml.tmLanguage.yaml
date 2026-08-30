@@ -590,16 +590,15 @@ repository:
       - include: $self
   strikethrough:
     name: markup.strikethrough.ftml
-    begin: \-\-
-    beginCaptures:
-      '0':
+    match: (\-\-)(?![\s\-])((?:(?!\-\-).)+[^\s\-])(\-\-)
+    captures:
+      '1':
         name: punctuation.definition.tag.begin.ftml
-    end: \-\-
-    endCaptures:
-      '0':
+      '2':
+        patterns:
+          - include: $self
+      '3':
         name: punctuation.definition.tag.end.ftml
-    patterns:
-      - include: $self
   underline:
     name: markup.underline.ftml
     begin: \_\_
