@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import ftmlWorker from './ftml.web.worker.js?bundled-worker';
+import wdprWorker from './wdpr.web.worker.js?bundled-worker';
 import css from './css/wikidot.css';
 import cssponyfill from './css/ponyfill.css';
 import collapsible from './css/collapsible.css';
@@ -67,8 +68,13 @@ function genHtml(panelInfo: previewInfo) {
       backend: ${JSON.stringify(panelInfo.backend)},
       live: ${panelInfo.live},
     };
+
     const ftmlWorkerSource = ${JSON.stringify(ftmlWorker)};
     const ftmlWorker = URL.createObjectURL(new Blob([ftmlWorkerSource]));
+
+    const wdprWorkerSource = ${JSON.stringify(wdprWorker)};
+    const wdprWorker = URL.createObjectURL(new Blob([wdprWorkerSource]));
+
     const previewContent = document.getElementById('preview-content');
   
     if (state.content) previewContent.innerHTML = state.content;
@@ -76,8 +82,19 @@ function genHtml(panelInfo: previewInfo) {
     let ftml = new Worker(ftmlWorker, {
       name: 'ftml-renderer',
     });
+
+    let wdpr = new Worker(wdprWorker, {
+      name: 'wdpr-renderer',
+    });
   
     ftml.addEventListener('message', e => {
+      const { html } = e.data;
+      previewContent.innerHTML = html;
+      state.content = html;
+      vscode.setState(state);
+    });
+  
+    wdpr.addEventListener('message', e => {
       const { html } = e.data;
       previewContent.innerHTML = html;
       state.content = html;
@@ -102,6 +119,9 @@ function genHtml(panelInfo: previewInfo) {
             case "wikidot":
               previewContent.innerHTML = wdHtml;
               state.content = wdHtml;
+              break;
+            case "wdpr":
+              wdpr.postMessage(ftmlSource);
               break;
             case "ftml":
             default:
