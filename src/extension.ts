@@ -28,6 +28,7 @@ import { parsePageData, serveBackend } from "./components/source";
 import * as wikidot from './wikidot/interface';
 import WikidotAuthProvider from './wikidot/WikidotAuthProvider';
 import { toWikidotRevUri, WikidotRevContentProvider } from './wikidot/WikidotRevContentProvider';
+import { backendProviders } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
   setContext(context);
@@ -97,7 +98,7 @@ export function activate(context: vscode.ExtensionContext) {
       if (activePreview) {
         let panel = idToPreview.get(activePreview)!;
         let panelInfo = idToInfo.get(activePreview)!;
-        panelInfo.backend = panelInfo.backend == 'ftml' ? 'wikidot' : 'ftml';
+        panelInfo.backend = backendProviders[(backendProviders.findIndex(v=>v === panelInfo.backend)+1) % 3];
         panel.webview.postMessage({
           type: "meta.backend",
           backend: panelInfo.backend,

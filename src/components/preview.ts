@@ -12,6 +12,7 @@ import {
 } from "../global";
 import { serveBackend } from "./source";
 import { setListeners } from "./listeners";
+import { BackendEnum, backendProviders } from "../utils";
 
 /**
  * All the metadata associated with a preview tab.
@@ -123,12 +124,13 @@ function genHtml(panelInfo: previewInfo) {
  */
 function createPreviewPanel(viewColumn?: number) {
   let backend = `${vscode.workspace.getConfiguration('ftml.preview').get('backend')}`.toLowerCase();
+  if (!backendProviders.includes(backend)) backend = BackendEnum.Ftml;
   let panelInfo = {
     id: Math.random().toString(36).substring(4),
     fileName: '',
     viewColumn: viewColumn ?? vscode.ViewColumn.Active,
     content: '',
-    backend: backend == "wikidot" ? "wikidot" : "ftml",
+    backend,
     live: backend == "wikidot" ? false : !!vscode.workspace.getConfiguration('ftml.preview').get('live'),
   }
   while (openPreviews.has(panelInfo.id)) {

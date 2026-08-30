@@ -49,6 +49,7 @@ function serveBackend(panel: vscode.WebviewPanel, fileName: string, source: stri
       })
       break;
     case "ftml":
+    case "wdpr":
     default:
       panel.webview.postMessage({
         type: "content",
