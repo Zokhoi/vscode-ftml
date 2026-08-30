@@ -1,5 +1,8 @@
 # Change Log
 
+## Unreleased
+- Added [wdpr](https://github.com/r74tech/wdpr) backend
+
 ## 0.2.7: Beta 2 patch 7
 - Fixed Wikidot username during session relogin
 - Fixed live preview not loading
