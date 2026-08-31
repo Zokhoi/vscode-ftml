@@ -1,10 +1,12 @@
-let ftml = require("@vscode-ftml/ftml-wasm");
-ftml.init();
+import { init, ready, loading, renderHTML } from "@vscode-ftml/ftml-wasm";
+
+init();
+
 onmessage = async (e) => {
-  if (!ftml.ready) await ftml.loading;
+  if (!ready) await loading;
   const ftmlSource = e.data;
 
-  const { html } = ftml.renderHTML(ftmlSource);
+  const { html } = renderHTML(ftmlSource);
 
   // sending message back to main thread
   postMessage({ html });
