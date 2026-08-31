@@ -18,9 +18,9 @@ page: vscode-ftml-test
 </body>
 [[/html]]
 
-[[css]]
+[[module css]]
 .select { size: 10px; color: limegreen; }
-[[/css]]
+[[/module]]
 
 [[math]]
 \text{yes} \Omega

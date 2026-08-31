@@ -512,37 +512,6 @@ Multiline [!-- stuff
 [!-- comment-single --]
 Single [!-- stuff here --] Comment
 
-[!-- css-fail --]
-[[css]]
-Other stuff
-
-[!-- css-inline --]
-[[css]]a { color: blue; }[[/css]]
-
-[!-- css-multiline --]
-[[css]]
-h1 {
-    margin-top: .7em
-    padding: 0;
-    font-weight: bold;
-}
-[[/css]]
-
-[!-- css-multiple --]
-[[css]]
-a { display: none; }
-[[/css]]
-apple
-[[css]]
-b { display: none; }
-[[/css]]
-banana
-
-[!-- css --]
-[[css]]
-a { color: blue; }
-[[/css]]
-
 [!-- del-alias --]
 Apple
 [[deletion]]Banana[[/deletion]]
