@@ -3,6 +3,7 @@
 ## Unreleased
 - Added [wdpr](https://github.com/r74tech/wdpr) backend
 - Fixed strikethrough interfering with common hosted html/code block url patterns
+- Added [[note]] block
 
 ## 0.2.7: Beta 2 patch 7
 - Fixed Wikidot username during session relogin

@@ -384,7 +384,7 @@ repository:
         name: punctuation.definition.tag.end.ftml
     name: meta.block.structure.$2.standalone.ftml
   block:
-    begin: (?i)(\[\[)\s*(footnote|tabview|tabs)\s*(\]\])
+    begin: (?i)(\[\[)\s*(footnote|tabview|tabs|note)\s*(\]\])
     beginCaptures:
       '0':
         name: meta.block.structure.begin.ftml
@@ -394,7 +394,7 @@ repository:
         name: entity.name.tag.ftml
       '3':
         name: punctuation.definition.tag.end.ftml
-    end: (?i)((\[\[)\/)\s*(footnote|tabview|tabs)\s*(\]\])
+    end: (?i)((\[\[)\/)\s*(footnote|tabview|tabs|note)\s*(\]\])
     endCaptures:
       '0':
         name: meta.block.structure.end.ftml
