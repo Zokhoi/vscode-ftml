@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@vscode-ftml/ftml-wasm':
-        specifier: 1.28.1-2
-        version: 1.28.1-2
+        specifier: ^1.42.0
+        version: 1.42.0
       '@wdprlib/parser':
         specifier: ^5.1.6
         version: 5.1.6
@@ -93,8 +93,8 @@ packages:
   '@types/vscode@1.65.0':
     resolution: {integrity: sha512-wQhExnh2nEzpjDMSKhUvnNmz3ucpd3E+R7wJkOhBNK3No6fG3VUdmVmMOKD0A8NDZDDDiQcLNxe3oGmX5SjJ5w==}
 
-  '@vscode-ftml/ftml-wasm@1.28.1-2':
-    resolution: {integrity: sha512-t/Pu8dJeGlTCbqtvcXzACJv4Wqz7YOWbP5xAPmBgz4vKjkRsRyssKuegugS9SV5s4HNvjR7pdhfTSFG+XgzgLQ==}
+  '@vscode-ftml/ftml-wasm@1.42.0':
+    resolution: {integrity: sha512-WJniTitjHnJENDOMbcg4VoFcEypAf0v6wE0Yw85ZxNGC6NkE8t3X6hkL2wezkOUjx8Yp3+x3etHqDZFtRbVjbQ==}
 
   '@wdprlib/ast@4.0.2':
     resolution: {integrity: sha512-fWZNcQIgL59hc3eslwxZvZfP8fwauMx+jUnazAOqw48yr/UISYq7jXeIMINAQWcKRyfRLWLU/nAQSWl1WcImxg==}
@@ -493,7 +493,7 @@ snapshots:
 
   '@types/vscode@1.65.0': {}
 
-  '@vscode-ftml/ftml-wasm@1.28.1-2': {}
+  '@vscode-ftml/ftml-wasm@1.42.0': {}
 
   '@wdprlib/ast@4.0.2': {}
 
