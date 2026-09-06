@@ -4,7 +4,9 @@
 
 A VSCode extension for support of FTML, the markup language of SCP Foundation.
 
-This extension supports only a subset of [Wikidot text](https://www.wikidot.com/doc-wiki-syntax:start) (Wikitext), refered to as [FTML](https://github.com/scpwiki/wikijump/tree/develop/ftml) (Foundation Text Markup Language).
+This extension supports only a subset of [Wikidot text](https://www.wikidot.com/doc-wiki-syntax:start) (Wikitext), refered to as [FTML](https://github.com/scpwiki/ftml) (Foundation Text Markup Language).
+
+Multiple rendering backends are available, with the default being [FTML](https://github.com/scpwiki/ftml). Other backends include [Wdpr](https://github.com/r74tech/wdpr) and native Wikidot.
 
 ## Features for desktop and web VSCode
 
