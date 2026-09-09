@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.3.0: Beta 3
 - Added [wdpr](https://github.com/r74tech/wdpr) backend
 - Fixed strikethrough interfering with common hosted html/code block url patterns
 - Added [[note]] block
