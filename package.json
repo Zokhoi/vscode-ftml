@@ -308,7 +308,7 @@
     "vite-plugin-commonjs-externals": "^0.1.1"
   },
   "dependencies": {
-    "@vscode-ftml/ftml-wasm": "^1.42.0",
+    "@vscode-ftml/ftml-wasm": "^1.42.1",
     "@wdprlib/parser": "^5.1.6",
     "@wdprlib/render": "^4.0.7",
     "cross-fetch": "^3.1.5",
