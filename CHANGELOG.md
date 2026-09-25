@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## 0.3.1: Beta 3 patch 1
 - Fixed https for wikidot sites
 - Enable wdpr preview backend in VSCode for web
 
