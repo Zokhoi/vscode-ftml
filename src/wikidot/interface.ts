@@ -93,7 +93,7 @@ class WikidotAjaxError extends WikidotError {
  * @param params Objects to be sent to the ajax endpoint.
  */
 async function Ajax(info: {wikiSite: string, session?: string}, params: any): Promise<Response> {
-  if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
+  if (!info.wikiSite.startsWith("http")) { info.wikiSite = `https://${info.wikiSite}.wikidot.com` }
   const wikidotToken7 = Math.random().toString(36).substring(4);
   params = Object.assign({
     wikidot_token7: wikidotToken7,
@@ -252,7 +252,7 @@ namespace Page {
    * Gets the raw html of a page.
    */
   export async function getHtml(info: {wikiSite: string, wikiPage: string, session?: string, checkExist?: boolean, useOkRange?: boolean}) {
-    if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
+    if (!info.wikiSite.startsWith("http")) { info.wikiSite = `https://${info.wikiSite}.wikidot.com` }
     info.checkExist ??= false;
     info.useOkRange ??= false;
     let res = await fetch(urljoin(info.wikiSite, unixNamify(info.wikiPage), '/norender/true'), {
@@ -286,7 +286,7 @@ namespace Page {
    * Checks if the page exist on Wikidot.
    */
   export async function existsPage(info: {wikiSite: string, wikiPage: string, session?: string, useOkRange?: boolean }): Promise<boolean> {
-    if (!info.wikiSite.startsWith("http")) { info.wikiSite = `http://${info.wikiSite}.wikidot.com` }
+    if (!info.wikiSite.startsWith("http")) { info.wikiSite = `https://${info.wikiSite}.wikidot.com` }
     let res = (await fetch(urljoin(info.wikiSite, unixNamify(info.wikiPage), '/norender/true'), {
       headers: {
         'User-Agent': `${pkgname}/0.0.1`,

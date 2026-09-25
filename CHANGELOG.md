@@ -1,5 +1,8 @@
 # Change Log
 
+## Unreleased
+- Fixed https for wikidot sites
+
 ## 0.3.0: Beta 3
 - Added [wdpr](https://github.com/r74tech/wdpr) backend
 - Fixed strikethrough interfering with common hosted html/code block url patterns
