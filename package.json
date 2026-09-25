@@ -93,7 +93,6 @@
       {
         "command": "ftml.preview.toggleBackend",
         "title": "%ftml.preview.toggleBackend%",
-        "enablement": "!isWeb",
         "category": "Ftml"
       },
       {
@@ -239,7 +238,7 @@
           "group": "4_ftml"
         },
         {
-          "when": "ftmlPreviewFocus && !isWeb",
+          "when": "ftmlPreviewFocus",
           "command": "ftml.preview.toggleBackend",
           "group": "4_ftml"
         },

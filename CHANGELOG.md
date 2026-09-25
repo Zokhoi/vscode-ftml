@@ -2,6 +2,7 @@
 
 ## Unreleased
 - Fixed https for wikidot sites
+- Enable wdpr preview backend in VSCode for web
 
 ## 0.3.0: Beta 3
 - Added [wdpr](https://github.com/r74tech/wdpr) backend

@@ -28,7 +28,7 @@ import { parsePageData, serveBackend } from "./components/source";
 import * as wikidot from './wikidot/interface';
 import WikidotAuthProvider from './wikidot/WikidotAuthProvider';
 import { toWikidotRevUri, WikidotRevContentProvider } from './wikidot/WikidotRevContentProvider';
-import { backendProviders } from './utils';
+import { BackendEnum, backendProviders } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
   setContext(context);
@@ -95,10 +95,15 @@ export function activate(context: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand('ftml.preview.toggleBackend', () => {
+      let providers = backendProviders;
+      if (vscode.env.uiKind === vscode.UIKind.Web) {
+        // disable previewing with Wikidot
+        providers = providers.filter(v=>v!==BackendEnum.Wikidot);
+      }
       if (activePreview) {
         let panel = idToPreview.get(activePreview)!;
         let panelInfo = idToInfo.get(activePreview)!;
-        panelInfo.backend = backendProviders[(backendProviders.findIndex(v=>v === panelInfo.backend)+1) % 3];
+        panelInfo.backend = providers[(providers.findIndex(v=>v === panelInfo.backend)+1) % providers.length];
         panel.webview.postMessage({
           type: "meta.backend",
           backend: panelInfo.backend,
